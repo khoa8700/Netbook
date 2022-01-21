@@ -28,4 +28,5 @@ urlpatterns=[
     path('lock_out/',views.lock_out,name="lock_out"),
     path('about_us/',views.about_us,name="about_us"),
     path('increase_views/',views.increase_views,name="increase_views"),
+    path('base/',views.base,name="base"),
 ]

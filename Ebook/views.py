@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q, Count
 
 from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
@@ -28,37 +29,49 @@ from django.http import JsonResponse
 import pytz
 
 # Create your views here.
+TRENDING_NOVELS_PER_PAGE=8
 NOVELS_PER_PAGE=2
 NOVELS_IN_TOP_RATES=3
 USERS_PER_PAGE=2
 LOCK_OUT_TIME = 7 # (days)
+TOP_FOLLOWED_NOVELS = 5
 
 def index(request):
-    novels=list(Novel.objects.all())
-    page_number = request.GET.get('page')
-    if page_number is None:
-        page_number=1
-    # print("page : ",page_number)
-    paginator = Paginator(novels, NOVELS_PER_PAGE)
+    trending_novels=list(Novel.objects.filter().order_by('-publication_date'))[:TRENDING_NOVELS_PER_PAGE]
+    top_followed_novels = list(Novel.objects.annotate(count=Count("following",filter=(Q(following__is_followed=True)))).order_by('-count'))[:TOP_FOLLOWED_NOVELS]
+    top_followed_novels_with_count = []
+    for novel in top_followed_novels:
+        top_followed_novels_with_count.append([novel,novel.following_set.filter(is_followed=True).count()])
+    
+        
+    
+    # page_number = request.GET.get('page')
+    # if page_number is None:
+    #     page_number=1
+    # # print("page : ",page_number)
+    # paginator = Paginator(novels, NOVELS_PER_PAGE)
 
-    try:
-        page = paginator.page(page_number)
-    except PageNotAnInteger:
-        # page = paginator.page(1)
-        raise Http404
-    except EmptyPage:
-        # page = paginator.page(paginator.num_pages)
-        raise Http404
+    # try:
+    #     page = paginator.page(page_number)
+    # except PageNotAnInteger:
+    #     # page = paginator.page(1)
+    #     raise Http404
+    # except EmptyPage:
+    #     # page = paginator.page(paginator.num_pages)
+    #     raise Http404
 
-    novels = page.object_list
-    page_obj = paginator.get_page(page_number)
+    # novels = page.object_list
+    # page_obj = paginator.get_page(page_number)
 
     tags = list(Tag.objects.all())
-    print(type(novels))
+    print(type(trending_novels))
+    print("trending_novels : ",trending_novels)
+    print("top_followed_novels : ",top_followed_novels)
     return render(request,"Ebook/index.html",{
-        "novels":novels,
+        "trending_novels":trending_novels,
+        "top_followed_novels_with_count":top_followed_novels_with_count,
         "tags":tags,
-        "page_obj":page_obj,
+        # "page_obj":page_obj,
     })
 
 @authenticated_user
@@ -628,3 +641,5 @@ def increase_views(request):
     return JsonResponse({"error": "invalid"}, status=400)
         
         
+def base(request):
+    return render(request,'Ebook/base.html')

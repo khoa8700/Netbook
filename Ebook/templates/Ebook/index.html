@@ -1,118 +1,1731 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="zxx">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="description" content="Anime Template">
-        <meta name="keywords" content="Anime, unica, creative, html">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>Anime | Template</title>
-        <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-            rel="stylesheet">
-        <!-- Css Styles -->
-        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/plyr.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
-        <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
-    </head>
-    <body>
-        <!-- Page Preloder -->
-        <div id="preloder">
-            <div class="loader"></div>
-        </div>
-        <!-- Header Section Begin -->
-        {%  include 'Ebook/navbar.html' %}
-        <!-- Header End -->
-        <!-- Hero Section Begin -->
-        {% include 'Ebook/section_welcome.html' %}
-        <!-- Hero Section End -->
-        <!-- Product Section Begin -->
-        <section class="product spad">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="trending__product">
-                            <div class="row">
-                                <div class="col-lg-8 col-md-8 col-sm-8">
-                                    <div class="section-title">
-                                        <h4>Trending Now</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                {% for novel in novels %}
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <div class="product__item">
-                                        <div class="product__item__pic set-bg" data-setbg="{{ MEDIA_URL }}/{{ novel.thumbnail }}">
-                                            <div class="ep">{{ novel.chapter_set.count }}</div>
-                                        </div>
-                                        <div class="product__item__text">
-                                            <h5><a href="{{ novel.get_absolute_url }}">{{ novel.title }}</a></h5>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% include 'Ebook/paginator.html' %}
+{% extends 'Ebook/base.html' %}
+{% block content %}
+<main id="mainpart" class="at-index">
+
+    <div class="container" style="margin-bottom: 40px;">
+        <!-- <div class="row">
+            <div class="no-push col-12 push-2-l col-8-l">
+                <div id="announcements" class="index-top_notification">
+                    <div class="annoucement-item">
+                        <a href="/thao-luan/2267-khong-dang-manga" style=" color:  red">Không đăng Manga</a>
                     </div>
-                    {% include 'Ebook/top_rates.html' %}
+                    <div class="annoucement-item">
+                        <a href="/thao-luan/2250-hako-faqs-nhung-cau-hoi-thuong-gap-tren-hako"
+                            style=" color:  blue">(HAKO FAQs) NHỮNG CÂU HỎI THƯỜNG GẶP TRÊN HAKO</a>
+                    </div>
+                    <div class="annoucement-item">
+                        <a href="/thao-luan/2222-ve-viec-nhieu-truyen-bi-danh-gia-rate-linh-tinh"
+                            style=" color:  red">Về việc nhiều truyện bị Đánh giá (Rate) linh tinh</a>
+                    </div>
+                    <div class="annoucement-item">
+                        <a href="/thao-luan/1122-thu-nghiem-thong-bao-chuong-moi" style="">Thử nghiệm thông báo
+                            chương mới</a>
+                    </div>
+                    <div class="annoucement-item">
+                        <a href="/thao-luan/20-quy-dinh-chung-doi-voi-cac-du-an-dang-tai-cong-light-novel-bao-gom-truyen-dichconvert-va-oln"
+                            style=" color:  red">Quy định chung đối với các dự án đăng tại Cổng Light Novel</a>
+                    </div>
                 </div>
             </div>
+        </div> -->
+        <div class="row">
+            <div class="col-12 col-lg-9">
+                <div class="daily-recent_views">
+                    <header class="title">
+                        <span class="top-tab_title title-active"><i class="fas fa-trophy"></i> Nổi bật</span>
+                        <span class="top-tab_title"><a
+                                href="https://ln.hako.re/danh-sach?truyendich=1&amp;sapxep=topthang">Top
+                                tháng</a></span>
+                        <span class="top-tab_title"><a
+                                href="https://ln.hako.re/danh-sach?truyendich=1&amp;sapxep=top">Toàn
+                                t/gian</a></span>
+                    </header>
+                    <main class="row slider d-block">
+                        {% for novel in trending_novels %}
+                        <div class="popular-thumb-item mr-1">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
+                                    title="{{ novel.title }}">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio"
+                                            style="background-image: url('{{ MEDIA_URL }}/{{ novel.thumbnail }}')">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr series-title"
+                                        title="Ryoushin no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi">
+                                        <a href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
+                                            title="{{ novel.title }}">{{ novel.title }}</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                    </main>
+                </div>
+            </div>
+            <div class="col-12 col-lg-3">
+                <section class="index-section rank-cirle most-followed">
+                    <header class="section-title">
+                        <span class="sts-bold">Theo dõi</span><span class="sts-empty">nhiều</span>
+                    </header>
+                    <main>
+                        {% for novel,cnt in top_followed_novels_with_count %}
+                        <div class="rank-circle-item">
+                            <span class="rank-number">{{ forloop.counter }}</span>
+                            <div class="series-detail clear">
+                                <h5 class="series-title"><a href="{{ novel.get_absolute_url }}"
+                                        title="{{ novel.title }}">{{ novel.title }}</a></h5>
+                                <small class="rank-count">{{ cnt }} theo dõi</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        <!-- <div class="rank-circle-item">
+                            <span class="rank-number">6</span>
+                            <div class="series-detail clear">
+                                <h5 class="series-title"><a href="/truyen/424-tensei-shitara-slime-datta-ken"
+                                        title="Tensei Shitara Slime datta ken">Tensei Shitara Slime datta
+                                        ken</a></h5>
+                                <small class="rank-count">6,029 theo dõi</small>
+                            </div>
+                        </div>
+                        <div class="rank-circle-item">
+                            <span class="rank-number">7</span>
+                            <div class="series-detail clear">
+                                <h5 class="series-title"><a
+                                        href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
+                                        title="Ryoushin no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi">Ryoushin
+                                        no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi</a></h5>
+                                <small class="rank-count">5,823 theo dõi</small>
+                            </div>
+                        </div>
+                        <div class="rank-circle-item">
+                            <span class="rank-number">8</span>
+                            <div class="series-detail clear">
+                                <h5 class="series-title"><a
+                                        href="/truyen/3009-ankoku-kishi-monogatari-yuusha-wo-taosu-tameni-maou-ni-shoukansaremashita"
+                                        title="Ankoku kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~">Ankoku
+                                        kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~</a>
+                                </h5>
+                                <small class="rank-count">5,375 theo dõi</small>
+                            </div>
+                        </div>
+                        <div class="rank-circle-item">
+                            <span class="rank-number">9</span>
+                            <div class="series-detail clear">
+                                <h5 class="series-title"><a
+                                        href="/truyen/6947-shinja-zero-no-megami-sama-to-hajimeru-isekai-kouryaku-classmate-saijaku-no-mahou-tsukai"
+                                        title="Shinja Zero no Megami-sama to Hajimeru Isekai Kouryaku">Shinja
+                                        Zero no Megami-sama to Hajimeru Isekai Kouryaku</a></h5>
+                                <small class="rank-count">5,242 theo dõi</small>
+                            </div>
+                        </div>
+                        <div class="rank-circle-item">
+                            <span class="rank-number">10</span>
+                            <div class="series-detail clear">
+                                <h5 class="series-title"><a
+                                        href="/truyen/8252-kurasu-no-daikirai-na-joshi-to-kekkon-suru-koto-ni-natta"
+                                        title="Kurasu no daikirai na joshi to kekkon suru koto ni natta.">Kurasu
+                                        no daikirai na joshi to kekkon suru koto ni natta.</a></h5>
+                                <small class="rank-count">4,866 theo dõi</small>
+                            </div>
+                        </div> -->
+                    </main>
+                </section>
+                <!-- <section class="last-topics index-section">
+                    <header class="section-title">
+                        <a href="https://ln.hako.re/thao-luan"><span class="sts-bold">Thảo</span><span
+                                class="sts-empty">Luận</span></a>
+                    </header>
+                    <main>
+
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #28e1e8; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/2311-gop-y-ve-viec-lam-bai-review-va-danh-gia-mal?comment_id=1640110&amp;reply_id=1640112#ln-comment-1640112"
+                                        title="Góc review và recommend MAL (Manga-Anime-Light Novel)">
+                                        Góc review và recommend MAL (Manga-Anime-Light Novel)
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 22:31:37"
+                                        datetime="2022-01-20T22:31:37+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/614-cam-nang-cho-cac-translator?comment_id=1639051&amp;reply_id=1640093#ln-comment-1640093"
+                                        title="Phòng hỗ trợ dịch thuật">
+                                        Phòng hỗ trợ dịch thuật
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 22:25:58"
+                                        datetime="2022-01-20T22:25:58+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/2263-hoi-truyen-tu-az-goc-8-nham-cho-dich-gia-20?comment_id=1639860&amp;reply_id=1640043#ln-comment-1640043"
+                                        title="Hỏi Truyện từ A&gt;Z. Góc 8 nhảm cho dịch giả 2.0">
+                                        Hỏi Truyện từ A&gt;Z. Góc 8 nhảm cho dịch giả 2.0
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 21:50:00"
+                                        datetime="2022-01-20T21:50:00+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/2266-thao-luan-cho-tac-gia-oln?comment_id=1639889&amp;reply_id=1640029#ln-comment-1640029"
+                                        title="Thảo luận cho tác giả OLN">
+                                        Thảo luận cho tác giả OLN
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 21:40:41"
+                                        datetime="2022-01-20T21:40:41+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/1859-15-death-flag-co-ban-ki-nang-sinh-ton?comment_id=1639975#ln-comment-1639975"
+                                        title="15 death flag cơ bản (kĩ năng sinh tồn)">
+                                        15 death flag cơ bản (kĩ năng sinh tồn)
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 21:06:57"
+                                        datetime="2022-01-20T21:06:57+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/2237-box-giang-hoa-thang-bai-tai-ky-nang?comment_id=1639907&amp;reply_id=1639937#ln-comment-1639937"
+                                        title="BOX Giảng hòa: Thắng bại tại kỹ năng">
+                                        BOX Giảng hòa: Thắng bại tại kỹ năng
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 20:42:01"
+                                        datetime="2022-01-20T20:42:01+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #eb1d57; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi?comment_id=1639843&amp;reply_id=1639890#ln-comment-1639890"
+                                        title="Góp ý và báo lỗi">
+                                        Góp ý và báo lỗi
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 20:14:39"
+                                        datetime="2022-01-20T20:14:39+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/85-de-xuat-lnwn-cho-cac-trans?comment_id=1639508#ln-comment-1639508"
+                                        title="Đề xuất LN/WN cho các trans">
+                                        Đề xuất LN/WN cho các trans
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 15:02:20"
+                                        datetime="2022-01-20T15:02:20+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="topic-item">
+                            <div class="row">
+                                <div class="col-9 line-ellipsis">
+                                    <i class="fas fa-circle" style="color: #eb1d57; margin-right: 4px;"></i>
+                                    <a href="/thao-luan/392-bao-cao-vi-pham-cho-mang-truyen-dich?comment_id=1639372#ln-comment-1639372"
+                                        title="BOX xử lý truyện dịch">
+                                        BOX xử lý truyện dịch
+                                    </a>
+                                </div>
+                                <div class="col-3 topic-data text-right">
+                                    <time class="timeago" title="20-01-2022 12:34:12"
+                                        datetime="2022-01-20T12:34:12+07:00"></time>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </section> -->
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center; margin: 0 auto 10px auto;">
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-9">
+                <section class="index-section thumb-section-flow last-chapter translation three-row">
+                    <header class="section-title">
+                        <span class="sts-bold">Chương</span><span class="sts-empty">mới nhất</span>
+                    </header>
+                    <main class="row">
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world/c92525-chuong-10-cuoc-gap-go-voi-ban-thuo-nho"
+                                    title="Chương 10: Cuộc gặp gỡ với bạn thuở nhỏ">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11498-dc703235-262f-4daf-853a-dc643050faa4-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Chương 10: Cuộc gặp gỡ với bạn thuở nhỏ"><a
+                                            href="/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world/c92525-chuong-10-cuoc-gap-go-voi-ban-thuo-nho"
+                                            title="Chương 10: Cuộc gặp gỡ với bạn thuở nhỏ">Chương 10: Cuộc gặp gỡ
+                                            với bạn thuở nhỏ</a></div>
+                                    <div class="thumb_attr volume-title">Web Novel</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world"
+                                    title="Forever and Always, My Childhood Friend is the Cutest Girl in the World">Forever
+                                    and Always, My Childhood Friend is the Cutest Girl in the World</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/447-reincarnated-as-a-dragons-egg-lets-aim-to-be-the-strongest/c92524-chuong-442-the-luc-thu-hai-tham-gia"
+                                    title="Chương 442 – Thế lực thứ hai tham gia">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s447-f0a304f0-7ce4-4255-ad00-7b8a701614b6-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Chương 442 – Thế lực thứ hai tham gia"><a
+                                            href="/truyen/447-reincarnated-as-a-dragons-egg-lets-aim-to-be-the-strongest/c92524-chuong-442-the-luc-thu-hai-tham-gia"
+                                            title="Chương 442 – Thế lực thứ hai tham gia">Chương 442 – Thế lực thứ
+                                            hai tham gia</a></div>
+                                    <div class="thumb_attr volume-title">Quyển 09</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/447-reincarnated-as-a-dragons-egg-lets-aim-to-be-the-strongest"
+                                    title="Tensei shitara doragon no tamago datta ~ saikyō igai mezasane ~e ~">Tensei
+                                    shitara doragon no tamago datta ~ saikyō igai mezasane ~e ~</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8838-baccano/c92523-mo-dau-vii-nguoi-phu-nu-mac-do-lien-than"
+                                    title="Mở đầu VII: Người phụ nữ mặc đồ liền thân">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s8838-f784fb0e-0f2d-4d27-be9f-6ac93d573e03-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Mở đầu VII: Người phụ nữ mặc đồ liền thân"><a
+                                            href="/truyen/8838-baccano/c92523-mo-dau-vii-nguoi-phu-nu-mac-do-lien-than"
+                                            title="Mở đầu VII: Người phụ nữ mặc đồ liền thân">Mở đầu VII: Người phụ
+                                            nữ mặc đồ liền thân</a></div>
+                                    <div class="thumb_attr volume-title">Tập 03: 1931 - The Grand Punk Railroad
+                                        (Express Episode)</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/truyen/8838-baccano"
+                                    title="Baccano!">Baccano!</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga/c92522-chuong-03"
+                                    title="Chương 03">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11544-567916d0-60c0-4f80-addb-eb7bc82f4ff8-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 03"><a
+                                            href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga/c92522-chuong-03"
+                                            title="Chương 03">Chương 03</a></div>
+                                    <div class="thumb_attr volume-title">WN</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga"
+                                    title="Yousei Bishoujo ga Nounai de Tasuke wo Motometekurundaga?">Yousei
+                                    Bishoujo ga Nounai de Tasuke wo Motometekurundaga?</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/11337-the-novice-alchemists-store/c92521-chuong-13-den-tu-phuong-xa-i"
+                                    title="Chương 13: Đến từ phương xa I">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11337-9df84f57-3aa7-433d-bf98-4dea1a8a35c3-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 13: Đến từ phương xa I"><a
+                                            href="/truyen/11337-the-novice-alchemists-store/c92521-chuong-13-den-tu-phuong-xa-i"
+                                            title="Chương 13: Đến từ phương xa I">Chương 13: Đến từ phương xa I</a>
+                                    </div>
+                                    <div class="thumb_attr volume-title">Tập 01 : Cửa hàng của tôi</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/truyen/11337-the-novice-alchemists-store"
+                                    title="The Novice Alchemist&#039;s Store">The Novice Alchemist&#039;s Store</a>
+                            </div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8617-saikyou-no-yohei-shojo-no-gakuen-seikatsu/c92520-chuong-45-arna-tu-luyen"
+                                    title="Chương 45: Arna, Tu luyện">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s8617-0cbe389a-a424-4284-894a-8fa508d7aea1-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 45: Arna, Tu luyện"><a
+                                            href="/truyen/8617-saikyou-no-yohei-shojo-no-gakuen-seikatsu/c92520-chuong-45-arna-tu-luyen"
+                                            title="Chương 45: Arna, Tu luyện">Chương 45: Arna, Tu luyện</a></div>
+                                    <div class="thumb_attr volume-title">Tập 2 (40-77)</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/8617-saikyou-no-yohei-shojo-no-gakuen-seikatsu"
+                                    title="Cuộc sống học đường của Nữ chiến binh mạnh mẽ">Cuộc sống học đường của Nữ
+                                    chiến binh mạnh mẽ</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/10940-when-the-clock-strikes-z/c92519-chuong-1-rang-buoc-gia-dinhz-family-tiez"
+                                    title="Chương 1: Ràng Buộc Gia ĐìnhZ">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s10940-f7abd443-c795-4f72-be10-763ccf83bab5-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 1: Ràng Buộc Gia ĐìnhZ"><a
+                                            href="/truyen/10940-when-the-clock-strikes-z/c92519-chuong-1-rang-buoc-gia-dinhz-family-tiez"
+                                            title="Chương 1: Ràng Buộc Gia ĐìnhZ">Chương 1: Ràng Buộc Gia ĐìnhZ</a>
+                                    </div>
+                                    <div class="thumb_attr volume-title">Tập 1</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/truyen/10940-when-the-clock-strikes-z"
+                                    title="When The Clock Strikes Z">When The Clock Strikes Z</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/7832-seiken-gakuin-no-maken-tsukai/c92518-chuong-ket"
+                                    title="Chương kết">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s7832-b2bc83ee-1a8a-4e6a-916d-beb3e4953ed6-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương kết"><a
+                                            href="/truyen/7832-seiken-gakuin-no-maken-tsukai/c92518-chuong-ket"
+                                            title="Chương kết">Chương kết</a></div>
+                                    <div class="thumb_attr volume-title">Tập 4</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/7832-seiken-gakuin-no-maken-tsukai"
+                                    title="Seiken Gakuin no Maken Tsukai">Seiken Gakuin no Maken Tsukai</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/1305-rakuin-no-monshou/c92517-chuong-4-bi-mat-cua-cac-quy-co-part2"
+                                    title="Chương 4: Bí mật của các quý cô (Part2)">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s1305-d4dd3cd9-ffa4-4821-bbb3-3586a8a88f06-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Chương 4: Bí mật của các quý cô (Part2)"><a
+                                            href="/truyen/1305-rakuin-no-monshou/c92517-chuong-4-bi-mat-cua-cac-quy-co-part2"
+                                            title="Chương 4: Bí mật của các quý cô (Part2)">Chương 4: Bí mật của các
+                                            quý cô (Part2)</a></div>
+                                    <div class="thumb_attr volume-title">Tập 07: Đoàn đưa tang ngu xuẩn đánh thức
+                                        rồng</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/truyen/1305-rakuin-no-monshou"
+                                    title="Rakuin no Monshou">Rakuin no Monshou</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8472-itai-no-wa-iya-nanode-bogyo-ryoku-ni-kyokufuri-shitai-to-omoimasu/c92515-chuong-195-chuyen-hoa-phong-ngu-va-can-biet-thu-4"
+                                    title="Chương 195 - Chuyên hóa phòng ngự và Căn biệt thự 4">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s8472-52682328-9761-421d-9639-19a86d23b998-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Chương 195 - Chuyên hóa phòng ngự và Căn biệt thự 4"><a
+                                            href="/truyen/8472-itai-no-wa-iya-nanode-bogyo-ryoku-ni-kyokufuri-shitai-to-omoimasu/c92515-chuong-195-chuyen-hoa-phong-ngu-va-can-biet-thu-4"
+                                            title="Chương 195 - Chuyên hóa phòng ngự và Căn biệt thự 4">Chương 195 -
+                                            Chuyên hóa phòng ngự và Căn biệt thự 4</a></div>
+                                    <div class="thumb_attr volume-title">Tập 06</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/8472-itai-no-wa-iya-nanode-bogyo-ryoku-ni-kyokufuri-shitai-to-omoimasu"
+                                    title="Itai no wa Iya nanode Bōgyo-Ryoku ni Kyokufuri Shitai to Omoimasu">Itai
+                                    no wa Iya nanode Bōgyo-Ryoku ni Kyokufuri Shitai to Omoimasu</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/11430-im-not-going-to-be-bullied-by-a-girl/c92514-chuong-08-su-si-nhuc-tai-can-tin"
+                                    title="Chương 08: Sự sỉ nhục tại căn tin">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11430-8e911b6d-3c6c-4a6b-8dbe-f9797ab67745-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 08: Sự sỉ nhục tại căn tin">
+                                        <a href="/truyen/11430-im-not-going-to-be-bullied-by-a-girl/c92514-chuong-08-su-si-nhuc-tai-can-tin"
+                                            title="Chương 08: Sự sỉ nhục tại căn tin">Chương 08: Sự sỉ nhục tại căn
+                                            tin</a></div>
+                                    <div class="thumb_attr volume-title">Web Novel</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/11430-im-not-going-to-be-bullied-by-a-girl"
+                                    title="I’m Not Going to Be Bullied By a Girl">I’m Not Going to Be Bullied By a
+                                    Girl</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8934-strongest-survival-by-otome-games-heroine/c92511-chuong-27-loi-the-uoc-voi-elena"
+                                    title="Chương 27: Lời Thệ Ước Với Elena">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s8934-bc1c09dd-da02-42c6-9627-5733765b29b6-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 27: Lời Thệ Ước Với Elena">
+                                        <a href="/truyen/8934-strongest-survival-by-otome-games-heroine/c92511-chuong-27-loi-the-uoc-voi-elena"
+                                            title="Chương 27: Lời Thệ Ước Với Elena">Chương 27: Lời Thệ Ước Với
+                                            Elena</a></div>
+                                    <div class="thumb_attr volume-title">Hồi 1: Arc Lang Thang Tro Sát Vương Công
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/8934-strongest-survival-by-otome-games-heroine"
+                                    title="Strongest Survival by Otome Game’s Heroine">Strongest Survival by Otome
+                                    Game’s Heroine</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi/c92508-chuong-40-gio-nau-an"
+                                    title="Chương 40: Giờ nấu ăn">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s8115-16869074-a621-4172-a683-a6b7a619b8c6-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 40: Giờ nấu ăn"><a
+                                            href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi/c92508-chuong-40-gio-nau-an"
+                                            title="Chương 40: Giờ nấu ăn">Chương 40: Giờ nấu ăn</a></div>
+                                    <div class="thumb_attr volume-title">Web Novel</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
+                                    title="Ryoushin no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi">Ryoushin
+                                    no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/11554-hentai-ouji-to-warawanai-neko/c92507-illustration"
+                                    title="Illustration">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11554-047461ab-73d7-4e49-8e48-0c415cd53369-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Illustration"><a
+                                            href="/truyen/11554-hentai-ouji-to-warawanai-neko/c92507-illustration"
+                                            title="Illustration">Illustration</a></div>
+                                    <div class="thumb_attr volume-title">Vol 1</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/11554-hentai-ouji-to-warawanai-neko"
+                                    title="Hentai Ouji to Warawanai Neko">Hentai Ouji to Warawanai Neko</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/10422-isekai-yurutto-survival-seikatsu-gakkou-no-minna-to-isekai-no-mujintou-ni-ten-i-shita-kedo-ore-dake-rakushou-desu/c92505-chuong-81-de-xuat-cua-karin"
+                                    title="Chương 81: Đề xuất của Karin">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s10422-cbd29e8c-6422-4c39-b891-1e2b24ac0bbc-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 81: Đề xuất của Karin"><a
+                                            href="/truyen/10422-isekai-yurutto-survival-seikatsu-gakkou-no-minna-to-isekai-no-mujintou-ni-ten-i-shita-kedo-ore-dake-rakushou-desu/c92505-chuong-81-de-xuat-cua-karin"
+                                            title="Chương 81: Đề xuất của Karin">Chương 81: Đề xuất của Karin</a>
+                                    </div>
+                                    <div class="thumb_attr volume-title">Web Novel</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/10422-isekai-yurutto-survival-seikatsu-gakkou-no-minna-to-isekai-no-mujintou-ni-ten-i-shita-kedo-ore-dake-rakushou-desu"
+                                    title="Isekai Yurutto Survival Seikatsu ~Gakkou no Minna to Isekai no Mujintou ni Ten-i Shita Kedo Ore Dake Rakushou Desu~">Isekai
+                                    Yurutto Survival Seikatsu ~Gakkou no Minna to Isekai no Mujintou ni Ten-i Shita
+                                    Kedo Ore Dake Rakushou Desu~</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/8678-motokano-to-no-jirettai-gisou-kekkon/c92504-doan-ket"
+                                    title="Đoạn kết">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s8678-0bf5650e-b61a-41ea-8090-a1cc86052e4d-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Đoạn kết"><a
+                                            href="/truyen/8678-motokano-to-no-jirettai-gisou-kekkon/c92504-doan-ket"
+                                            title="Đoạn kết">Đoạn kết</a></div>
+                                    <div class="thumb_attr volume-title">Volume 2</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/truyen/8678-motokano-to-no-jirettai-gisou-kekkon"
+                                    title="Motokano to no Jirettai Gisou Kekkon">Motokano to no Jirettai Gisou
+                                    Kekkon</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/truyen/11447-imouto-sae-ireba-ii/c92502-minh-hoa-den-trang"
+                                    title="Minh họa đen trắng">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11447-9fae4b7b-17db-416c-acea-7928d5f63554-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Minh họa đen trắng"><a
+                                            href="/truyen/11447-imouto-sae-ireba-ii/c92502-minh-hoa-den-trang"
+                                            title="Minh họa đen trắng">Minh họa đen trắng</a></div>
+                                    <div class="thumb_attr volume-title">Imosae Kantoku Art Works</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/truyen/11447-imouto-sae-ireba-ii"
+                                    title="Imouto sae ireba ii">Imouto sae ireba ii</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2 see-more">
+                            <div class="thumb-wrapper">
+                                <div class="a6-ratio">
+                                    <div class="content img-in-ratio"
+                                        style="background-image: url('img/nocover.png');"></div>
+                                </div>
+                                <a href="https://ln.hako.re/danh-sach?truyendich=1&amp;sapxep=capnhat">
+                                    <div class="thumb-see-more">
+                                        <div class="see-more-inside">
+                                            <div class="see-more-content">
+                                                <div class="see-more-icon"><i class="fas fa-arrow-circle-right"></i>
+                                                </div>
+                                                <div class="see-more-text">Xem thêm</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </main>
+                </section>
+                <!-- <section class="index-section thumb-section-flow last-chapter original one-row">
+                    <header class="section-title"><span class="sts-bold">Sáng tác</span><span class="sts-empty">Mới
+                            Nhất</span></header>
+                    <main class="row">
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/sang-tac/11556-tien-de/c92527-chuong-01" title="Chương 01">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11556-0659ef6b-a45c-484f-8204-d57da2962bb0-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 01"><a
+                                            href="/sang-tac/11556-tien-de/c92527-chuong-01" title="Chương 01">Chương
+                                            01</a></div>
+                                    <div class="thumb_attr volume-title">Tập Một</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/sang-tac/11556-tien-de"
+                                    title="Tiên Đế">Tiên Đế</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/sang-tac/11528-dang-du-ky-nguyen-hon-gioi/c92526-chuong-01-vu-tru-duoc-hinh-thanh-nhu-the-nao"
+                                    title="Vũ trụ được hình thành như thế nào?">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11528-688ba563-822b-4e0e-a404-a3bc8c5424de-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Vũ trụ được hình thành như thế nào?"><a
+                                            href="/sang-tac/11528-dang-du-ky-nguyen-hon-gioi/c92526-chuong-01-vu-tru-duoc-hinh-thanh-nhu-the-nao"
+                                            title="Vũ trụ được hình thành như thế nào?">Vũ trụ được hình thành như
+                                            thế nào?</a></div>
+                                    <div class="thumb_attr volume-title">Cái này là tiền truyện của tiền truyện
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/sang-tac/11528-dang-du-ky-nguyen-hon-gioi"
+                                    title="Đấng Du Ký Nguyền Hồn Giới">Đấng Du Ký Nguyền Hồn Giới</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/sang-tac/11534-mot-cau-chuyen-hai-nhan-vat-chinh/c92516-chuong-6-hi-vong"
+                                    title="Chương 6: Hi vọng">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://ln.hako.re/img/nocover.png"></div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="Chương 6: Hi vọng"><a
+                                            href="/sang-tac/11534-mot-cau-chuyen-hai-nhan-vat-chinh/c92516-chuong-6-hi-vong"
+                                            title="Chương 6: Hi vọng">Chương 6: Hi vọng</a></div>
+                                    <div class="thumb_attr volume-title">Tập 01: Đàn em trong nghề</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/sang-tac/11534-mot-cau-chuyen-hai-nhan-vat-chinh"
+                                    title="Một câu chuyện, hai nhân vật chính?">Một câu chuyện, hai nhân vật
+                                    chính?</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/sang-tac/11537-tro-ve-cung-em/c92509-chuong-02-du-o-dau-thi-cung-phai-lam-viec-ma-thoi"
+                                    title="Chương 02: Dù ở đâu thì cũng phải làm việc mà thôi">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s11537-8e8f9a73-54b3-482d-b9d8-9c793692a25f-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Chương 02: Dù ở đâu thì cũng phải làm việc mà thôi"><a
+                                            href="/sang-tac/11537-tro-ve-cung-em/c92509-chuong-02-du-o-dau-thi-cung-phai-lam-viec-ma-thoi"
+                                            title="Chương 02: Dù ở đâu thì cũng phải làm việc mà thôi">Chương 02: Dù
+                                            ở đâu thì cũng phải làm việc mà thôi</a></div>
+                                    <div class="thumb_attr volume-title">Tập 1</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="/sang-tac/11537-tro-ve-cung-em"
+                                    title="Trở Về Cùng Em">Trở Về Cùng Em</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="/sang-tac/9748-tui-minh-tot-nghiep-roi-hang-yeu-duong/c92491-chuong-24-le-chao-mung-tan-binh-bat-dau"
+                                    title="Chương 24 – Lễ chào mừng Tân Binh bắt đầu!!!">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="https://c1.hako.re/lightnovel/covers/s9748-d3ffd9e7-92ce-47d9-b372-f536f3e2aeef-m.jpg">
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title"
+                                        title="Chương 24 – Lễ chào mừng Tân Binh bắt đầu!!!"><a
+                                            href="/sang-tac/9748-tui-minh-tot-nghiep-roi-hang-yeu-duong/c92491-chuong-24-le-chao-mung-tan-binh-bat-dau"
+                                            title="Chương 24 – Lễ chào mừng Tân Binh bắt đầu!!!">Chương 24 – Lễ chào
+                                            mừng Tân Binh bắt đầu!!!</a></div>
+                                    <div class="thumb_attr volume-title">Mục Lục</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a
+                                    href="/sang-tac/9748-tui-minh-tot-nghiep-roi-hang-yeu-duong"
+                                    title="Tụi Mình Tốt Nghiệp Rồi Hẵng Yêu Đương">Tụi Mình Tốt Nghiệp Rồi Hẵng Yêu
+                                    Đương</a></div>
+                        </div>
+                        <div class="thumb-item-flow col-4 col-lg-2 see-more">
+                            <div class="thumb-wrapper">
+                                <div class="a6-ratio">
+                                    <div class="content img-in-ratio"
+                                        style="background-image: url('img/nocover.png');"></div>
+                                </div>
+                                <a href="https://ln.hako.re/danh-sach?sangtac=1&amp;sapxep=capnhat">
+                                    <div class="thumb-see-more">
+                                        <div class="see-more-inside">
+                                            <div class="see-more-content">
+                                                <div class="see-more-icon"><i class="fas fa-arrow-circle-right"></i>
+                                                </div>
+                                                <div class="see-more-text">Xem thêm</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </main>
+                </section> -->
+            </div>
+            <div class="col-12 col-lg-3">
+                <section id="recent-comments" class="index-section">
+                    <header class="section-title">
+                        <span class="sts-bold">Bình luận</span><span class="sts-empty">gần đây</span>
+                    </header>
+                    <main class="sect-body">
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/10793-reyandere?comment_id=1640001&amp;reply_id=1640121#ln-comment-1640121">RE:Yandere</a></span>
+                                <div class="comment-content">
+                                    @haizz: đợi tầm tuần nữa nhá :)))))
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/43175">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua43175-e94f5887-a2d6-46fd-83bf-0342b90c7389.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/10793-reyandere?comment_id=1640001&amp;reply_id=1640121#ln-comment-1640121"
+                                        rel="nofollow" class="comment-user_name strong">Taidhsphn</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/10793-reyandere?comment_id=1640001&amp;reply_id=1640121#ln-comment-1640121">
+                                            <time class="timeago" title="20-01-2022 22:33:44"
+                                                datetime="2022-01-20T22:33:44+07:00">
+                                                20-01-2022 22:33:44
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/10793-reyandere?comment_id=1640001&amp;reply_id=1640119#ln-comment-1640119">RE:Yandere</a></span>
+                                <div class="comment-content">
+                                    @Taidhsphn: đọc bằng ảnh ko quen :((
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/30475">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua30475-3b571c70-305a-433d-80b7-c434e7e35e2c.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/10793-reyandere?comment_id=1640001&amp;reply_id=1640119#ln-comment-1640119"
+                                        rel="nofollow" class="comment-user_name strong">haizz</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/10793-reyandere?comment_id=1640001&amp;reply_id=1640119#ln-comment-1640119">
+                                            <time class="timeago" title="20-01-2022 22:33:17"
+                                                datetime="2022-01-20T22:33:17+07:00">
+                                                20-01-2022 22:33:17
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world?comment_id=1640095&amp;reply_id=1640115#ln-comment-1640115">Forever
+                                        and Always, My Childhood Friend is the Cutest Girl in the World</a></span>
+                                <div class="comment-content">
+                                    ơ kìa, tết xong có bù không anh bạn(chúc ông ăn tết vui vẻ):&amp;gt;&amp;gt;
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/110288">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua110288-43d33826-71ce-47f4-b06a-ebf6013985ea.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world?comment_id=1640095&amp;reply_id=1640115#ln-comment-1640115"
+                                        rel="nofollow" class="comment-user_name strong">Rozarlkyo</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world?comment_id=1640095&amp;reply_id=1640115#ln-comment-1640115">
+                                            <time class="timeago" title="20-01-2022 22:32:09"
+                                                datetime="2022-01-20T22:32:09+07:00">
+                                                20-01-2022 22:32:09
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/10412-isekai-meikyuu-no-saishinbu-wo-mezasou?comment_id=1640076&amp;reply_id=1640114#ln-comment-1640114">Cùng
+                                        hướng đến nơi sâu thẳm nhất trong mê cung tại thế giới khác</a></span>
+                                <div class="comment-content">
+                                    @S.T.A.L.K.E.R: n nhưng mà Ngài có cách nào để giải toả cơn thèm thuốc không
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/85489">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua85489-5439ac51-383d-4364-b863-f266991d2633.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/10412-isekai-meikyuu-no-saishinbu-wo-mezasou?comment_id=1640076&amp;reply_id=1640114#ln-comment-1640114"
+                                        rel="nofollow" class="comment-user_name strong">Kaiito</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/10412-isekai-meikyuu-no-saishinbu-wo-mezasou?comment_id=1640076&amp;reply_id=1640114#ln-comment-1640114">
+                                            <time class="timeago" title="20-01-2022 22:32:03"
+                                                datetime="2022-01-20T22:32:03+07:00">
+                                                20-01-2022 22:32:03
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1640096&amp;reply_id=1640108#ln-comment-1640108">Youkoso
+                                        Jitsuryoku Shijou Shugi no Kyoushitsu e: 2-nensei-hen</a></span>
+                                <div class="comment-content">
+                                    Đợi ipm phát hành nào.
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/75349">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua75349-ac81abf0-7729-4f27-9546-c2e9e1635d50.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1640096&amp;reply_id=1640108#ln-comment-1640108"
+                                        rel="nofollow" class="comment-user_name strong">Ayase❤️</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1640096&amp;reply_id=1640108#ln-comment-1640108">
+                                            <time class="timeago" title="20-01-2022 22:30:23"
+                                                datetime="2022-01-20T22:30:23+07:00">
+                                                20-01-2022 22:30:23
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1572021&amp;reply_id=1640102#ln-comment-1640102">Youkoso
+                                        Jitsuryoku Shijou Shugi no Kyoushitsu e: 2-nensei-hen</a></span>
+                                <div class="comment-content">
+                                    Xin bro :))
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/111745">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua111745-484b70f2-54d7-4d93-a2f4-28f1aea22dee.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1572021&amp;reply_id=1640102#ln-comment-1640102"
+                                        rel="nofollow" class="comment-user_name strong">Leonardo DavinNhân</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1572021&amp;reply_id=1640102#ln-comment-1640102">
+                                            <time class="timeago" title="20-01-2022 22:28:01"
+                                                datetime="2022-01-20T22:28:01+07:00">
+                                                20-01-2022 22:28:01
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1629755&amp;reply_id=1640099#ln-comment-1640099">Youkoso
+                                        Jitsuryoku Shijou Shugi no Kyoushitsu e: 2-nensei-hen</a></span>
+                                <div class="comment-content">
+                                    @UNIVERSE: =))))
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/111745">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua111745-484b70f2-54d7-4d93-a2f4-28f1aea22dee.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1629755&amp;reply_id=1640099#ln-comment-1640099"
+                                        rel="nofollow" class="comment-user_name strong">Leonardo DavinNhân</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1629755&amp;reply_id=1640099#ln-comment-1640099">
+                                            <time class="timeago" title="20-01-2022 22:26:55"
+                                                datetime="2022-01-20T22:26:55+07:00">
+                                                20-01-2022 22:26:55
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1640096#ln-comment-1640096">Youkoso
+                                        Jitsuryoku Shijou Shugi no Kyoushitsu e: 2-nensei-hen</a></span>
+                                <div class="comment-content">
+                                    Đọc trễ quá bị xóa hết r :v
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/111745">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua111745-484b70f2-54d7-4d93-a2f4-28f1aea22dee.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1640096#ln-comment-1640096"
+                                        rel="nofollow" class="comment-user_name strong">Leonardo DavinNhân</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/7855-youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e-2-nensei-hen?comment_id=1640096#ln-comment-1640096">
+                                            <time class="timeago" title="20-01-2022 22:26:26"
+                                                datetime="2022-01-20T22:26:26+07:00">
+                                                20-01-2022 22:26:26
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world?comment_id=1640095#ln-comment-1640095">Forever
+                                        and Always, My Childhood Friend is the Cutest Girl in the World</a></span>
+                                <div class="comment-content">
+                                    Tuần sau vẫn update chương mới bình thường. Nhưng Tết trans đi chơi nên ko có
+                                    chương nào đâu nha ~~
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/92722">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua92722-ae0a11ca-5fd7-44fc-ae04-16eccd6419eb.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world?comment_id=1640095#ln-comment-1640095"
+                                        rel="nofollow" class="comment-user_name strong">Mirelia</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/11498-forever-and-always-my-childhood-friend-is-the-cutest-girl-in-the-world?comment_id=1640095#ln-comment-1640095">
+                                            <time class="timeago" title="20-01-2022 22:26:10"
+                                                datetime="2022-01-20T22:26:10+07:00">
+                                                20-01-2022 22:26:10
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment-item-at-index">
+                            <div class="comment-info">
+                                <span class="series-name"><a
+                                        href="https://ln.hako.re/truyen/10412-isekai-meikyuu-no-saishinbu-wo-mezasou?comment_id=1640076&amp;reply_id=1640090#ln-comment-1640090">Cùng
+                                        hướng đến nơi sâu thẳm nhất trong mê cung tại thế giới khác</a></span>
+                                <div class="comment-content">
+                                    @Kaiito: vậy là ngươi vẫn chưa đủ kiên trì kaito ạ
+                                </div>
+                                <div class="comment-top">
+                                    <div class="comment-user_ava">
+                                        <a href="https://ln.hako.re/thanh-vien/52764">
+                                            <img
+                                                src="https://c1.hako.re/lightnovel/users/ua52764-ba7b8cc3-d75b-437c-b0f0-59769874155c.jpg">
+                                        </a>
+                                    </div>
+                                    <a href="https://ln.hako.re/truyen/10412-isekai-meikyuu-no-saishinbu-wo-mezasou?comment_id=1640076&amp;reply_id=1640090#ln-comment-1640090"
+                                        rel="nofollow" class="comment-user_name strong">S.T.A.L.K.E.R</a>
+                                    <small class="comment-location">
+                                        <a
+                                            href="https://ln.hako.re/truyen/10412-isekai-meikyuu-no-saishinbu-wo-mezasou?comment_id=1640076&amp;reply_id=1640090#ln-comment-1640090">
+                                            <time class="timeago" title="20-01-2022 22:23:11"
+                                                datetime="2022-01-20T22:23:11+07:00">
+                                                20-01-2022 22:23:11
+                                            </time>
+                                        </a>
+                                    </small>
+                                </div>
+                            </div>
+                        </div> -->
+                    </main>
+                </section>
+            </div>
+        </div>
+    </div>
+    <div style="text-align: center; margin: 0 auto 10px auto;">
+    </div>
+    <!-- <div class="bottom-part at-index">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-8 col-lg-9">
+                    <section class="index-section new-series">
+                        <header class="section-title"><span class="sts-bold">Truyện</span><span
+                                class="sts-empty">Vừa Đăng</span>
+                        </header>
+                        <main class="sect-body">
+                            <div class="row">
+                                <article class="list-item col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-4 col-md-3 col-lg-4">
+                                            <div class="series-cover">
+                                                <a href="/truyen/11554-hentai-ouji-to-warawanai-neko">
+                                                    <div class="a6-ratio">
+                                                        <div class="content img-in-ratio lazyload"
+                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11554-047461ab-73d7-4e49-8e48-0c415cd53369-m.jpg">
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-md-9 col-lg-8">
+                                            <div class="list-detail">
+                                                <h4 class="series-title"><a
+                                                        href="/truyen/11554-hentai-ouji-to-warawanai-neko">Hentai
+                                                        Ouji to Warawanai Neko</a></h4>
+                                                <div class="series-summary">Yokodera cũng giống như những cậu bé
+                                                    tuổi teen khác: sự biến thái là bản năng của cậu. Cậu luôn ham
+                                                    muốn được ngắm phần...</div>
+                                                <div class="lastest-chapter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="list-item col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-4 col-md-3 col-lg-4">
+                                            <div class="series-cover">
+                                                <a
+                                                    href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga">
+                                                    <div class="a6-ratio">
+                                                        <div class="content img-in-ratio lazyload"
+                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11544-567916d0-60c0-4f80-addb-eb7bc82f4ff8-m.jpg">
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-md-9 col-lg-8">
+                                            <div class="list-detail">
+                                                <h4 class="series-title"><a
+                                                        href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga">Yousei
+                                                        Bishoujo ga Nounai de Tasuke wo Motometekurundaga?</a></h4>
+                                                <div class="series-summary">Atsushi Yamagami bị những người bạn cùng
+                                                    lớp xa lánh bởi vì có tin đồn rằng cậu đã đánh vào mặt của một
+                                                    cô gái học ở trư...</div>
+                                                <div class="lastest-chapter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="list-item col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-4 col-md-3 col-lg-4">
+                                            <div class="series-cover">
+                                                <a href="/truyen/11535-jojos-bizarre-adventure-over-heaven">
+                                                    <div class="a6-ratio">
+                                                        <div class="content img-in-ratio lazyload"
+                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11535-c43aee4e-c306-4cfa-8c0e-d56342f9fe82-m.jpg">
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-md-9 col-lg-8">
+                                            <div class="list-detail">
+                                                <h4 class="series-title"><a
+                                                        href="/truyen/11535-jojos-bizarre-adventure-over-heaven">JoJo&#039;s
+                                                        Bizarre Adventure Over Heaven</a></h4>
+                                                <div class="series-summary">    JoJo's Bizarre Adventure Over Heaven
+                                                    là nội dung từ cuốn nhật ký của DIO đã bị Kujo Jotaro đốt bỏ ở
+                                                    phần Stardust Cr...</div>
+                                                <div class="lastest-chapter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="list-item col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-4 col-md-3 col-lg-4">
+                                            <div class="series-cover">
+                                                <a
+                                                    href="/truyen/11527-prove-your-eternal-love-there-shall-be-no-heroine-correction">
+                                                    <div class="a6-ratio">
+                                                        <div class="content img-in-ratio lazyload"
+                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11527-5f128811-16a1-4024-ab02-1c37e1a13022-m.jpg">
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-md-9 col-lg-8">
+                                            <div class="list-detail">
+                                                <h4 class="series-title"><a
+                                                        href="/truyen/11527-prove-your-eternal-love-there-shall-be-no-heroine-correction">Question
+                                                        1: Prove Your Eternal Love. There Shall Be No Heroine
+                                                        Correction.</a></h4>
+                                                <div class="series-summary">Ngày hôm đó, tôi chuẩn bị đi tỏ tình.
+                                                    Tôi chuẩn bị đi tỏ tình với Tokiwa Nagisa, một bé đàn em người
+                                                    đã thổ lộ tình cảm...</div>
+                                                <div class="lastest-chapter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="list-item col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-4 col-md-3 col-lg-4">
+                                            <div class="series-cover">
+                                                <a href="/truyen/11522-magika-no-kenshin-to-shoukan-maou">
+                                                    <div class="a6-ratio">
+                                                        <div class="content img-in-ratio lazyload"
+                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11522-5a5b6c9d-aa00-4a3d-9ed9-838aa2568641-m.jpg">
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-md-9 col-lg-8">
+                                            <div class="list-detail">
+                                                <h4 class="series-title"><a
+                                                        href="/truyen/11522-magika-no-kenshin-to-shoukan-maou">Magika
+                                                        no Kenshin to Shoukan Maou</a></h4>
+                                                <div class="series-summary">15 năm trước, thế giới tìm ra ma thuật
+                                                    cũng như những sinh vật huyền thoại trong một không gian khác.
+                                                    Con người học được...</div>
+                                                <div class="lastest-chapter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                                <article class="list-item col-12 col-lg-6">
+                                    <div class="row">
+                                        <div class="col-4 col-md-3 col-lg-4">
+                                            <div class="series-cover">
+                                                <a
+                                                    href="/truyen/11521-its-not-cheating-if-its-with-your-stepsister">
+                                                    <div class="a6-ratio">
+                                                        <div class="content img-in-ratio lazyload"
+                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11521-fd579344-dcd8-43f9-9aaa-967a153f76b9-m.jpg">
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="col-8 col-md-9 col-lg-8">
+                                            <div class="list-detail">
+                                                <h4 class="series-title"><a
+                                                        href="/truyen/11521-its-not-cheating-if-its-with-your-stepsister">It’s
+                                                        not cheating if it’s with your stepsister</a></h4>
+                                                <div class="series-summary">Tôi có một cô bạn gái, tên cô ấy là
+                                                    Shiori Hoshino. Cô được biết đến với danh xưng “Nữ hoàng băng
+                                                    giá” vì vẻ ngoài ấn tư...</div>
+                                                <div class="lastest-chapter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        </main>
+                        <div class="see-more_cover">
+                            <a class="see-more"
+                                href="https://ln.hako.re/danh-sach?truyendich=1&amp;sapxep=truyenmoi">
+                                <i class="fas fa-hand-point-right"></i>Xem thêm
+                            </a>
+                        </div>
+                    </section>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3">
+                    <section class="index-section rank-cirle most-followed">
+                        <header class="section-title">
+                            <span class="sts-bold">Theo dõi</span><span class="sts-empty">nhiều</span>
+                        </header>
+                        <main>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">1</span>
+                                <div class="series-detail clear">
+                                    <div class="series-cover">
+                                        <div class="a6-ratio">
+                                            <div class="content img-in-ratio"
+                                                style="background-image: url('https://c1.hako.re/lightnovel/covers/s3569-4f9d3270-6d42-4301-8ad7-761e917fc3b6-m.jpg') ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5 class="series-title"><a
+                                            href="/truyen/3569-in-no-jitsury-okusha-ni-naritakute-new"
+                                            title="In no jitsury okusha ni naritakute!">In no jitsury okusha ni
+                                            naritakute!</a></h5>
+                                    <small class="rank-count">8,841 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">2</span>
+                                <div class="series-detail clear">
+                                    <div class="series-cover">
+                                        <div class="a6-ratio">
+                                            <div class="content img-in-ratio"
+                                                style="background-image: url('https://c1.hako.re/lightnovel/covers/s139-e57efbf8-0c46-4f8f-8287-9aa586c555c6-m.jpg') ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5 class="series-title"><a href="/truyen/139-that-nghiep-tai-sinh"
+                                            title="Mushoku Tensei - Isekai Ittara Honki Dasu">Mushoku Tensei -
+                                            Isekai Ittara Honki Dasu</a></h5>
+                                    <small class="rank-count">7,201 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">3</span>
+                                <div class="series-detail clear">
+                                    <div class="series-cover">
+                                        <div class="a6-ratio">
+                                            <div class="content img-in-ratio"
+                                                style="background-image: url('https://c1.hako.re/lightnovel/covers/s767-2679cd16-9be4-40b8-ad73-7c8dd4b2a31c-m.jpg') ">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5 class="series-title"><a
+                                            href="/truyen/767-arifureta-shokugyou-de-sekai-saikyou"
+                                            title="Arifureta Shokugyou de Sekai Saikyou">Arifureta Shokugyou de
+                                            Sekai Saikyou</a></h5>
+                                    <small class="rank-count">6,800 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">4</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a href="/truyen/3601-maou-gakuin-no-futekigousha"
+                                            title="Maou Gakuin no Futekigousha ~Shijou Saikyou no Maou no Shiso, Tensei shite Shison tachi no Gakkou e Kayou~">Maou
+                                            Gakuin no Futekigousha ~Shijou Saikyou no Maou no Shiso, Tensei shite
+                                            Shison tachi no Gakkou e Kayou~</a></h5>
+                                    <small class="rank-count">6,706 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">5</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a
+                                            href="/truyen/10712-toi-bi-ten-senpai-ntr-mat-ban-gai-nen-toi-ntr-lai-ban-gai-cua-han"
+                                            title="Tôi bị tên senpai NTR mất bạn gái, nên tôi NTR lại bạn gái của hắn">Tôi
+                                            bị tên senpai NTR mất bạn gái, nên tôi NTR lại bạn gái của hắn</a></h5>
+                                    <small class="rank-count">6,405 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">6</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a href="/truyen/424-tensei-shitara-slime-datta-ken"
+                                            title="Tensei Shitara Slime datta ken">Tensei Shitara Slime datta
+                                            ken</a></h5>
+                                    <small class="rank-count">6,029 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">7</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a
+                                            href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
+                                            title="Ryoushin no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi">Ryoushin
+                                            no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi</a></h5>
+                                    <small class="rank-count">5,823 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">8</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a
+                                            href="/truyen/3009-ankoku-kishi-monogatari-yuusha-wo-taosu-tameni-maou-ni-shoukansaremashita"
+                                            title="Ankoku kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~">Ankoku
+                                            kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~</a>
+                                    </h5>
+                                    <small class="rank-count">5,375 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">9</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a
+                                            href="/truyen/6947-shinja-zero-no-megami-sama-to-hajimeru-isekai-kouryaku-classmate-saijaku-no-mahou-tsukai"
+                                            title="Shinja Zero no Megami-sama to Hajimeru Isekai Kouryaku">Shinja
+                                            Zero no Megami-sama to Hajimeru Isekai Kouryaku</a></h5>
+                                    <small class="rank-count">5,242 theo dõi</small>
+                                </div>
+                            </div>
+                            <div class="rank-circle-item">
+                                <span class="rank-number">10</span>
+                                <div class="series-detail clear">
+                                    <h5 class="series-title"><a
+                                            href="/truyen/8252-kurasu-no-daikirai-na-joshi-to-kekkon-suru-koto-ni-natta"
+                                            title="Kurasu no daikirai na joshi to kekkon suru koto ni natta.">Kurasu
+                                            no daikirai na joshi to kekkon suru koto ni natta.</a></h5>
+                                    <small class="rank-count">4,866 theo dõi</small>
+                                </div>
+                            </div>
+                        </main>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="container pad-top-40">
+        <section class="index-section js-finished-series">
+            <header class="section-title">
+                <span class="sts-bold">Truyện</span><span class="sts-empty">đã hoàn thành</span>
+            </header>
+            <main class="row slider">
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/8756-koibito-daikou-wo-hajimeta-ore-naze-ka-bishoujo-no-shimei-irai-ga-haittekuru/c91227-phu-chuong-sau-nam-sau-vao-mot-ngay-no-loi-bat"
+                            title="Phụ chương: Sáu năm sau, vào một ngày nọ + Lời bạt">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://c1.hako.re/lightnovel/covers/s8756-2b443889-54b2-4817-a0b5-d7d6fef1ae25-m.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title"
+                                title="Phụ chương: Sáu năm sau, vào một ngày nọ + Lời bạt"><a
+                                    href="/truyen/8756-koibito-daikou-wo-hajimeta-ore-naze-ka-bishoujo-no-shimei-irai-ga-haittekuru/c91227-phu-chuong-sau-nam-sau-vao-mot-ngay-no-loi-bat"
+                                    title="Phụ chương: Sáu năm sau, vào một ngày nọ + Lời bạt">Phụ chương: Sáu năm
+                                    sau, vào một ngày nọ + Lời bạt</a></div>
+                            <div class="thumb_attr volume-title">Tập 3 [Đã hoàn thành]</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a
+                            href="/truyen/8756-koibito-daikou-wo-hajimeta-ore-naze-ka-bishoujo-no-shimei-irai-ga-haittekuru"
+                            title="Koibito Daikou wo hajimeta Ore, naze ka Bishoujo no Shimei Irai ga Haittekuru">Koibito
+                            Daikou wo hajimeta Ore, naze ka Bishoujo no Shimei Irai ga Haittekuru</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/2936-pygmalion-wa-tane-wo-maku/c37400-chuong-15-pygmalion-dang-gieo-hat-giong"
+                            title="Chương 15: Pygmalion đang gieo hạt giống.">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://4.bp.blogspot.com/-1IZcFQhvIuY/W0tQbWYv1bI/AAAAAAABaOE/TaacJfy-lGIDdHHIK_ECuu0_rwRXcID5gCHMYCw/w215/default.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Chương 15: Pygmalion đang gieo hạt giống.">
+                                <a href="/truyen/2936-pygmalion-wa-tane-wo-maku/c37400-chuong-15-pygmalion-dang-gieo-hat-giong"
+                                    title="Chương 15: Pygmalion đang gieo hạt giống.">Chương 15: Pygmalion đang gieo
+                                    hạt giống.</a></div>
+                            <div class="thumb_attr volume-title">Tập 02</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/2936-pygmalion-wa-tane-wo-maku"
+                            title="Pygmalion wa Tane wo Maku">Pygmalion wa Tane wo Maku</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/9141-a-certain-elfs-note/c78968-chuong-08-mua-dong-trang-ben-phai"
+                            title="Chương 08: Mùa đông – Trang bên phải">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://ln.hako.re/img/nocover.png"></div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Chương 08: Mùa đông – Trang bên phải"><a
+                                    href="/truyen/9141-a-certain-elfs-note/c78968-chuong-08-mua-dong-trang-ben-phai"
+                                    title="Chương 08: Mùa đông – Trang bên phải">Chương 08: Mùa đông – Trang bên
+                                    phải</a></div>
+                            <div class="thumb_attr volume-title">Oneshot</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/9141-a-certain-elfs-note"
+                            title="A Certain Elf’s Note">A Certain Elf’s Note</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/270-shuumatsu-nani-shitemasu-ka-isogashii-desu-ka-sukutte-moratte-ii-desu-ka/c49602-loi-bat-khong-duoc-de-cham-tre-loi-bat-du-vay-van-co"
+                            title="Lời Bạt Không-Được-Để-Chậm-Trễ / Lời Bạt Dù-Vậy-Vẫn-Có">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://2.bp.blogspot.com/-Q9T9WfxXRjg/WO2v_vsNnzI/AAAAAAAAKBw/i_AZp05cT8Q/w215/series_270.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title"
+                                title="Lời Bạt Không-Được-Để-Chậm-Trễ / Lời Bạt Dù-Vậy-Vẫn-Có"><a
+                                    href="/truyen/270-shuumatsu-nani-shitemasu-ka-isogashii-desu-ka-sukutte-moratte-ii-desu-ka/c49602-loi-bat-khong-duoc-de-cham-tre-loi-bat-du-vay-van-co"
+                                    title="Lời Bạt Không-Được-Để-Chậm-Trễ / Lời Bạt Dù-Vậy-Vẫn-Có">Lời Bạt
+                                    Không-Được-Để-Chậm-Trễ / Lời Bạt Dù-Vậy-Vẫn-Có</a></div>
+                            <div class="thumb_attr volume-title">Tập EX</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a
+                            href="/truyen/270-shuumatsu-nani-shitemasu-ka-isogashii-desu-ka-sukutte-moratte-ii-desu-ka"
+                            title="Shuumatsu Nani Shitemasu ka Isogashii desu ka Sukutte Moratte Ii desu ka">Shuumatsu
+                            Nani Shitemasu ka Isogashii desu ka Sukutte Moratte Ii desu ka</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/10517-i-cant-convey-it-in-words/c86604-toan-tap" title="Toàn tập">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://ln.hako.re/img/nocover.png"></div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Toàn tập"><a
+                                    href="/truyen/10517-i-cant-convey-it-in-words/c86604-toan-tap"
+                                    title="Toàn tập">Toàn tập</a></div>
+                            <div class="thumb_attr volume-title">Oneshot</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/10517-i-cant-convey-it-in-words"
+                            title="I Can’t Convey It in Words">I Can’t Convey It in Words</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/3769-starting-over/c48375-phan-4" title="Phần 4">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://c1.hako.re/lightnovel/covers/s3769-91ac4646-f1a8-469c-9085-64bd3d976087-m.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Phần 4"><a
+                                    href="/truyen/3769-starting-over/c48375-phan-4" title="Phần 4">Phần 4</a></div>
+                            <div class="thumb_attr volume-title">Starting Over</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/3769-starting-over"
+                            title="Starting Over">Starting Over</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/6299-kuzu-to-kinka-no-qualidea/c64689-tat-tan-tat-ve-project-qualidea"
+                            title="Tất tần tật về Project Qualidea">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://c1.hako.re/lightnovel/covers/s6299-c65310d0-1ef6-47e7-ac2c-43d34c879956-m.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Tất tần tật về Project Qualidea"><a
+                                    href="/truyen/6299-kuzu-to-kinka-no-qualidea/c64689-tat-tan-tat-ve-project-qualidea"
+                                    title="Tất tần tật về Project Qualidea">Tất tần tật về Project Qualidea</a>
+                            </div>
+                            <div class="thumb_attr volume-title">Kuzu to Kinka no Qualidea</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/6299-kuzu-to-kinka-no-qualidea"
+                            title="Kuzu to Kinka no Qualidea">Kuzu to Kinka no Qualidea</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/222-toradora/c40575-minh-hoa" title="Minh Họa">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://1.bp.blogspot.com/-_O0rZK24gLE/WO2v5Po8syI/AAAAAAAAJ-4/vXD0_U0jtxA/w215/series_222.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Minh Họa"><a
+                                    href="/truyen/222-toradora/c40575-minh-hoa" title="Minh Họa">Minh Họa</a></div>
+                            <div class="thumb_attr volume-title">Tập 10</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/222-toradora"
+                            title="Toradora!">Toradora!</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/4404-time-trouble/c91378-minh-hoa-vol8" title="Minh họa Vol.8">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://c1.hako.re/lightnovel/covers/s4404-0a409b6d-04bb-4241-afc7-4e424d94e2b1-m.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Minh họa Vol.8"><a
+                                    href="/truyen/4404-time-trouble/c91378-minh-hoa-vol8"
+                                    title="Minh họa Vol.8">Minh họa Vol.8</a></div>
+                            <div class="thumb_attr volume-title">Minh Họa</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a href="/truyen/4404-time-trouble"
+                            title="Elsword: Time Trouble">Elsword: Time Trouble</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/7508-rezero-kara-hajimeru-isekai-seikatsu-x-kono-subarashii-sekai-ni-shukufuku-wo-special-collaboration-book/c68407-chuong-02-phuoc-lanh-cho-emt-tuyet-voi-nay"
+                            title="Chương 02: Phước lành cho E.M.T tuyệt vời này!">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://c1.hako.re/lightnovel/covers/s7508-27e20647-3430-4d5d-bbe2-a084fcdf078b-m.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title"
+                                title="Chương 02: Phước lành cho E.M.T tuyệt vời này!"><a
+                                    href="/truyen/7508-rezero-kara-hajimeru-isekai-seikatsu-x-kono-subarashii-sekai-ni-shukufuku-wo-special-collaboration-book/c68407-chuong-02-phuoc-lanh-cho-emt-tuyet-voi-nay"
+                                    title="Chương 02: Phước lành cho E.M.T tuyệt vời này!">Chương 02: Phước lành cho
+                                    E.M.T tuyệt vời này!</a></div>
+                            <div class="thumb_attr volume-title">Booklet truyện ngắn</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a
+                            href="/truyen/7508-rezero-kara-hajimeru-isekai-seikatsu-x-kono-subarashii-sekai-ni-shukufuku-wo-special-collaboration-book"
+                            title="Re:Zero kara Hajimeru Isekai Seikatsu x Kono Subarashii Sekai ni Shukufuku wo! - Special Collaboration Book">Re:Zero
+                            kara Hajimeru Isekai Seikatsu x Kono Subarashii Sekai ni Shukufuku wo! - Special
+                            Collaboration Book</a></div>
+                </div>
+                <div class="thumb-item-flow thumb-slider">
+                    <div class="thumb-wrapper">
+                        <a href="/truyen/10107-kaguya-sama-wa-tsuge-ra-setai-hidetomo-in-gakuen-nanafushigi/c85333-chuong-04-shuchin-muon-tim-kiem"
+                            title="Chương 04: Shuchin muốn tìm kiếm">
+                            <div class="a6-ratio">
+                                <div class="content img-in-ratio lazyload"
+                                    data-bg="https://c1.hako.re/lightnovel/covers/s10107-ec1f764a-5cd1-40e2-b821-d094e03058f6-m.jpg">
+                                </div>
+                            </div>
+                        </a>
+                        <div class="thumb-detail">
+                            <div class="thumb_attr chapter-title" title="Chương 04: Shuchin muốn tìm kiếm"><a
+                                    href="/truyen/10107-kaguya-sama-wa-tsuge-ra-setai-hidetomo-in-gakuen-nanafushigi/c85333-chuong-04-shuchin-muon-tim-kiem"
+                                    title="Chương 04: Shuchin muốn tìm kiếm">Chương 04: Shuchin muốn tìm kiếm</a>
+                            </div>
+                            <div class="thumb_attr volume-title">Tập 01</div>
+                        </div>
+                    </div>
+                    <div class="thumb_attr series-title"><a
+                            href="/truyen/10107-kaguya-sama-wa-tsuge-ra-setai-hidetomo-in-gakuen-nanafushigi"
+                            title="Kaguya-sama wa Kokurasetai ~Shuuchiin Gakuen Nanafushigi~">Kaguya-sama wa
+                            Kokurasetai ~Shuuchiin Gakuen Nanafushigi~</a></div>
+                </div>
+                <div class="thumb-item-flow see-more">
+                    <div class="thumb-wrapper">
+                        <div class="a6-ratio">
+                            <div class="content img-in-ratio" style="background-image: url('img/nocover.png');">
+                            </div>
+                        </div>
+                        <a href="https://ln.hako.re/danh-sach?truyendich=1&amp;hoanthanh=1&amp;sapxep=capnhat">
+                            <div class="thumb-see-more">
+                                <div class="see-more-inside">
+                                    <div class="see-more-content">
+                                        <div class="see-more-icon"><i class="fas fa-arrow-circle-right"></i></div>
+                                        <div class="see-more-text">Xem thêm</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </main>
         </section>
-        <!-- Product Section End -->
-        <!-- Footer Section Begin -->
-        <footer class="footer">
-            {% include 'Ebook/scroll.html' %}
-            
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="footer__logo">
-                            <a href="{% url 'index' %}"><img src="{% static 'img/logo.png' %}" alt=""></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="footer__nav">
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <p>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Thuc tap cong nhan 2022
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- Footer Section End -->
-        <!-- Search model Begin -->
-        <!-- SEARCH -->
-        <div class="search-model">
-            <div class="h-100 d-flex align-items-center justify-content-center">
-                <div class="search-close-switch"><i class="icon_close"></i></div>
-                <form class="search-model-form" method="GET" action="{% url 'search' %}"> {% csrf_token %}
-                    <input type="text" id="search-input" name="keyword" placeholder="Search here.....">
-                </form>
-            </div>
-        </div>
-        <!-- Search model end -->
-        <!-- Js Plugins -->
-        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-        <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script src="{% static 'js/player.js' %}"></script>
-        <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
-        <script src="{% static 'js/mixitup.min.js' %}"></script>
-        <script src="{% static 'js/jquery.slicknav.js' %}"></script>
-        <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-        <script src="{% static 'js/main.js' %}"></script>
-    </body>
-</html>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            $(".mobile-toggle header").click(function () {
+                $(this).parent().find(".listall_summary").toggle();
+                $(this).parent().find(".sect-body").toggle();
+            });
+
+            //listab(".daily-recent_views");
+
+        });
+    </script>
+</main>
+{% endblock %}
+
