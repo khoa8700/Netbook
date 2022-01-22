@@ -17555,7 +17555,7 @@ ul.others-list li a.others-name.name-convert {
 }
 
 .orinovel-type .detail-list header {
-    background-image: url(/images/header-icon-blue.png?fe36c5b19746da53eafc95b71e43bce3)
+    background-image: url('static/images/header-icon-blue.png')
 }
 
 .orinovel-type .lastest-chapter a {

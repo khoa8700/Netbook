@@ -1,182 +1,292 @@
+{% extends 'Ebook/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="zxx">
+{% block content %}
+<style>
+    body {
+        background: inherit;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="description" content="Anime Template">
-    <meta name="keywords" content="Anime, unica, creative, html">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Anime | Template</title>
-
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-
-    <!-- Css Styles -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/plyr.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
-    <style>
-        .chapter{
-            color: white;
-        }
-        .review{
-            color: white;
-        }
-        .review_button{
-            color: white;
-            background-color: red;
-            border-radius: 15px;
-            height: 50px;
-            width: 100px;
-            font: bold 20px Arial;
-            right: 0;
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Page Preloder -->
-    <div id="preloder">
-        <div class="loader"></div>
-    </div>
-
-    <!-- Header Section Begin -->
-    {% include 'Ebook/navbar.html' %}
-    <!-- Header End -->
-
-    <!-- Breadcrumb Begin -->
-
-    <!-- Breadcrumb End -->
-
-    <!-- Anime Section Begin -->
-    <section class="anime-details spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                  <div class="section-title">
-                      <h5>Chương {{ chapter.number }} : {{ chapter.title }}</h5>
-                  </div>
-                    <div class="anime__review__item">
-                        <div class="anime__review__item__text">
-                            <p>{{ chapter.content | safe }}</p>
-                        </div>
-                    </div>
-                    <div class="anime__details__episodes">
-                        <div class="section-title">
-                            <h5>List Name</h5>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-sm-6">
-                            <div class="product__page__filter">
-                                <p class="chapter">Chương:</p>
-                                <select onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
-                                    {% for i in range %}
-                                    {% if chapter.number == i %}
-                                    <option value="" selected="selected">{{ i }}</option>
-                                    {% else %}
-                                    <option value="{% url 'read' novel.slug i %}">{{ i }}</option>
-                                    {% endif %}
-                                    {% endfor %}
-                                </select>
-                                {% if chapter.number < max_range %}
-                                <input type="button" onclick="location.href='{% url 'read' novel.slug chapter.number|add:1 %}';" value="Next" class="review_button"></div>
-                                {% endif %}
-                            </div>
-                            
-                        </div>
+    #footer {
+        display: none;
+    }
+</style>
+<main id="mainpart" class="reading-page style-0">
+    <section id="rd-side_icon" class="none force-block-l">
+        {% if chapter.number > 1 %}
+        <a class="rd_sd-button_item rd_top-left" href="{% url 'read' novel.slug chapter.number|add:'-1' %}"><i class="fas fa-backward"></i></a>
+        {% endif %}
+        <a class="rd_sd-button_item" href="{{ chapter.novel.get_absolute_url }}"><i class="fas fa-home"></i></a>
+        <a id="rd-setting_icon" data-affect="#" class="rd_sd-button_item"><i class="fas fa-font"></i></a>
+        <a id="rd-info_icon" data-affect="#rd_sidebar.chapters" class="rd_sd-button_item"><i class="fas fa-info"></i></a>
+        {% if chapter.number < max_range  %}
+        <a class="rd_sd-button_item rd_top-right" href="{% url 'read' novel.slug chapter.number|add:'1' %}"><i class="fas fa-forward"></i></a>
+        {% endif %}
+    </section>
+    <section id="chapters" class="rd_sidebar rdtoggle">
+        <main class="rdtoggle_body">
+            <header class="rd_sidebar-header clear">
+                <a class="img" href="{{ chapter.get_absolute_url }}" style="background: url('{{ MEDIA_URL }}/{{ chapter.novel.thumbnail }}') no-repeat"></a>
+                <div class="rd_sidebar-name">
+                    <h5><a href="{{ chapter.novel.get_absolute_url }}">{{ chapter.novel.title }}</a></h5>
+                    <small><i class="fas fa-pen"></i>{{ chapter.novel.userinfo.name }}</small>
+                </div>
+            </header>
+            <ul id="chap_list" class="unstyled">
+                {% for i in range %}
+                <li class="{% if chapter.number == i %}current{% endif %}"><a href="{% url 'read' novel.slug i %}">Chương {{ i }}</a></li>
+                {% endfor %}
+            </ul>
+        </main>
+        <div class="black-click"></div>
+    </section>
+    <section id="setting" class="rdtoggle">
+        <section class="re_set-in basic-section clear rdtoggle_body">
+            <header class="sect-header"><span class="sect-title">Tùy chỉnh</span></header>
+            <main class="sect-body">
+                <div class="set-list set-color clear">
+                    <label>Màu nền</label>
+                    <div class="set-input clear">
+                        <span data-color="#fff" data-id="0" style="background-color: #fff"></span>
+                        <span data-color="#e6f0e6" data-id="1" style="background-color: #e6f0e6"></span>
+                        <span data-color="#e3f5fa" data-id="2" style="background-color: #e3f5fa"></span>
+                        <span data-color="#f6f4ec" data-id="3" style="background-color: #f6f4ec"></span>
+                        <span data-color="#f5e9ef" data-id="4" style="background-color: #f5e9ef"></span>
+                        <span data-color="#222222" data-id="5" style="background-color: #222222"></span>
                     </div>
                 </div>
+                <div class="set-list set-font-family clear"><label>Font chữ</label>
+                    <div class="set-slide set-input">
+                        <select>
+                        <option>Times New Roman</option>
+                        <option>Merriweather</option>
+                        <option>Lora</option>
+                        <option>Roboto</option>
+                        <option>Noto Sans</option>
+                        <option>Nunito</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="set-list set-font clear"><label>Kích cỡ chữ</label>
+                    <div class="set-slide set-input">
+                        <span class="set-slide_button set-smaller"><i class="fas fa-chevron-left"></i></span>
+                        <input class="set-slide_input" disabled="" value="16px" type="text">
+                        <span class="set-bigger set-slide_button"><i class="fas fa-chevron-right"></i></span>
+                    </div>
+                </div>
+                <div class="set-list set-margin clear"><label>Bản lề</label>
+                    <div class="set-slide set-input">
+                        <span class="set-slide_button set-smaller"><i class="fas fa-chevron-left"></i></span>
+                        <input class="set-slide_input" disabled="" value="20px" type="text">
+                        <span class="set-bigger set-slide_button"><i class="fas fa-chevron-right"></i></span>
+                    </div>
+                </div>
+            </main>
+        </section>
+        <div class="black-click"></div>
+    </section>
+    <div class="container">
+        <div class="row">
+            <div class="reading-content col-12 col-lg-10 offset-lg-1" style="word-wrap: break-word;">
+                <div class="title-top" style="padding-top: 20px">
+                    <h2 class="title-item" align="center">Chương {{ chapter.number }} : {{ chapter.title }}</h2>
+                    <h6 class="title-item" align="center">Lần cuối : 
+                        <time class="timeago" title="{{ chapter.update_date }}" datetime="{{ chapter.update_date }}">{{ chapter.update_date }}</time>
+                    </h6>
+                </div>
+                <div style="text-align: center; margin: 20px auto -20px auto;">
+                </div>
+                <div id="chapter-content" class="long-text no-select" style="font-family:&#039;Times New Roman&#039;, &#039;Times New Roman&#039;, Georgia, serif;">
+                    <p>{{ chapter.content | safe }}</p>
+                    <p class="none">Đọc bản dịch gốc và ủng hộ nhóm dịch tại <a href="https://ln.hako.re">ln.hako.re</a></p>
+                </div>
+                <div style="text-align: center; margin: 20px auto 10px auto;">
+                </div>
+
             </div>
         </div>
-    </section>
-    <!-- Anime Section End -->
+    </div>
+</main>
+<script>
+    token = 'GiQu1LG7Mm1kZXGiSaIJxgY4ehOwc7igJ2i6zk0S';
 
-    <!-- Footer Section Begin -->
-    <footer class="footer">
-        {% include 'Ebook/scroll.html' %}
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="footer__logo">
-                        <a href="./index.html"><img src="img/logo.png" alt=""></a>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                      Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                      <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+    $('.rd-basic_icon').hide();
 
-                  </div>
-              </div>
-          </div>
-      </footer>
-      <!-- Footer Section End -->
+    $(document).ready(function() {
+        listab("#chapter-comments");
+        // Switch to FB tab if request fb_comment_id
+        if (getParameterByName('fb_comment_id') != null) {
+            $('span[data-tab-index="2"]').click();
+        }
 
-      <!-- Search model Begin -->
-      {% include 'Ebook/search_bar.html' %}
-      <script>
-        var session = true;
-        $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 100 && session) {
-            session = false;
-            alert("Bạn đã đọc xong truyện");
-            $.ajax({
-                type: 'POST',
-                url : "{% url  'increase_views' %}",
-                data : {
-                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
-                    "slug" : "{{ slug }}",
-                    "chapter_number" : "{{ chapter_number }}",
-                },
-                success: function (response) {
-                    alert("Thành cong");
-                },
-                error: function (response) {
-                    alert(response["responseJSON"]["error"]);
+        function turnoffall() {
+            $(".rdtoggle").removeClass("on");
+            $(".rdtoggle_body").removeClass("animation fade-in-left-big fade-in-down");
+            $("html").removeClass("overflow-hiden");
+        }
+
+        function rdtoggle(classicon, effect) {
+            if ($(classicon).hasClass("on")) {
+                turnoffall();
+            } else {
+                turnoffall();
+                $(classicon).addClass("on");
+                $("html").addClass("overflow-hiden");
+                $(classicon + " .rdtoggle_body").addClass("animation " + effect);
+            }
+        };
+
+        $("#rd-setting_icon").on('click', function() {
+            rdtoggle("#setting", "fade-in-down");
+        });
+
+        $("#rd-info_icon").on('click', function() {
+            rdtoggle("#chapters", "fade-in-left-big");
+        });
+
+
+        $(".black-click").on('click', function() {
+            turnoffall();
+            $("#rd-side_icon").hide();
+        });
+
+        var bgcolor = Cookies.get('night_mode') ? 5 : (Cookies.get('color') || 3);
+        var fontfamily = Cookies.get('fontfamily') || '';
+        var fontsize = Cookies.get('font') || 18;
+        var margin = Cookies.get('margin') || 0;
+
+        function setcolor(alter = true) {
+            var switcher = $(".set-color .set-input span").eq(bgcolor);
+            switcher.addClass("current");
+
+            if (alter) {
+                for (var i = 0; i < $(".set-color .set-input span").length; i++) {
+                    $("#mainpart").removeClass('style-' + i);
                 }
-            })
+                $("#mainpart").addClass('style-' + bgcolor);
+            }
         }
+
+        // This creates unsmooth experience so we only use it for select box
+        function setfontfamily() {
+            $('.set-font-family select option').filter(function() {
+                return fontfamily.split(',')[0].indexOf($(this).text()) != -1;
+            }).attr('selected', true);
+        }
+
+        function setfontstyle(alter = true) {
+            $(".set-font input.set-slide_input").val(fontsize + "px");
+
+            if (alter) {
+                $("div#chapter-content").css("font-size", fontsize + "px");
+
+                var lineheight = +fontsize + 10;
+                $("#chapter-content").css("line-height", lineheight + "px");
+            }
+        }
+
+        function setmargin() {
+            $(".set-margin input.set-slide_input").val(margin + "px");
+            $("#chapter-content").css({
+                'padding-left': margin + "px",
+                'padding-right': margin + "px"
+            });
+        }
+
+        setcolor(false);
+        setfontfamily();
+        setfontstyle(false);
+        setmargin();
+
+        //1px = 0.0625rem;
+        //16px = 1rem (default);
+
+        $(".set-color .set-input span").click(function() {
+            bgcolor = $(this).data("id");
+            $(".set-color .set-input span").removeClass("current");
+            setcolor();
+            Cookies.set('color', bgcolor, {
+                expires: 365
+            });
         });
-      </script>
-      <!-- <script>
-        var session = true;
-        $(document).scroll(function(e){
-        // grab the scroll amount and the window height
-        var scrollAmount = $(window).scrollTop();
-        var documentHeight = $(document).height();
 
-        // calculate the percentage the user has scrolled down the page
-        var scrollPercent = (scrollAmount / documentHeight) * 100;
+        $('.set-font-family select').on('change', function() {
+            fontfamily = "'" + $('option:selected', this).text() + "', " + '\'Times New Roman\', Georgia, serif';
 
-        if(scrollPercent > 50 && session) {
-            session=false;
-            // run a function called doSomething
-            doSomething();
-        }
+            $('div#chapter-content').css('font-family', fontfamily);
 
-        function doSomething() { 
-            alert("Bạn đã đọc hết truyện");
-            // do something when a user gets 50% of the way down my page
-
-        }
-
+            Cookies.set('fontfamily', fontfamily, {
+                expires: 365
+            });
         });
-      </script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <!-- Search model end -->
 
-    <!-- Js Plugins -->
+        $(".set-font .set-slide_button.set-smaller").click(function() {
+            fontsize = fontsize - 2;
+            if (fontsize < 0) fontsize = 0;
+            setfontstyle();
+            Cookies.set('font', fontsize, {
+                expires: 365
+            });
+        });
 
-</body>
+        $(".set-font .set-slide_button.set-bigger").click(function() {
+            fontsize = +fontsize + 2;
+            setfontstyle();
+            Cookies.set('font', fontsize, {
+                expires: 365
+            });
+        });
 
-</html>
+        $(".set-margin .set-slide_button.set-smaller").click(function() {
+            margin = margin - 20;
+            if (margin < 0) margin = 0;
+            setmargin();
+            Cookies.set('margin', margin, {
+                expires: 365
+            });
+        });
+
+        $(".set-margin .set-slide_button.set-bigger").click(function() {
+            margin = +margin + 20;
+            setmargin();
+            Cookies.set('margin', margin, {
+                expires: 365
+            });
+        });
+
+
+        $('div#chapter-content').html(
+            $('div#chapter-content').html().replace(
+                /\[note(\d+)\]/gi,
+                '<span id="anchor-note$1" class="note-icon none-print inline note-tooltip" data-tooltip-content="#note$1 .note-content" data-note-id="note$1"><i class="fas fa-sticky-note"></i></span><a id="anchor-note$1" class="inline-print none" href="#note$1">[note]</a>'
+            )
+        )
+
+        tippy('.note-tooltip', {
+            delay: 50,
+            maxWidth: 240,
+            interactive: true,
+            content(ref) {
+                const selector = ref.getAttribute('data-tooltip-content');
+                const template = document.querySelector(selector);
+                return template.innerHTML;
+            }
+        });
+    });
+
+    isLoggedIn = 1;
+    series_id = parseInt('5091');
+    chapter_id = parseInt('52884');
+
+    readingObject = {
+        series_id: series_id,
+        series_title: '&quot;Omae Gotoki ga Maou ni Kateru to Omou na&quot; to Gachizei ni Yuusha Party wo Tsuihou Sareta node, Outo de Kimama ni Kurashitai',
+        series_url: $('i.fa-home').first().parent().attr('href'),
+        series_cover: $('.rd_sidebar-header a.img').css('background-image'),
+        chapter_title: $('ul.sub-chap_list li.current a').text().trim(),
+        chapter_url: $('ul.sub-chap_list li.current a').attr('href'),
+        book_title: $('ul#chap_list > li.current a').text(),
+        book_url: $('ul#chap_list > li.current a').attr('href'),
+        read_time: +new Date() / 1000 | 0,
+    };
+</script>
+{% endblock %}
