@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Max
 
 from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
@@ -35,16 +35,30 @@ NOVELS_IN_TOP_RATES=3
 USERS_PER_PAGE=2
 LOCK_OUT_TIME = 7 # (days)
 TOP_FOLLOWED_NOVELS = 5
+CHAPTERS_PER_ROW=6
+NUMBER_ROW_LATEST_CHAPTERS=3
+LATEST_CHAPTERS_PER_PAGE=CHAPTERS_PER_ROW*NUMBER_ROW_LATEST_CHAPTERS-1
+LATEST_NOVELS_FULL=16
+LATEST_COMMENTS_PER_PAGE=6
+
 
 def index(request):
-    trending_novels=list(Novel.objects.filter().order_by('-publication_date'))[:TRENDING_NOVELS_PER_PAGE]
+    trending_novels=list(Novel.objects.filter().order_by('-publication_date')[:TRENDING_NOVELS_PER_PAGE])
     top_followed_novels = list(Novel.objects.annotate(count=Count("following",filter=(Q(following__is_followed=True)))).order_by('-count'))[:TOP_FOLLOWED_NOVELS]
     top_followed_novels_with_count = []
     for novel in top_followed_novels:
         top_followed_novels_with_count.append([novel,novel.following_set.filter(is_followed=True).count()])
-    
-        
-    
+    latest_chapters = list(Chapter.objects.all().order_by('-update_date')[:LATEST_CHAPTERS_PER_PAGE])
+    latest_novels_full=list(Novel.objects.annotate(latest_update_date=Max("chapter__update_date")).filter(status=True).order_by("-latest_update_date"))
+    print("# latest_novels_full : ",latest_novels_full)
+    latest_novels_full_and_last_chapters=[]
+    for novel in latest_novels_full:
+        if novel.chapter_set.count()==0:
+            continue
+        latest_novels_full_and_last_chapters.append([novel,list(Chapter.objects.filter(novel=novel).order_by("-update_date"))[0]])
+    recently_comments=list(Comment.objects.all().order_by('-publication_date')[:LATEST_COMMENTS_PER_PAGE])
+    print("recently_comments : ",recently_comments)
+    # print("# lastest chapter : ",latest_chapters)
     # page_number = request.GET.get('page')
     # if page_number is None:
     #     page_number=1
@@ -71,6 +85,9 @@ def index(request):
         "trending_novels":trending_novels,
         "top_followed_novels_with_count":top_followed_novels_with_count,
         "tags":tags,
+        "latest_chapters":latest_chapters,
+        "latest_novels_full_and_last_chapters":latest_novels_full_and_last_chapters,
+        "recently_comments":recently_comments,
         # "page_obj":page_obj,
     })
 
