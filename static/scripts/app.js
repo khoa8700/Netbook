@@ -245,22 +245,6 @@ $(document).ajaxError(function(e, t, n, o) {
     }), t(), $(".ln-comment-body").on("click", ".comment_see_more", function(e) {
         var t;
         (t = $(this)).prev().css("max-height", "initial"), t.remove()
-    }), $("form.comment_form input.button").on("click", function() {
-        var t = tinymce.activeEditor.getContent();
-        $.post("/action/comment/new", {
-            _token: token,
-            type: comment_type,
-            type_id: comment_typeid,
-            content: t,
-            parent_id: 0
-        }, function(t) {
-            if ("success" == t.status && "" != t.html) {
-                var n = $(".ln-comment-body");
-                $("html,body").animate({
-                    scrollTop: n.offset().top - $("body").offset().top + n.scrollTop()
-                }), $("#ln-comment-submit").after($('<div class="ln-comment-group">' + t.html + "</div>").fadeIn(700)), tinymce.activeEditor.setContent(""), e($("#ln-comment-" + t.comment_id).find(".ln-comment-content"))
-            } else alert(t.message)
-        }, "json")
     }), $(".ln-comment-body").on("click", ".do-reply", function() {
         var e = $(this),
             t = e.closest(".ln-comment-item").data("comment"),

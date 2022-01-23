@@ -107,8 +107,8 @@
                                                 <div class="col-4 col-md feature-item width-auto-xl">
                                                     <a id="collect" class="side-feature-button button-follow follow">
                                                         <span class="block feature-value"><i
-                                                                class="far fa-heart"></i></span>
-                                                        <span class="block feature-name"> 362 </span>
+                                                                class="{% if is_followed %}fas{% else %}far{% endif %} fa-heart"></i></span>
+                                                        <span class="block feature-name"> {{ follow_number }} </span>
                                                     </a>
                                                 </div>
                                                 <div class="col-4 col-md feature-item width-auto-xl">
@@ -142,7 +142,7 @@
                                                     </div>
                                                 </div> -->
                                                 <div class="col-4 col-md feature-item width-auto-xl">
-                                                    <a href="https://ln.hako.re/truyen/5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai#series-comments"
+                                                    <a href="{% url 'detail' slug %}#series-comments"
                                                         class="side-feature-button">
                                                         <span class="block feature-value"><i
                                                                 class="fas fa-comments"></i></span>
@@ -424,7 +424,7 @@
                                                                 target="_blank">https://manganelo.com/chapter/aw918417/chapter_4</a>
                                                             manga theo ln nên khác xa bản
                                                             web -->
-                                                            <p>{{ comment.content }}</p>      
+                                                            <p>{{ comment.content | safe }}</p>      
                                                         </div>
                                                         <div class="comment_see_more expand none">Xem thêm</div>
                                                     </div>
@@ -503,6 +503,51 @@
         </div>
     </main>
     <script>
+        $("#collect").on("click", function() {
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'follow' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                },
+                success: function (response) {
+                    // alert(response["number"]);
+                    // var data=JSON.parse(JSON.stringify(response))
+                    // console.log(data)
+                    location.reload();  
+                    
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        })
+        $("form.comment_form input.button").on("click", function() {
+            alert("comment send");
+            var t = tinymce.activeEditor.getContent();
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'post_comment' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                    "content" : t,
+                },
+                success: function (response) {
+                    // alert(response["number"]);
+                    // var data=JSON.parse(JSON.stringify(response))
+                    // console.log(data)
+                    location.reload();  
+                    
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        })
+    </script>
+    <script>
         $(document).ready(function () {
             listab("#series-comments");
             // Switch to FB tab if request fb_comment_id
@@ -530,6 +575,7 @@
 
         series_id = parseInt('5091');
     </script>
+    
     <script src="/scripts/app.js?id=abbe46948765a4d10a28"></script>
     <script type='text/javascript'
         src='//pl16314303.safestcontentgate.com/d5/6b/4b/d56b4bd6c3d2c1e161c4ab3c78c27670.js'></script>

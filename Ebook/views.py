@@ -258,7 +258,7 @@ def detail(request,slug=None):
         novel = get_object_or_404(Novel,slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
-
+        follow_number = Following.objects.filter(novel=novel,is_followed=True).count()
         ############ test
         # local_tz = pytz.timezone('Asia/Bangkok')
         # current = timezone.now().replace(tzinfo=pytz.utc).astimezone(local_tz)
@@ -286,7 +286,7 @@ def detail(request,slug=None):
 
         else:
             first_chapter = None
-        comments = Comment.objects.filter(novel=novel)
+        comments = Comment.objects.filter(novel=novel).order_by("-publication_date")
 
         is_followed = False
         rating = None
@@ -316,6 +316,7 @@ def detail(request,slug=None):
         
         print("tags : ",tags)
         return render(request,'Ebook/detail.html',{
+            "slug" : slug,
             "userinfo" : userinfo,
             "novel" : novel,
             "tags" : tags,
@@ -325,6 +326,7 @@ def detail(request,slug=None):
             "comments" : comments,
             "first_chapter" : first_chapter,
             "rating" : rating,
+            "follow_number" : follow_number,
         })
     return redirect('index')
 
@@ -464,9 +466,11 @@ def profile_general(request):
     userinfo = UserInfo.objects.get(user=user)
     return render(request,"Ebook/profile_general.html",{"userinfo":userinfo})
 
+
 @authenticated_user
+@csrf_exempt
 def follow(request):
-    if request.method == "POST":
+    if request.method == "POST" and request.is_ajax():
         print("in POST")
         slug = request.POST.get("slug")
         if slug is not None:
@@ -483,11 +487,9 @@ def follow(request):
                 following.novel = novel
             following.is_followed = not following.is_followed
             following.save()
-            next = request.POST.get('next', '/')
-            print("nxt : "+next)
-            return HttpResponseRedirect(next)
+            return JsonResponse({"ok": True}, status=200)
             # return redirect('detail',slug=slug)
-    return redirect('index')
+    return JsonResponse({"error": "invalid"}, status=400)
 
 @authenticated_user
 def profile_follow(request):
@@ -660,3 +662,27 @@ def increase_views(request):
         
 def base(request):
     return render(request,'Ebook/base.html')
+
+@csrf_exempt
+def postComment(request):
+    if request.method == "POST" and request.is_ajax():
+        print("## in post comment")
+        slug = request.POST.get("slug")
+        print("## slug in comment : ",slug)
+        if slug is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                user = User.objects.get(pk=request.user.pk)
+                content = request.POST.get("content")
+                print("## content : ",content)
+                comment = Comment()
+                comment.publication_date=datetime.now()
+                comment.user=user
+                comment.novel=novel
+                comment.content=content
+                comment.save()
+                return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)

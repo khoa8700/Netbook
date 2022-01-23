@@ -29,4 +29,5 @@ urlpatterns=[
     path('about_us/',views.about_us,name="about_us"),
     path('increase_views/',views.increase_views,name="increase_views"),
     path('base/',views.base,name="base"),
+    path('post_comment/',views.postComment,name="post_comment"),
 ]

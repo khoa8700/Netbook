@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
@@ -153,9 +154,18 @@ class Following(models.Model):
 class Comment(models.Model):
     user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now=True)
-    content = models.CharField(max_length=200, null=True)
+    content = RichTextField(default="Hello world")
     publication_date = models.DateTimeField(null=True,blank=True)
+
+    def __str__(self):
+        return self.novel.title
+    
+    # def to_dict(self):
+    #     return {
+    #         "username" : self.user.userinfo.name,
+    #         "content" : self.content,
+    #         "publication_date" : self.publication_date.strftime("%Y-%m-%d %H:%M:%S") if self.publication_date is not None else None
+    #     }
 
 class Bookmark(models.Model):
     user = ForeignKey(User,null=True, blank=True,on_delete=models.CASCADE)
