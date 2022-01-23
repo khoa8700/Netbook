@@ -601,5 +601,8 @@ def novelList(request, first_letter = None):
         novels = list(Novel.objects.filter(title__startswith='[^a-z]'))
     else:
         novels = list(Novel.objects.filter(title__startswith=first_letter))
+    # novel_chapter =[]
+    for novel in novels:
+        novel = [novel,list(Chapter.objects.filter(novel=novel).order_by("-update_date"))[0]]
     print(novels)
     return render(request,"Ebook/novel_list.html",{'first_letter':first_letter,'novels':novels})
