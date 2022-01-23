@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
+from numpy import tile
 
 from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
@@ -592,3 +593,13 @@ def lock_out(request):
 
 def about_us(request):
     return render(request,"Ebook/about_us.html")
+
+def novelList(request, first_letter = None):
+    if first_letter == None:
+        novels = list(Novel.objects.all())
+    elif first_letter == 'khac':
+        novels = list(Novel.objects.filter(title__startswith='[^a-z]'))
+    else:
+        novels = list(Novel.objects.filter(title__startswith=first_letter))
+    print(novels)
+    return render(request,"Ebook/novel_list.html",{'first_letter':first_letter,'novels':novels})
