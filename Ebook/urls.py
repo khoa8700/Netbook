@@ -22,6 +22,7 @@ urlpatterns=[
     path('profile/follow',views.profile_follow,name="profile_follow"),
     path('profile/change_pass',views.profile_change_pass,name="profile_change_pass"),
     path('rate/',views.rate,name="rate"),
+    path('n_rate/',views.nRate,name="n_rate"),
     path('follow/',views.follow,name="follow"),
     path('manage/',views.manage,name="user_manage"),
     path('ban/',views.ban,name="ban"),

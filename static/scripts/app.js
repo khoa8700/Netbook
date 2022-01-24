@@ -398,19 +398,6 @@ $(document).ajaxError(function(e, t, n, o) {
         return (t = n.parent().next()).is(":visible") ? (t.hide(), n.text("Click vào để hiển thị nội dung")) : (t.show(), n.text("Click vào để ẩn nội dung")), !1
     })
 }), $(document).ready(function() {
-    "undefined" != typeof series_id && series_id > 0 && $("span.star-evaluate-item").on("click", function() {
-        if ("1" == $('meta[name="logged-in"]').attr("content")) {
-            var e = $(this).data("value");
-            $.post("/action/series/updaterating", {
-                _token: $('meta[name="csrf-token"]').attr("content"),
-                series_id: series_id,
-                value: e
-            }, function(e) {
-                "success" == e.status ? alert("Cảm ơn bạn đã đánh giá truyện") : e.message ? alert(e.message) : alert("Error")
-            }, "json")
-        } else alert("Bạn phải đăng nhập để đánh giá truyện")
-    })
-}), $(document).ready(function() {
     if ($("main.search-page div.search-advance").length) {
         var e = new Set,
             t = new Set;

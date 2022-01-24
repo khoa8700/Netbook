@@ -14,7 +14,7 @@
                     <div class="page-breadcrumb">
                         <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
                         <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
-                        <span class="breadcrum-level"><a href="https://ln.hako.re">Truyện dịch</a></span>
+                        <span class="breadcrum-level"><a href="{% url 'index' %}">Truyện dịch</a></span>
                     </div>
                 </div>
                 <div class="col-12 col-lg-3">
@@ -177,16 +177,16 @@
                                             <div class="col-12 col-md-3 statistic-item block-wide at-mobile">
                                                 <div class="statistic-name">Lần cuối</div>
                                                 <div class="statistic-value"><time class="timeago"
-                                                        title="20/03/2020 18:14:19"
-                                                        datetime="2020-03-20T18:14:19+07:00"></time></div>
+                                                        title="{{ novel.publication_date }}"
+                                                        datetime="{{ novel.publication_date }}">{{ novel.publication_date }}</time></div>
                                             </div>
                                             <div class="col-4 col-md-3 statistic-item">
-                                                <div class="statistic-name"> 52 đánh giá</div>
-                                                <div class="statistic-value">4.9<small>/5</small></div>
+                                                <div class="statistic-name"> {{ novel.number_rating }} đánh giá</div>
+                                                <div class="statistic-value">{{ novel.avg_rate }}<small>/5</small></div>
                                             </div>
                                             <div class="col-4 col-md-3 statistic-item">
                                                 <div class="statistic-name">Lượt xem</div>
-                                                <div class="statistic-value">74.827</div>
+                                                <div class="statistic-value">{{ novel.views }}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -545,6 +545,37 @@
                     alert(response["responseJSON"]["error"]);
                 }
             })
+        }),
+        $("span.star-evaluate-item").on("click", function() {
+
+            {% if request.user.is_authenticated %}
+            {% if rating is None %}
+            var e = $(this).data("value");
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'n_rate' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                    "rate" : e,
+                },
+                success: function (response) {
+                    // alert(response["number"]);
+                    // var data=JSON.parse(JSON.stringify(response))
+                    // console.log(data)
+                    location.reload();  
+                    
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+            {% else %}
+            alert("Bạn đã đánh giá rồi");
+            {% endif %}
+            {% else %}
+            alert("Phải đăng nhập mới đăng nhập đc")
+            {% endif %}
         })
     </script>
     <script>

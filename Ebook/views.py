@@ -686,3 +686,32 @@ def postComment(request):
                 comment.save()
                 return JsonResponse({"ok": True}, status=200)
     return JsonResponse({"error": "invalid"}, status=400)
+
+@never_cache
+@authenticated_user
+def nRate(request):
+    if request.method == "POST" and request.is_ajax():
+        slug = request.POST.get("slug")
+        novel = Novel.objects.get(slug=slug)
+        if novel is not None:
+            user = User.objects.get(pk=request.user.pk)
+            print("#type : ",type(user))
+            print("#name : ",user.userinfo.name)
+            rate = int(request.POST.get("rate"))
+            print("rate : ",rate)
+            rating = Rating()
+            rating.rate=rate
+            rating.novel = novel
+            rating.user = user
+            rating.save()
+
+            prev_number=novel.number_rating
+            sum_rate=prev_number*novel.avg_rate
+            sum_rate+=1.0*rating.rate
+            novel.number_rating+=1
+
+            novel.avg_rate=sum_rate/novel.number_rating
+            novel.save()
+
+            return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)
