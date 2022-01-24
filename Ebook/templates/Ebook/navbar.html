@@ -1,78 +1,148 @@
 {% load static %}
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-    rel="stylesheet">
-<!-- Css Styles -->
-<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/plyr.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+<div id="navbar" class="headroom">
+    <div class="container">
+        <div id="sidenav-icon" class="none-xl none-l">
+            <div class="sidenav-icon-content">
+                <span class="sidenav-icon_white"></span>
+                <span class="sidenav-icon_white"></span>
+                <span class="sidenav-icon_white"></span>
+            </div>
+            <ul class="navbar-menu none hidden-block at-mobile unstyle">
+                <div class="navbar-search block none-m in-navbar-menu">
+                    <form class="" action="{% url 'search' %}" method="get">
+                        <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="keyword"
+                            value="">
+                        <button class="search-submit" type="submit" value="Tìm kiếm"><i
+                                class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <li><a class="nav-menu_item" href="/sang-tac"><span class="">Sáng tác</span></a></li>
+                <li><a class="nav-menu_item" href="/convert"><span class="">Convert</span></a></li>
+                <li><a class="nav-menu_item" href="/xuat-ban"><span class="">Xuất bản</span></a></li>
+                <li><a class="nav-menu_item" href="/thao-luan"><span class="">Thảo luận</span></a></li>
+                <li><a class="nav-menu_item" href="/danh-sach"><span class="">Danh sách</span></a></li>
+                <li class="nav-has-submenu">
+                    <a class="nav-menu_item">
+                        <span class="">Hướng dẫn</span>
+                        <i class="fas fa-chevron-down dropdown-icon" style="float: right; margin-top: 6px"></i>
+                    </a>
+                    <ul class="nav-submenu list-unstyled none">
+                        <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
+                        <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                        <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo
+                                    lỗi</span></a></li>
+                        <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-logo-wrapper">
+            <a href="/" class="navbar-logo" style="background-image: url('{% static '/img/logo-9.png' %}')" title="Trang chủ"></a>
+        </div>
+        <div id="navbar-user">
+            <div class="nav-user_icon">
+                <div class="nav-user_avatar">
+                    <img src="https://ln.hako.re/img/noava.png">
+                </div>
+                <div class="at-user_avatar"></div>
+                
+                <ul class="account-sidebar hidden-block unstyled none">
+                    <li>
+                        <a href="https://ln.hako.re/thanh-vien/111847"><i class="fas fa-user"></i><span>Tài
+                                khoản</span></a>
+                    </li>
+                    <li>
+                        <a href="/lich-su-doc"><i class="fas fa-history"></i><span>Lịch sử</span></a>
+                    </li>
+                    <li>
+                        <a href="/bookmark"><i class="fas fa-bookmark"></i><span>Đánh dấu</span></a>
+                    </li>
+                    <li>
+                        <a href="/ke-sach"><i class="fas fa-heart"></i><span>Kệ sách</span></a>
+                    </li>
+                    <li>
+                        <a href="/tin-nhan"><i class="fas fa-envelope"></i><span>Tin nhắn</span>
+                            <div class="at-user_list"></div>
+                        </a>
+                    </li>
+                    <hr class="none block-l">
+                    <li>
+                        <div class="nightmode-toggle">
+                            <i class="fas fa-moon"></i><span>Nền tối</span>
+                            <div class="toggle-icon"><i class="fas fa-toggle-off"></i></div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="/action"><i class="fas fa-cog"></i><span>Hệ thống</span></a>
+                    </li>
+                    <li>
+                        <a href="/logout"><i class="fas fa-sign-out-alt"></i><span>Thoát</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div id="noti-icon" class="user-sublink">
+                <div class="icon-wrapper">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div id="noti-sidebar" class="noti-sidebar hidden-block none">
+                    <div class="noti-wrapper">
 
-<header class="header">
-  <div class="container">
-      <div class="row">
-          <div class="col-lg-2">
-              <div class="header__logo">
-                  <a href="{% url 'index' %}">
-                  <img src="{% static 'img/logo.png' %}" alt="">
-                  </a>
-              </div>
-          </div>
-          <div class="col-lg-8">
-              <div class="header__nav">
-                  <nav class="header__menu mobile-menu">
-                      <ul>
-                          <li class="active"><a href="{% url 'index' %}">Homepage</a></li>
-                          <li>
-                              <a href="#">Categories <span class="arrow_carrot-down"></span></a>
-                              <ul class="dropdown">
-                                  {% for tag in tag_list %}
-                                  <li><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a></li>
-                                  {% endfor %}
-                              </ul>
-                          </li>
-                          {% if user.userinfo.role == 2 or user.userinfo.role == 1 %}
-                          <li><a href="{% url 'my_work' %}">Write</a></li>
-                          {% endif %}
-                          <li><a href="{% url 'about_us' %}">About us</a></li>
-                          {% if user.userinfo.role == 1 %}
-                          <li><a href="{% url 'user_manage' %}">Manage</a></li>
-                          {% endif %}
-                      </ul>
-                  </nav>
-              </div>
-          </div>
-          <div class="col-lg-2">
-              <div class="header__right">
-                  <a href="#" class="search-switch"><span class="icon_search"></span></a>
-                  
-                  {% if not request.user.is_authenticated %}
-                  <a href="{% url 'login' %}"><span class="icon_profile"></span></a>
-                  {% endif %}
+                        <div id="noti-content" class="noti-content no-padding">
+                            Không có thông báo
+                        </div>
+                        <div class="noti-more">
+                            <a class="noti-url" href="/thong-bao"> Xem tất cả </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="series-unread-icon" class="user-sublink appearing">
+                <a class="link-item" href="https://ln.hako.re/ke-sach">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-mainblock">
+            <div class="navbar-search none block-m">
+                <form class="" action="{% url 'search' %}" method="get">
+                    <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="keyword"
+                        value="">
+                    <button class="search-submit" type="submit" value="Tìm kiếm"><i
+                            class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <ul class="navbar-menu at-navbar none d-lg-block unstyled">
+                <li><a class="nav-menu_item" href="/sang-tac"><i class="fas fa-pen-nib menu-icon"></i><span
+                            class="">Sáng tác</span></a></li>
+                <li><a class="nav-menu_item" href="/convert"><i class="fas fa-book menu-icon"></i><span
+                            class="">Convert</span></a></li>
+                <li><a class="nav-menu_item" href="/xuat-ban"><i class="fas fa-calendar menu-icon"></i><span
+                            class="">Xuất bản</span></a></li>
+                <li><a class="nav-menu_item" href="/thao-luan"><i class="fas fa-users menu-icon"></i><span
+                            class="">Thảo luận</span></a></li>
+                <li><a class="nav-menu_item" href="/danh-sach"><i class="fas fa-th-list menu-icon"></i><span
+                            class="">Danh sách</span></a></li>
+                <li class="nav-has-submenu">
+                    <a class="nav-menu_item">
+                        <i class="fas fa-question menu-icon"></i><span class="">Hướng dẫn</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                        <i class="fas fa-chevron-right dropdown-icon"></i>
+                    </a>
+                    <ul class="nav-submenu hidden-block unstyled none">
+                        <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
+                        <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                        <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo
+                                    lỗi</span></a></li>
+                        <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
 
-                  {% if request.user.is_authenticated %}
-                  <a href="{% url 'profile_general' %}"><span class="icon_profile"></span></a>
-                  {% endif %}
-
-                  {% if request.user.is_authenticated %}
-                  <a href="{% url 'logout' %}"><span class="arrow_right"></span></a>
-                  {% endif %}
-              </div>
-          </div>
-      </div>
-      <div id="mobile-menu-wrap"></div>
-  </div>
-</header>
-
-<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/player.js' %}"></script>
-<script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
-<script src="{% static 'js/mixitup.min.js' %}"></script>
-<script src="{% static 'js/jquery.slicknav.js' %}"></script>
-<script src="{% static 'js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
+    </div>
+</div>
+<div class="page-top-group  at-index ">
+    <div class="index-background"></div>
+</div>

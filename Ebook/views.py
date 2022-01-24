@@ -6,6 +6,8 @@ from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 from numpy import tile
+from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q, Count, Max, OuterRef, Subquery
 
 from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
@@ -24,40 +26,71 @@ from django.utils import timezone
 import datetime as dt
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
+from django.http import JsonResponse
 import pytz
+from django.db.models.fields import BooleanField, DateField, FloatField, IntegerField, TextField
 
 # Create your views here.
+TRENDING_NOVELS_PER_PAGE=8
 NOVELS_PER_PAGE=2
 NOVELS_IN_TOP_RATES=3
 USERS_PER_PAGE=2
 LOCK_OUT_TIME = 7 # (days)
+TOP_FOLLOWED_NOVELS = 5
+CHAPTERS_PER_ROW=6
+NUMBER_ROW_LATEST_CHAPTERS=3
+LATEST_CHAPTERS_PER_PAGE=CHAPTERS_PER_ROW*NUMBER_ROW_LATEST_CHAPTERS-1
+LATEST_NOVELS_FULL=16
+LATEST_COMMENTS_PER_PAGE=6
+
 
 def index(request):
-    novels=list(Novel.objects.all())
-    page_number = request.GET.get('page')
-    if page_number is None:
-        page_number=1
-    # print("page : ",page_number)
-    paginator = Paginator(novels, NOVELS_PER_PAGE)
+    trending_novels=list(Novel.objects.filter().order_by('-publication_date')[:TRENDING_NOVELS_PER_PAGE])
+    top_followed_novels = list(Novel.objects.annotate(count=Count("following",filter=(Q(following__is_followed=True)))).order_by('-count'))[:TOP_FOLLOWED_NOVELS]
+    top_followed_novels_with_count = []
+    for novel in top_followed_novels:
+        top_followed_novels_with_count.append([novel,novel.following_set.filter(is_followed=True).count()])
+    latest_chapters = list(Chapter.objects.all().order_by('-update_date')[:LATEST_CHAPTERS_PER_PAGE])
+    latest_novels_full=list(Novel.objects.annotate(latest_update_date=Max("chapter__update_date")).filter(status=True).order_by("-latest_update_date"))
+    print("# latest_novels_full : ",latest_novels_full)
+    latest_novels_full_and_last_chapters=[]
+    for novel in latest_novels_full:
+        if novel.chapter_set.count()==0:
+            continue
+        latest_novels_full_and_last_chapters.append([novel,list(Chapter.objects.filter(novel=novel).order_by("-update_date"))[0]])
+    recently_comments=list(Comment.objects.all().order_by('-publication_date')[:LATEST_COMMENTS_PER_PAGE])
+    print("recently_comments : ",recently_comments)
+    # print("# lastest chapter : ",latest_chapters)
+    # page_number = request.GET.get('page')
+    # if page_number is None:
+    #     page_number=1
+    # # print("page : ",page_number)
+    # paginator = Paginator(novels, NOVELS_PER_PAGE)
 
-    try:
-        page = paginator.page(page_number)
-    except PageNotAnInteger:
-        # page = paginator.page(1)
-        raise Http404
-    except EmptyPage:
-        # page = paginator.page(paginator.num_pages)
-        raise Http404
+    # try:
+    #     page = paginator.page(page_number)
+    # except PageNotAnInteger:
+    #     # page = paginator.page(1)
+    #     raise Http404
+    # except EmptyPage:
+    #     # page = paginator.page(paginator.num_pages)
+    #     raise Http404
 
-    novels = page.object_list
-    page_obj = paginator.get_page(page_number)
+    # novels = page.object_list
+    # page_obj = paginator.get_page(page_number)
 
     tags = list(Tag.objects.all())
-    print(type(novels))
+    print(type(trending_novels))
+    print("trending_novels : ",trending_novels)
+    print("top_followed_novels : ",top_followed_novels)
     return render(request,"Ebook/index.html",{
-        "novels":novels,
+        "trending_novels":trending_novels,
+        "top_followed_novels_with_count":top_followed_novels_with_count,
         "tags":tags,
-        "page_obj":page_obj,
+        "latest_chapters":latest_chapters,
+        "latest_novels_full_and_last_chapters":latest_novels_full_and_last_chapters,
+        "recently_comments":recently_comments,
+        # "page_obj":page_obj,
     })
 
 @authenticated_user
@@ -212,6 +245,8 @@ def read(request,slug=None,chapter_number=None):
             "chapter" : chapter,
             "range" : range(1,cnt+1),
             "max_range" : cnt,
+            "slug" : slug,
+            "chapter_number" : chapter_number,
         })
     return redirect('index')
 
@@ -225,7 +260,7 @@ def detail(request,slug=None):
         novel = get_object_or_404(Novel,slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
-
+        follow_number = Following.objects.filter(novel=novel,is_followed=True).count()
         ############ test
         # local_tz = pytz.timezone('Asia/Bangkok')
         # current = timezone.now().replace(tzinfo=pytz.utc).astimezone(local_tz)
@@ -253,7 +288,7 @@ def detail(request,slug=None):
 
         else:
             first_chapter = None
-        comments = Comment.objects.filter(novel=novel)
+        comments = Comment.objects.filter(novel=novel).order_by("-publication_date")
 
         is_followed = False
         rating = None
@@ -283,6 +318,7 @@ def detail(request,slug=None):
         
         print("tags : ",tags)
         return render(request,'Ebook/detail.html',{
+            "slug" : slug,
             "userinfo" : userinfo,
             "novel" : novel,
             "tags" : tags,
@@ -292,6 +328,7 @@ def detail(request,slug=None):
             "comments" : comments,
             "first_chapter" : first_chapter,
             "rating" : rating,
+            "follow_number" : follow_number,
         })
     return redirect('index')
 
@@ -313,7 +350,9 @@ def createNovel(request):
             # user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
             u=User.objects.get(pk=request.user.pk)
             userInfo=u.userinfo
-            novel=form.save()
+            novel=form.save(commit=False)
+            novel.publication_date=datetime.now()
+            novel.save()
             novel.userinfo=userInfo
             novel.save()
             print(novel.tags.all())
@@ -429,9 +468,11 @@ def profile_general(request):
     userinfo = UserInfo.objects.get(user=user)
     return render(request,"Ebook/profile_general.html",{"userinfo":userinfo})
 
+
 @authenticated_user
+@csrf_exempt
 def follow(request):
-    if request.method == "POST":
+    if request.method == "POST" and request.is_ajax():
         print("in POST")
         slug = request.POST.get("slug")
         if slug is not None:
@@ -448,11 +489,9 @@ def follow(request):
                 following.novel = novel
             following.is_followed = not following.is_followed
             following.save()
-            next = request.POST.get('next', '/')
-            print("nxt : "+next)
-            return HttpResponseRedirect(next)
+            return JsonResponse({"ok": True}, status=200)
             # return redirect('detail',slug=slug)
-    return redirect('index')
+    return JsonResponse({"error": "invalid"}, status=400)
 
 @authenticated_user
 def profile_follow(request):
@@ -595,14 +634,114 @@ def about_us(request):
     return render(request,"Ebook/about_us.html")
 
 def novelList(request, first_letter = None):
+    
+    order = request.GET.get("sapxep")
+    ongoing = request.GET.get("dangtienhanh")
+    complete = request.GET.get("hoanthanh")
+    
+    # print(order)
+    if not (order or ongoing or complete):
+        order = 'tentruyen'
+        ongoing = 1
+        complete = 1
+        
+    
     if first_letter == None:
-        novels = list(Novel.objects.all())
+        novels = Novel.objects.all()
+        
     elif first_letter == 'khac':
-        novels = list(Novel.objects.filter(title__startswith='[^a-z]'))
+        novels = Novel.objects.filter(title__startswith='[^a-z]')
     else:
-        novels = list(Novel.objects.filter(title__startswith=first_letter))
-    # novel_chapter =[]
+        novels = Novel.objects.filter(title__startswith=first_letter)
+
+    # print(ongoing, complete)
+    if ongoing == 1 and complete == 0:
+        novels = novels.filter(status=0)
+    elif ongoing == 0 and complete == 1:
+        novels = novels.filter(status=1)
+        
+    novels = novels.annotate(follow=Count("following",filter=Q(following__is_followed=True)))
+    novels = novels.annotate(update_date=Max("chapter__update_date"))
+    # latest_chapter = Chapter.objects.filter(novel__id=OuterRef('id')).order_by('-update_date')[:1]
+    # novels = novels.annotate(latest_chapter = Subquery(latest_chapter.values('chapter')))
+    
+    if order == 'tentruyen':
+        novels = novels.order_by("title")
+    elif order == 'tentruyenza':
+        novels = novels.order_by("-title")
+    elif order == 'capnhat':
+        novels = novels.order_by("-update_date")
+    elif order == 'truyenmoi':
+        novels = novels.order_by("-publication_date")
+    elif order == 'theodoi':
+        novels = novels.order_by('-follow')
+    elif order == 'top':
+        novels = novels.order_by("-views")
+    novel_chapter = []   
     for novel in novels:
-        novel = [novel,list(Chapter.objects.filter(novel=novel).order_by("-update_date"))[0]]
-    print(novels)
-    return render(request,"Ebook/novel_list.html",{'first_letter':first_letter,'novels':novels})
+        novel_chapter.append([novel, Chapter.objects.filter(novel=novel).order_by("-update_date")[:1]])
+    
+    # print(novel_chapter)
+    return render(request,"Ebook/novel_list.html",{
+        'novels':novel_chapter,
+        'first_letter':first_letter,
+        'ongoing':ongoing,
+        'complete':complete,
+        'order':order,
+        })
+
+@csrf_exempt
+def increase_views(request):
+    print("welcome")
+    if request.method == "POST" and request.is_ajax():
+        print("hello increase views")
+        slug = request.POST.get("slug")
+        chapter_number = request.POST.get("chapter_number")
+        print("slug : ",slug)
+        print("chapter_number : ",chapter_number)
+        if slug is not None and chapter_number is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                try:
+                    chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+                except Chapter.DoesNotExist:
+                    chapter = None
+                if chapter is not None:
+                    novel.views+=1
+                    chapter.views+=1
+                    novel.save()
+                    chapter.save()
+                    print("### increase view : done")
+                    return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)
+        
+        
+def base(request):
+    return render(request,'Ebook/base.html')
+
+@csrf_exempt
+def postComment(request):
+    if request.method == "POST" and request.is_ajax():
+        print("## in post comment")
+        slug = request.POST.get("slug")
+        print("## slug in comment : ",slug)
+        if slug is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                user = User.objects.get(pk=request.user.pk)
+                content = request.POST.get("content")
+                print("## content : ",content)
+                comment = Comment()
+                comment.publication_date=datetime.now()
+                comment.user=user
+                comment.novel=novel
+                comment.content=content
+                comment.save()
+                return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)

@@ -157,10 +157,10 @@
                     <li><a class="nav-menu_item" href="/danh-sach"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
                     <li class="nav-has-submenu">
                         <a class="nav-menu_item">
-<i class="fas fa-question menu-icon"></i><span class="">Hướng dẫn</span>
-<i class="fas fa-chevron-down dropdown-icon"></i>
-<i class="fas fa-chevron-right dropdown-icon"></i>
-</a>
+                        <i class="fas fa-question menu-icon"></i><span class="">Hướng dẫn</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                        <i class="fas fa-chevron-right dropdown-icon"></i>
+                        </a>
                         <ul class="nav-submenu hidden-block unstyled none">
                             <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
                             <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
@@ -233,9 +233,10 @@
                             </div>
                             <div class="section-content">
                                 <ul class="filter-type unstyled">
-                                    <li><input type="checkbox" name="dangtienhanh" value="1" checked> Đang tiến hành</li>
-                                    {% comment %} <li><input type="checkbox" name="tamngung" value="1" checked> Tạm ngưng</li> {% endcomment %}
-                                    <li><input type="checkbox" name="hoanthanh" value="1" checked> Đã hoàn thành</li>
+                                    <li><input type="checkbox" name="dangtienhanh" value="1"
+                                        {% if ongoing %} checked {% endif %}> Đang tiến hành</li>
+                                    <li><input type="checkbox" name="hoanthanh" value="1" 
+                                        {% if complete %} checked {% endif %}> Đã hoàn thành</li>
                                 </ul>
                                 <div class="submit-wrapper">
                                     <input type="submit" class="button button-primary-green" value="Áp dụng">
@@ -260,48 +261,52 @@
                             <header class="filter-container pad-bottom-10">
 
                                 <select name="sapxep" onchange="this.form.submit()" class="block inline-m">
-                                    <option value="tentruyen">A - Z</option>
-                                    <option value="tentruyenza">Z - A</option>
-                                    <option value="capnhat">Mới cập nhật</option>
-                                    <option value="truyenmoi">Truyện mới</option>
-                                    <option value="theodoi">Theo dõi</option>
-                                    <option value="top">Top toàn thời gian</option>
-                                </select>   ``
+                                    <option value="tentruyen" {% if order == 'tentruyen' %} selected="selected" {% endif %}>A - Z</option>
+                                    <option value="tentruyenza" {% if order == 'tentruyenza' %} selected="selected" {% endif %}>Z - A</option>
+                                    <option value="capnhat" {% if order == 'capnhat' %} selected="selected" {% endif %}>Mới cập nhật</option>
+                                    <option value="truyenmoi" {% if order == 'truyenmoi' %} selected="selected" {% endif %}>Truyện mới</option>
+                                    <option value="theodoi" {% if order == 'theodoi' %} selected="selected" {% endif %}>Theo dõi</option>
+                                    <option value="top" {% if order == 'top' %} selected="selected" {% endif %}>Top toàn thời gian</option>
+                                </select>
                                 <div class="text-right inline-block-m right-m none-l">
                                     <span class="button button-green js-call-filters-wrapper"><i class="fas fa-filter" style="margin-right: 10px;"></i>Bộ lọc</span>
                                 </div>
                             </header>
                             <main class="row">
+                                {% for novel,chapter in novels %}
                                 <div class="thumb-item-flow col-4 col-md-3 col-lg-2">
-                                    <div class="thumb-wrapper ln-tooltip" data-tooltip-content="#series_4812">
-                                        <a href="/truyen/4812-adachi-shimamura/c55390-chuong-02-di-cau-tuong-lai" title="Chương 02 - Đi câu tương lai">
+                                    <div class="thumb-wrapper ln-tooltip" data-tooltip-content="#series_{{novel.id}}">
+                                        <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title }}">
                                             <div class="a6-ratio">
-                                                <div class="content img-in-ratio lazyload" data-bg="https://c1.hako.re/lightnovel/covers/s4812-63fa4cdc-47ea-456c-a96f-c40e767dac51-m.jpg"></div>
+                                                <div class="content img-in-ratio lazyload" data-bg="{{ MEDIA_URL }}/{{ novel.thumbnail }}"></div>
                                             </div>
                                         </a>
                                         <div class="thumb-detail">
-                                            <div class="thumb_attr chapter-title" title="Chương 02 - Đi câu tương lai"><a href="/truyen/4812-adachi-shimamura/c55390-chuong-02-di-cau-tuong-lai" title="Chương 02 - Đi câu tương lai">Chương 02 - Đi câu tương lai</a></div>
-                                            <div class="thumb_attr volume-title">Tập 01</div>
+                                            <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title }}">
+                                                <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title }}">Chương {{ chapter.number }}: {{ chapter.title }}</a>
+                                            </div>
+                                            {% comment %} <div class="thumb_attr volume-title">Tập 01</div> {% endcomment %}
                                         </div>
                                     </div>
-                                    <div class="thumb_attr series-title"><a href="/truyen/4812-adachi-shimamura" title="Adachi &amp; Shimamura">Adachi &amp; Shimamura</a></div>
+                                    <div class="thumb_attr series-title"><a href="{{ novel.get_absolute_url }}" title="{{ novel.title }}">{{ novel.title }}</a></div>
                                 </div>
 
                                 <div style="display: none">
-                                    <div id="series_4812">
+                                    <div id="series_{{novel.id}}">
                                         <div style="margin: 10px 0; width: 250px">
                                             <p style="color: white; font-weight: bold">
-                                                Adachi &amp; Shimamura
+                                                {{ novel.title }}
                                             </p>
                                             <p>
-                                                <div>Số từ: 27.650</div>
-                                                <div>Lượt xem: 20.540</div>
-                                                <div>Lượt thích: 145</div>
+                                                {% comment %} <div>Số từ: 27.650</div> {% endcomment %}
+                                                <div>Lượt xem: {{novel.views}}</div>
+                                                <div>Lượt theo dõi: {{novel.follow}}</div>
                                             </p>
-                                            Tầng hai của nhà thể chất - đây luôn luôn là nơi gặp gỡ của chúng tôi. Đang là giờ học, nhưng tất nhiên, chẳng có tiết học nào đang diễn ra tại một nơi như thế này. Đây là nơi mà Shimamura và tôi trở...
+                                            {{ novel.description }}
                                         </div>
                                     </div>
                                 </div>
+                                {% endfor %}
                             </main>
                             <div class="pagination-footer">
                                 <div class="pagination_wrap">
@@ -354,7 +359,7 @@
         });
     </script>
     <script src="{% static '/scripts/app.js' %}"></script>
-    <script type='text/javascript' src='//pl16314303.safestcontentgate.com/d5/6b/4b/d56b4bd6c3d2c1e161c4ab3c78c27670.js'></script>
+    {% comment %} <script type='text/javascript' src='//pl16314303.safestcontentgate.com/d5/6b/4b/d56b4bd6c3d2c1e161c4ab3c78c27670.js'></script> {% endcomment %}
     <footer id="footer">
         <div class="container">
 

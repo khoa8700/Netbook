@@ -245,6 +245,7 @@ $(document).ajaxError(function(e, t, n, o) {
     }), t(), $(".ln-comment-body").on("click", ".comment_see_more", function(e) {
         var t;
         (t = $(this)).prev().css("max-height", "initial"), t.remove()
+<<<<<<< HEAD
     }), $("form.comment_form input.button").on("click", function() {
         var t = tinymce.activeEditor.getContent();
         $.post("/action/comment/new", {
@@ -261,6 +262,8 @@ $(document).ajaxError(function(e, t, n, o) {
                 }), $("#ln-comment-submit").after($('<div class="ln-comment-group">' + t.html + "</div>").fadeIn(700)), tinymce.activeEditor.setContent(""), e($("#ln-comment-" + t.comment_id).find(".ln-comment-content"))
             } else alert(t.message)
         }, "json")
+=======
+>>>>>>> 94faf6da0cdea6e2a8e35c1bd478586f22275fea
     }), $(".ln-comment-body").on("click", ".do-reply", function() {
         var e = $(this),
             t = e.closest(".ln-comment-item").data("comment"),
