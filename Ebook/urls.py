@@ -31,4 +31,5 @@ urlpatterns=[
     path('increase_views/',views.increase_views,name="increase_views"),
     path('base/',views.base,name="base"),
     path('post_comment/',views.postComment,name="post_comment"),
+    path('advanced_search/',views.advancedSearch,name="advanced_search"),
 ]

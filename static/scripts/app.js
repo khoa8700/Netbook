@@ -413,7 +413,7 @@ $(document).ajaxError(function(e, t, n, o) {
                     a = i.parents("label").data("genre-id");
                 i.hasClass("fa-check") ? e.add(a) : i.hasClass("fa-times") && t.add(a)
             });
-            var o = "?selectgenres=" + _toConsumableArray(e).join(",") + "&rejectgenres=" + _toConsumableArray(t).join(",");
+            var o = "?tags=" + _toConsumableArray(e).join(",") + "&rejecttags=" + _toConsumableArray(t).join(",");
             o += "&" + $(this).serialize(), window.location.href = window.location.href.split("?")[0] + o
         })
     }

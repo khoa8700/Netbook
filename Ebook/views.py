@@ -715,3 +715,76 @@ def nRate(request):
 
             return JsonResponse({"ok": True}, status=200)
     return JsonResponse({"error": "invalid"}, status=400)
+
+def advancedSearch(request):
+
+    tags=list(Tag.objects.all())
+
+    ret=Novel.objects
+
+    found=False
+
+    title=request.GET.get("title")
+    if title is not None:
+        ret=ret.filter(title__icontains=title)
+        found=True
+
+    # print("after search : ",list(ret))
+
+    status=request.GET.get("status")
+    if status is not None:
+        status=int(status)
+        if status!=0:
+            if status==1:
+                status=False
+            if status==2:
+                status=True
+
+            ret=ret.filter(status=status)
+        found=True
+
+    author=request.GET.get("author")
+    if author is not None:
+        ret=ret.filter(userinfo__name__icontains=author)
+        found=True
+
+    filter_tags_slug=request.GET.get("tags")
+
+    if filter_tags_slug is not None:
+        if filter_tags_slug != "":
+            filter_tags_slug=filter_tags_slug.split(",")
+            # print("all tags : ",filter_tags_slug)
+            if len(filter_tags_slug)!=0:
+                for tag_slug in filter_tags_slug:
+                    ret=ret.filter(tags=Tag.objects.get(slug=tag_slug))
+        found=True
+    
+    reject_tags_slug=request.GET.get("rejecttags")
+    print("#reject_tags_slug : ",reject_tags_slug)
+    if reject_tags_slug is not None:
+        if reject_tags_slug != "":
+            reject_tags_slug=reject_tags_slug.split(",")
+            if len(filter_tags_slug)!=0:
+                for tag_slug in reject_tags_slug:
+                    ret=ret.exclude(tags=Tag.objects.get(slug=tag_slug))
+        found=True
+
+    # print("advanced search : ",list(ret))
+    dict={}
+    cnt=0
+    if not found:
+        ret=[]
+
+    novels_and_last_chapters=[]
+    for novel in ret:
+        if novel.chapter_set.count()==0:
+            continue
+        novels_and_last_chapters.append([novel,list(Chapter.objects.filter(novel=novel).order_by("-number"))[0]])
+
+    for novel in ret:
+        dict[cnt]=novel.slug
+        cnt+=1
+    return render(request,"Ebook/advanced_search.html",{
+        "novels_and_last_chapters" : novels_and_last_chapters,
+        "tags" : tags,
+    })
