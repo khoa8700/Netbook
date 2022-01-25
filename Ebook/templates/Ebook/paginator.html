@@ -1,32 +1,37 @@
-{% load static %}
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@300;400;500;600;700;800;900&display=swap"
-rel="stylesheet">
-<!-- Css Styles -->
-<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/plyr.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
-<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
-<div class="product__pagination">
-    {% if page_obj.has_previous %}
-    <a href="?page=1"><i class="fa fa-angle-double-left"></i></a>
-    <a href="?page={{ page_obj.previous_page_number }}">{{ page_obj.number|add:"-1"}}</a>
-    {% endif %}
-    <a href="#" class="current-page">{{ page_obj.number }}</a>
-    {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}">{{ page_obj.number|add:"1"}}</a>
-    <a href="?page={{ page_obj.paginator.num_pages }}"><i class="fa fa-angle-double-right"></i></a>
-    {% endif %}
+<div class="pagination-footer">
+    <div class="pagination_wrap">
+        <a href="javascript:window.location.href = getPage(1);" class="paging_item paging_prevnext prev  {% if page_obj.number == 1 %} disabled {% endif %} ">Đầu</a>
+        
+        {% if page_obj.has_previous %}
+        <a href="javascript:window.location.href = getPage({{page_obj.previous_page_number}});">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+
+        <a href="#" class="paging_item page_num  current ">{{ page_obj.number }}</a>
+
+        {% if page_obj.has_next %}
+        <a href="javascript:window.location.href = getPage({{page_obj.next_page_number}});" class="paging_item page_num ">{{ page_obj.next_page_number }}</a>
+        {% endif %}
+
+        <a href="javascript:window.location.href = getPage({{page_obj.paginator.num_pages}});" class="paging_item paging_prevnext next {% if page_obj.number == page_obj.paginator.num_pages %} disabled {% endif %}">Cuối</a>
+    </div>
 </div>
-<script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/player.js' %}"></script>
-<script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
-<script src="{% static 'js/mixitup.min.js' %}"></script>
-<script src="{% static 'js/jquery.slicknav.js' %}"></script>
-<script src="{% static 'js/owl.carousel.min.js' %}"></script>
-<script src="{% static 'js/main.js' %}"></script>
+
+<script> 
+    function getPage(pageNumber)
+    {
+        var url = window.location.href;
+        if(url.match(/page=\d*/))
+        {
+            url = url.replace(/page=\d*/, 'page='+pageNumber);
+        }
+        else if(url.charAt(url.length-1) == '/')
+        {
+            url += '?page=' + pageNumber;
+        }
+        else
+        {
+            url += '&page=' + pageNumber;
+        }
+        return url;
+    }
+</script>

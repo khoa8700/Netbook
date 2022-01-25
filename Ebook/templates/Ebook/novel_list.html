@@ -184,7 +184,7 @@
                 <div class="page-breadcrumb">
                     <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
                     <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
-                    <span class="breadcrum-level"><a href="https://ln.hako.re/danh-sach">Danh sách</a></span>
+                    <span class="breadcrum-level"><a href="{% url 'novel_list'%}">Danh sách</a></span>
                 </div>
             </div>
             <div class="container">
@@ -250,7 +250,7 @@
                             <div class="section-content">
                                 <ul class="filter-type unstyled clear">
                                     {% for tag in tag_list %}
-                                    <li class="filter-type_item"><a href="{% url 'search_tag' tag.slug %}">{{ tag.name }}</a> </li>
+                                    <li class="filter-type_item"><a href="{% url 'novel_list' tag.slug %}">{{ tag.name|title }}</a> </li>
                                     {% endfor %}
                                 </ul>
                             </div>
@@ -273,22 +273,22 @@
                                 </div>
                             </header>
                             <main class="row">
-                                {% for novel,chapter in novels %}
+                                {% for novel, chapter in novels %}
                                 <div class="thumb-item-flow col-4 col-md-3 col-lg-2">
                                     <div class="thumb-wrapper ln-tooltip" data-tooltip-content="#series_{{novel.id}}">
-                                        <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title }}">
+                                        <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
                                             <div class="a6-ratio">
                                                 <div class="content img-in-ratio lazyload" data-bg="{{ MEDIA_URL }}/{{ novel.thumbnail }}"></div>
                                             </div>
                                         </a>
                                         <div class="thumb-detail">
-                                            <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title }}">
-                                                <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title }}">Chương {{ chapter.number }}: {{ chapter.title }}</a>
+                                            <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                                <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">Chương {{ chapter.number }}</a>
                                             </div>
-                                            {% comment %} <div class="thumb_attr volume-title">Tập 01</div> {% endcomment %}
+                                            <div class="thumb_attr volume-title">{{ chapter.title|title }}</div>
                                         </div>
                                     </div>
-                                    <div class="thumb_attr series-title"><a href="{{ novel.get_absolute_url }}" title="{{ novel.title }}">{{ novel.title }}</a></div>
+                                    <div class="thumb_attr series-title"><a href="{{ novel.get_absolute_url }}" title="{{ novel.title|title }}">{{ novel.title|title }}</a></div>
                                 </div>
 
                                 <div style="display: none">
@@ -298,29 +298,16 @@
                                                 {{ novel.title }}
                                             </p>
                                             <p>
-                                                {% comment %} <div>Số từ: 27.650</div> {% endcomment %}
                                                 <div>Lượt xem: {{novel.views}}</div>
                                                 <div>Lượt theo dõi: {{novel.follow}}</div>
                                             </p>
-                                            {{ novel.description }}
+                                            {{ novel.description|truncatechars:100 }}
                                         </div>
                                     </div>
                                 </div>
                                 {% endfor %}
                             </main>
-                            <div class="pagination-footer">
-                                <div class="pagination_wrap">
-
-                                    <a href="https://ln.hako.re/danh-sach?page=1" class="paging_item paging_prevnext prev  disabled ">Đầu</a>
-                                    <a href="https://ln.hako.re/danh-sach?page=1" class="paging_item page_num  current ">1</a>
-                                    <a href="https://ln.hako.re/danh-sach?page=2" class="paging_item page_num ">2</a>
-                                    <a href="https://ln.hako.re/danh-sach?page=3" class="paging_item page_num ">3</a>
-                                    <a href="https://ln.hako.re/danh-sach?page=4" class="paging_item page_num ">4</a>
-                                    <a href="https://ln.hako.re/danh-sach?page=5" class="paging_item page_num ">5</a>
-
-                                    <a href="https://ln.hako.re/danh-sach?page=47" class="paging_item paging_prevnext next ">Cuối</a>
-                                </div>
-                            </div>
+                            {% include 'Ebook/paginator.html' %}
                         </section>
                     </div>
                 </div>

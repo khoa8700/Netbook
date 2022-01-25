@@ -51,7 +51,7 @@
                                             <div class="series-gernes" x-data="{ more: false }">
                                                 {% for tag in tags %}
                                                 <a class="series-gerne-item"
-                                                    href="{% url 'search_tag' tag.slug %}"
+                                                    href="{% url 'novel_list' tag.slug %}"
                                                 {% if forloop.counter > 5 %}
                                                     style="display: none;" x-show="more"
                                                     :class="{ 'fade-in': more }"
