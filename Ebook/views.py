@@ -630,9 +630,9 @@ def novelList(request, first_letter = None):
     else:
         novels = Novel.objects.all()
         
-    if ongoing == 1 and complete == 0:
+    if ongoing == '1' and complete == None:
         novels = novels.filter(status=0)
-    elif ongoing == 0 and complete == 1:
+    elif ongoing == None and complete == '1':
         novels = novels.filter(status=1)
         
     novels = novels.annotate(follow=Count("following",filter=Q(following__is_followed=True)))
