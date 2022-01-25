@@ -343,6 +343,7 @@ def myWork(request, slug=None):
 def createNovel(request):
     form = CreateNovelForm()
     if request.method == "POST":
+        print("inPOST_create_novel")
         form = CreateNovelForm(request.POST, request.FILES)
         if form.is_valid():
             # user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
@@ -786,5 +787,18 @@ def advancedSearch(request):
         cnt+=1
     return render(request,"Ebook/advanced_search.html",{
         "novels_and_last_chapters" : novels_and_last_chapters,
+        "tags" : tags,
+    })
+
+def action(request):
+    novels_number=Novel.objects.all().count()
+    chapters_number=Chapter.objects.all().count()
+    return render(request,'Ebook/action.html',{
+        "novels_number" : novels_number,
+        "chapters_number" : chapters_number,
+    })
+def tagsList(request):
+    tags = list(Tag.objects.all())
+    return render(request,'Ebook/tags_list.html',{
         "tags" : tags,
     })

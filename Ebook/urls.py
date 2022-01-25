@@ -8,7 +8,6 @@ urlpatterns=[
     path('login/',views.loginPage,name="login"),
     path('register/',views.registerPage,name="register"),
     path('logout/', views.logoutUser, name="logout"),
-    path('create_novel/',views.createNovel,name="create_novel"),
     path('search/',views.search,name="search"),
     path('search/<slug:slug>/',views.search_tag,name="search_tag"),
     path('my_work/',views.myWork,name="my_work"),
@@ -32,4 +31,7 @@ urlpatterns=[
     path('base/',views.base,name="base"),
     path('post_comment/',views.postComment,name="post_comment"),
     path('advanced_search/',views.advancedSearch,name="advanced_search"),
+    path('action/',views.action,name="action"),
+    path('action/tags_list',views.tagsList,name="tags_list"),
+    path('action/create_novel/',views.createNovel,name="create_novel"),
 ]
