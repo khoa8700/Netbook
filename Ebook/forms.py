@@ -31,7 +31,7 @@ class CreateNovelForm(ModelForm):
 		widgets = {
 			'title' : forms.TextInput(attrs={'class':'form-control'}),
 			'description' : forms.TextInput(attrs={'class':'form-control'}),
-			'tag' : forms.TextInput(attrs={'class':'form-control'}),
+			'tags' : forms.TextInput(attrs={'class':'form-control'}),
 		}
 
 		def __init__(self, *args, **kwargs):
@@ -50,6 +50,11 @@ class CreateChapterForm(ModelForm):
 	class Meta:
 		model = Chapter
 		fields = ['title' , 'number' , 'content']
+		widgets = {
+			'title' : forms.TextInput(attrs={'class':'form-control'}),
+			'number' : forms.NumberInput(attrs={'class':'form-control'}),
+			'content' : forms.TextInput(attrs={'class':'form-control'}),
+		}
 
 class CreateRatingForm(ModelForm):
 	class Meta:

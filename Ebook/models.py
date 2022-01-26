@@ -115,7 +115,7 @@ class Novel(models.Model):
 class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
-    content = RichTextField(blank=True,null=True)
+    content = RichTextField(null=True,blank=True)
     title = models.CharField(max_length=200, null=True)
     views = IntegerField(default=0)
     update_date = models.DateTimeField(null=True,blank=True)

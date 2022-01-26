@@ -1,0 +1,359 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <title>Danh sách truyện - Cổng Light Novel - Đọc Light Novel</title>
+    <meta name="keywords" content="cổng light novel, đọc light novel, tiếng việt, tv, anime, manga, light novel, light novel convert, novel, thư viện, ecchi, comedy, school life, romance, sonako, hako, hako.re, harem, sword art online, baka to test, overlord, mushoku tensei, cô gái văn chương, light novel vietsub, youkoso, konosuba, You-Zitsu, Classroom of the Elite, Kumo Desu Ga Nani Ka, OLN, Overlord, Sáng tác, Sáng tác OLN, viết truyện, sáng tác light novel, oln, truyện tự sáng tác, truyện tiếng việt">
+    <meta name="description" content="Đọc Light Novel online, bình luận Light Novel. Thư viện Light Novel Tiếng Việt lớn nhất, chất lượng cao, cập nhật liên tục, nhiều chức năng hỗ trợ việc đọc truyện dễ dàng.">
+    <meta name="theme-color" content="#000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="GiQu1LG7Mm1kZXGiSaIJxgY4ehOwc7igJ2i6zk0S">
+    <meta name="logged-in" content="1">
+    <meta property="fb:app_id" content="1864643850436909">
+    <link rel="canonical" href="https://ln.hako.re/danh-sach">
+    <meta property="og:image" content="https://ln.hako.re/img/nocover.png">
+    <link rel="preload" href="{% static '/fonts/OpenSans-Regular.ttf' %}" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preload" href="{% static '/fonts/OpenSans-SemiBold.ttf' %}" as="font" type="font/ttf" crossorigin="anonymous">
+    <link rel="preconnect" href="https://www.google-analytics.com">
+    <link rel="shortcut icon" href="{% static '/img/favicon.png' %}">
+    <link rel="stylesheet" href="{% static '/css/interface.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" integrity="sha256-BtbhCIbtfeVWGsqxk1vOHEYXS6qcvQvLMZqjtpWUEx8=" crossorigin="anonymous" />
+    <script src="{% static '/scripts/plugins.js' %}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-34864968-3"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('set', {
+            'user_id': '111847',
+            'dimension1': true
+        });
+        gtag('js', new Date());
+        gtag('config', 'UA-34864968-3');
+    </script>
+</head>
+
+<body>
+    <div id="page-top"></div>
+    <div data-scrollto="#page-top" class="backtoTop"><i class="fas fa-angle-double-up"></i></div>
+    <div id="navbar" class="headroom">
+        <div class="container">
+            <div id="sidenav-icon" class="none-xl none-l">
+                <div class="sidenav-icon-content">
+                    <span class="sidenav-icon_white"></span>
+                    <span class="sidenav-icon_white"></span>
+                    <span class="sidenav-icon_white"></span>
+                </div>
+                <ul class="navbar-menu none hidden-block at-mobile unstyle">
+                    <div class="navbar-search block none-m in-navbar-menu">
+                        <form class="" action="/tim-kiem" method="get">
+                            <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="keywords" value="">
+                            <button class="search-submit" type="submit" value="Tìm kiếm"><i class="fas fa-search"></i></button>
+                        </form>
+                    </div>
+                    <li><a class="nav-menu_item" href="/sang-tac"><span class="">Sáng tác</span></a></li>
+                    <li><a class="nav-menu_item" href="/convert"><span class="">Convert</span></a></li>
+                    <li><a class="nav-menu_item" href="/xuat-ban"><span class="">Xuất bản</span></a></li>
+                    <li><a class="nav-menu_item" href="/thao-luan"><span class="">Thảo luận</span></a></li>
+                    <li><a class="nav-menu_item" href="/danh-sach"><span class="">Danh sách</span></a></li>
+                    <li class="nav-has-submenu">
+                        <a class="nav-menu_item">
+<span class="">Hướng dẫn</span>
+<i class="fas fa-chevron-down dropdown-icon" style="float: right; margin-top: 6px"></i>
+</a>
+                        <ul class="nav-submenu list-unstyled none">
+                            <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
+                            <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                            <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo lỗi</span></a></li>
+                            <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="navbar-logo-wrapper">
+                <a href="/" class="navbar-logo" style="background-image: url('{% static "/img/logo-9.png" %}')" title="Trang chủ"></a>
+            </div>
+            <div id="navbar-user">
+                <div class="nav-user_icon">
+                    <div class="nav-user_avatar">
+                        <img src="https://ln.hako.re/img/noava.png">
+                    </div>
+                    <div class="at-user_avatar"></div>
+                    <ul class="account-sidebar hidden-block unstyled none">
+                        <li>
+                            <a href="https://ln.hako.re/thanh-vien/111847"><i class="fas fa-user"></i><span>Tài khoản</span></a>
+                        </li>
+                        <li>
+                            <a href="/lich-su-doc"><i class="fas fa-history"></i><span>Lịch sử</span></a>
+                        </li>
+                        <li>
+                            <a href="/bookmark"><i class="fas fa-bookmark"></i><span>Đánh dấu</span></a>
+                        </li>
+                        <li>
+                            <a href="/ke-sach"><i class="fas fa-heart"></i><span>Kệ sách</span></a>
+                        </li>
+                        <li>
+                            <a href="/tin-nhan"><i class="fas fa-envelope"></i><span>Tin nhắn</span><div class="at-user_list"></div></a>
+                        </li>
+                        <hr class="none block-l">
+                        <li>
+                            <div class="nightmode-toggle">
+                                <i class="fas fa-moon"></i><span>Nền tối</span>
+                                <div class="toggle-icon"><i class="fas fa-toggle-off"></i></div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="/action"><i class="fas fa-cog"></i><span>Hệ thống</span></a>
+                        </li>
+                        <li>
+                            <a href="/logout"><i class="fas fa-sign-out-alt"></i><span>Thoát</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="noti-icon" class="user-sublink">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div id="noti-sidebar" class="noti-sidebar hidden-block none">
+                        <div class="noti-wrapper">
+
+                            <div id="noti-content" class="noti-content no-padding">
+                                Không có thông báo
+                            </div>
+                            <div class="noti-more">
+                                <a class="noti-url" href="/thong-bao"> Xem tất cả </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="series-unread-icon" class="user-sublink appearing">
+                    <a class="link-item" href="https://ln.hako.re/ke-sach">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="navbar-mainblock">
+                <div class="navbar-search none block-m">
+                    <form class="" action="/tim-kiem" method="get">
+                        <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="keywords" value="">
+                        <button class="search-submit" type="submit" value="Tìm kiếm"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <ul class="navbar-menu at-navbar none d-lg-block unstyled">
+                    <li><a class="nav-menu_item" href="/sang-tac"><i class="fas fa-pen-nib menu-icon"></i><span class="">Sáng tác</span></a></li>
+                    <li><a class="nav-menu_item" href="/convert"><i class="fas fa-book menu-icon"></i><span class="">Convert</span></a></li>
+                    <li><a class="nav-menu_item" href="/xuat-ban"><i class="fas fa-calendar menu-icon"></i><span class="">Xuất bản</span></a></li>
+                    <li><a class="nav-menu_item" href="/thao-luan"><i class="fas fa-users menu-icon"></i><span class="">Thảo luận</span></a></li>
+                    <li><a class="nav-menu_item" href="/danh-sach"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
+                    <li class="nav-has-submenu">
+                        <a class="nav-menu_item">
+                        <i class="fas fa-question menu-icon"></i><span class="">Hướng dẫn</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
+                        <i class="fas fa-chevron-right dropdown-icon"></i>
+                        </a>
+                        <ul class="nav-submenu hidden-block unstyled none">
+                            <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
+                            <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                            <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo lỗi</span></a></li>
+                            <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="page-top-group ">
+        <div class="index-background"></div>
+    </div>
+    <form method="get">
+        <main id="mainpart" class="browser-page">
+            <div style="text-align: center; margin: 0 auto 10px auto;">
+            </div>
+            <div class="container">
+                <div class="page-breadcrumb">
+                    <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
+                    <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrum-level"><a href="{% url 'novel_list'%}">Danh sách</a></span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row d-block clear">
+                    <div class="col-12 none d-lg-block col-lg-3 float-right filters-wrapper">
+                        <div class="none-l pad-bottom-20 text-right pad-top-20">
+                            <span class="js-off-filters-wrapper button button-red">Tắt bộ lọc</span>
+                        </div>
+                        <section class="sub-index-style">
+                            <div class="title-wrapper">
+                                <div class="section-title">Chữ cái</div>
+                            </div>
+                            <div class="browse-alphabet">
+                                <a class="alphabet_item
+                                {% if first_letter == None %}  current {% endif %} 
+                                " href="{% url 'novel_list' %}">Tất cả</a>
+                                <a class="alphabet_item 
+                                {% if first_letter == 'khac' %}  current {% endif %} 
+                                " href="{% url 'novel_list' 'khac' %}">#</a>
+                                {% for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+                                {% comment %} <a class="alphabet_item  current " href="https://ln.hako.re/danh-sach">Tất cả</a> {% endcomment %}
+                                    <a class="alphabet_item
+                                    {% if first_letter == letter %}  current {% endif %} 
+                                    " href="{% url 'novel_list' letter %}">{{letter}}</a>
+                                {% endfor %}
+                            </div>
+                        </section>
+                        {% comment %} <section class="sub-index-style filter-section">
+                            <div class="title-wrapper">
+                                <div class="section-title">Phân loại</div>
+                            </div>
+                            <div class="section-content">
+                                <ul class="filter-type unstyled">
+                                    <li><input type="checkbox" name="truyendich" value="1" checked> Truyện dịch</li>
+                                    <li><input type="checkbox" name="sangtac" value="1"> Truyện sáng tác</li>
+                                    <li><input type="checkbox" name="convert" value="1"> Convert</li>
+                                </ul>
+                                <div class="submit-wrapper">
+                                    <input type="submit" class="button button-primary-green" value="Áp dụng">
+                                </div>
+                            </div>
+                        </section> {% endcomment %}
+                        <section class="sub-index-style filter-section">
+                            <div class="title-wrapper">
+                                <div class="section-title">Tình trạng</div>
+                            </div>
+                            <div class="section-content">
+                                <ul class="filter-type unstyled">
+                                    <li><input type="checkbox" name="dangtienhanh" value="1"
+                                        {% if ongoing %} checked {% endif %}> Đang tiến hành</li>
+                                    <li><input type="checkbox" name="hoanthanh" value="1" 
+                                        {% if complete %} checked {% endif %}> Đã hoàn thành</li>
+                                </ul>
+                                <div class="submit-wrapper">
+                                    <input type="submit" class="button button-primary-green" value="Áp dụng">
+                                </div>
+                            </div>
+                        </section>
+                        <section class="sub-index-style">
+                            <div class="title-wrapper">
+                                <div class="section-title">Phân loại</div>
+                            </div>
+                            <div class="section-content">
+                                <ul class="filter-type unstyled clear">
+                                    {% for tag in tag_list %}
+                                    <li class="filter-type_item"><a href="{% url 'novel_list' tag.slug %}">{{ tag.name|title }}</a> </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-12 float-left col-lg-9">
+                        <section class="thumb-section-flow">
+                            <header class="filter-container pad-bottom-10">
+
+                                <select name="sapxep" onchange="this.form.submit()" class="block inline-m">
+                                    <option value="tentruyen" {% if order == 'tentruyen' %} selected="selected" {% endif %}>A - Z</option>
+                                    <option value="tentruyenza" {% if order == 'tentruyenza' %} selected="selected" {% endif %}>Z - A</option>
+                                    <option value="capnhat" {% if order == 'capnhat' %} selected="selected" {% endif %}>Mới cập nhật</option>
+                                    <option value="truyenmoi" {% if order == 'truyenmoi' %} selected="selected" {% endif %}>Truyện mới</option>
+                                    <option value="theodoi" {% if order == 'theodoi' %} selected="selected" {% endif %}>Theo dõi</option>
+                                    <option value="top" {% if order == 'top' %} selected="selected" {% endif %}>Top toàn thời gian</option>
+                                </select>
+                                <div class="text-right inline-block-m right-m none-l">
+                                    <span class="button button-green js-call-filters-wrapper"><i class="fas fa-filter" style="margin-right: 10px;"></i>Bộ lọc</span>
+                                </div>
+                            </header>
+                            <main class="row">
+                                {% for novel, chapter in novels %}
+                                <div class="thumb-item-flow col-4 col-md-3 col-lg-2">
+                                    <div class="thumb-wrapper ln-tooltip" data-tooltip-content="#series_{{novel.id}}">
+                                        <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                            <div class="a6-ratio">
+                                                <div class="content img-in-ratio lazyload" data-bg="{{ MEDIA_URL }}/{{ novel.thumbnail }}"></div>
+                                            </div>
+                                        </a>
+                                        <div class="thumb-detail">
+                                            <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                                <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">Chương {{ chapter.number }}</a>
+                                            </div>
+                                            <div class="thumb_attr volume-title">{{ chapter.title|title }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="thumb_attr series-title"><a href="{{ novel.get_absolute_url }}" title="{{ novel.title|title }}">{{ novel.title|title }}</a></div>
+                                </div>
+
+                                <div style="display: none">
+                                    <div id="series_{{novel.id}}">
+                                        <div style="margin: 10px 0; width: 250px">
+                                            <p style="color: white; font-weight: bold">
+                                                {{ novel.title }}
+                                            </p>
+                                            <p>
+                                                <div>Lượt xem: {{novel.views}}</div>
+                                                <div>Lượt theo dõi: {{novel.follow}}</div>
+                                            </p>
+                                            {{ novel.description|truncatechars:100 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </main>
+                            {% include 'Ebook/paginator.html' %}
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+    <script>
+        $(document).ready(function() {
+            $('.js-call-filters-wrapper').on('click', function() {
+                $('.filters-wrapper').toggle();
+                $('html').toggleClass('overflow-hiden');
+            });
+            $('.js-off-filters-wrapper').on('click', function() {
+                $('.filters-wrapper').hide();
+                $('html').removeClass('overflow-hiden');
+            });
+
+            tippy('.ln-tooltip', {
+                delay: 50,
+                maxWidth: 500,
+                interactive: false,
+                touch: ['hold', 1000],
+                placement: 'right',
+                ignoreAttributes: true,
+                content(ref) {
+                    const selector = ref.getAttribute('data-tooltip-content');
+                    const template = document.querySelector(selector);
+                    return template.innerHTML;
+                },
+                onShow(instance) {
+                    tippyHideAll({
+                        exclude: instance
+                    });
+                }
+            });
+        });
+    </script>
+    <script src="{% static '/scripts/app.js' %}"></script>
+    {% comment %} <script type='text/javascript' src='//pl16314303.safestcontentgate.com/d5/6b/4b/d56b4bd6c3d2c1e161c4ab3c78c27670.js'></script> {% endcomment %}
+    <footer id="footer">
+        <div class="container">
+
+            <span class="right">Liên hệ: <a href="mailto:contact@hako.re" target="_blank" style="color: #5fff46">contact@hako.re</a></span>
+            <span>© 2016 - 2022 Cổng Light Novel - Đọc Light Novel</span>
+        </div>
+    </footer>
+</body>
+
+</html>

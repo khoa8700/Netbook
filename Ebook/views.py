@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q, Count, Max
+from django.db.models import Q, Count, Max, OuterRef, Subquery
 
 from .models import Bookmark, Comment, Following, Novel, Chapter, Rating, Tag, UserInfo
 from .decorator import *
@@ -27,7 +27,8 @@ from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 import pytz
-
+from django.db.models.fields import BooleanField, DateField, FloatField, IntegerField, TextField
+import string
 # Create your views here.
 TRENDING_NOVELS_PER_PAGE=8
 NOVELS_PER_PAGE=2
@@ -152,6 +153,7 @@ def registerPage(request):
 def logoutUser(request):
 	logout(request)
 	return redirect('login')
+
 def search(request):
     novels=[]
     keyword=request.GET.get("keyword")
@@ -178,35 +180,6 @@ def search(request):
     return render(request,"Ebook/search.html",{
         "novels":novels,
         "page_obj":page_obj,
-    })
-
-def search_tag(request, slug=None):
-    novels=[]
-    tag = Tag.objects.get(slug=slug)
-    print("tag : ",tag)
-    novels = list(tag.novel_set.all())
-    print("novels : ",novels)
-    page_number = request.GET.get('page')
-    if page_number is None:
-        page_number=1
-    # print("page : ",page_number)
-    paginator = Paginator(novels, NOVELS_PER_PAGE)
-
-    try:
-        page = paginator.page(page_number)
-    except PageNotAnInteger:
-        # page = paginator.page(1)
-        raise Http404
-    except EmptyPage:
-        # page = paginator.page(paginator.num_pages)
-        raise Http404
-
-    novels = page.object_list
-    page_obj = paginator.get_page(page_number)
-    return render(request,"Ebook/search.html",{
-        "novels":novels,
-        "page_obj":page_obj,
-        "tag" : tag,
     })
 
 @authenticated_user
@@ -365,6 +338,22 @@ def createNovel(request):
 
 @authenticated_user
 @author_or_admin
+@author_check
+def editNovel(request,slug=None):
+    novel = get_object_or_404(Novel,slug=slug)
+    if request.method=="POST":
+        form = CreateNovelForm(data=request.POST, files=request.FILES,instance=novel)
+        if form.is_valid():
+            form.save()
+    form = CreateNovelForm(instance=novel)
+    return render(request, "Ebook/edit_novel.html",{
+        "form":form,
+        "slug":slug,
+    })
+
+
+@authenticated_user
+@author_or_admin
 @cache_control(no_cache=True, must_revalidate=True)
 def createChapter(request, slug=None):
     novel = get_object_or_404(Novel,slug=slug)
@@ -372,8 +361,9 @@ def createChapter(request, slug=None):
     if request.method == "POST":
         form = CreateChapterForm(request.POST)
         if form.is_valid():
-            chapter = form.save()
+            chapter = form.save(commit=False)
             chapter.novel = novel
+            chapter.update_date=datetime.now()
             chapter.save()
             return redirect('my_work_detail',slug=slug)
     context={
@@ -399,7 +389,9 @@ def editChapter(request, slug=None, chapter_number=None):
         else:
             form = CreateChapterForm(request.POST,instance=chapter)
             if form.is_valid():
-                form.save()
+                chapter = form.save(commit=False)
+                chapter.update_date=datetime.now()
+                chapter.save()
                 # return redirect('my_work_detail',slug=slug)
     
     # if slug is not None and chapter_number is not None:
@@ -632,6 +624,114 @@ def lock_out(request):
 def about_us(request):
     return render(request,"Ebook/about_us.html")
 
+def novelList(request, first_letter = None):
+    
+    order = request.GET.get("sapxep")
+    ongoing = request.GET.get("dangtienhanh")
+    complete = request.GET.get("hoanthanh")
+    
+    # print(order)
+    if not (order or ongoing or complete):
+        order = 'tentruyen'
+        ongoing = 1
+        complete = 1
+        
+    tag_list = [tag['slug'] for tag in Tag.objects.all().values('slug')]
+    if first_letter == None:
+        novels = Novel.objects.all()
+    elif first_letter in tag_list:
+        tag = Tag.objects.get(slug=first_letter)
+        novels = tag.novel_set.all()
+    elif first_letter == 'khac':
+        novels = Novel.objects.filter(title__regex='^[^a-zA-Z]')
+    elif first_letter in string.ascii_uppercase:
+        novels = Novel.objects.filter(title__startswith=first_letter)
+    else:
+        novels = Novel.objects.all()
+        
+    if ongoing == '1' and complete == None:
+        novels = novels.filter(status=0)
+    elif ongoing == None and complete == '1':
+        novels = novels.filter(status=1)
+        
+    novels = novels.annotate(follow=Count("following",filter=Q(following__is_followed=True)))
+    novels = novels.annotate(update_date=Max("chapter__update_date"))
+    # latest_chapter = Chapter.objects.filter(novel__id=OuterRef('id')).order_by('-update_date')[:1]
+    # novels = novels.annotate(latest_chapter = Subquery(latest_chapter.values('chapter')))
+    
+    if order == 'tentruyen':
+        novels = novels.order_by("title")
+    elif order == 'tentruyenza':
+        novels = novels.order_by("-title")
+    elif order == 'capnhat':
+        novels = novels.order_by("-update_date")
+    elif order == 'truyenmoi':
+        novels = novels.order_by("-publication_date")
+    elif order == 'theodoi':
+        novels = novels.order_by('-follow')
+    elif order == 'top':
+        novels = novels.order_by("-views")
+        
+    novel_chapter = []
+    for novel in novels:
+        novel_chapter.append([novel, list(Chapter.objects.filter(novel=novel).order_by("-number"))[0]])
+    
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    paginator = Paginator(novel_chapter, NOVELS_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+    # print(novel_chapter)
+    
+    novels = page.object_list
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request,"Ebook/novel_list.html",{
+        'novels':novels,
+        'first_letter':first_letter,
+        'ongoing':ongoing,
+        'complete':complete,
+        'order':order,
+        'page_obj':page_obj,
+        })
+    
+def search_tag(request, slug=None):
+    novels=[]
+    tag = Tag.objects.get(slug=slug)
+    print("tag : ",tag)
+    novels = list(tag.novel_set.all())
+    print("novels : ",novels)
+    page_number = request.GET.get('page')
+    if page_number is None:
+        page_number=1
+    # print("page : ",page_number)
+    paginator = Paginator(novels, NOVELS_PER_PAGE)
+
+    try:
+        page = paginator.page(page_number)
+    except PageNotAnInteger:
+        # page = paginator.page(1)
+        raise Http404
+    except EmptyPage:
+        # page = paginator.page(paginator.num_pages)
+        raise Http404
+
+    novels = page.object_list
+    page_obj = paginator.get_page(page_number)
+    return render(request,"Ebook/search.html",{
+        "novels":novels,
+        "page_obj":page_obj,
+        "tag" : tag,
+    })
+    
 @csrf_exempt
 def increase_views(request):
     print("welcome")

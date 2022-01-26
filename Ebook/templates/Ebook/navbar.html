@@ -20,7 +20,7 @@
                 <li><a class="nav-menu_item" href="/convert"><span class="">Convert</span></a></li>
                 <li><a class="nav-menu_item" href="/xuat-ban"><span class="">Xuất bản</span></a></li>
                 <li><a class="nav-menu_item" href="/thao-luan"><span class="">Thảo luận</span></a></li>
-                <li><a class="nav-menu_item" href="/danh-sach"><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><span class="">Danh sách</span></a></li>
                 <li class="nav-has-submenu">
                     <a class="nav-menu_item">
                         <span class="">Hướng dẫn</span>
@@ -122,7 +122,7 @@
                             class="">Xuất bản</span></a></li>
                 <li><a class="nav-menu_item" href="/thao-luan"><i class="fas fa-users menu-icon"></i><span
                             class="">Thảo luận</span></a></li>
-                <li><a class="nav-menu_item" href="/danh-sach"><i class="fas fa-th-list menu-icon"></i><span
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span
                             class="">Danh sách</span></a></li>
                 <li class="nav-has-submenu">
                     <a class="nav-menu_item">
@@ -133,8 +133,7 @@
                     <ul class="nav-submenu hidden-block unstyled none">
                         <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
                         <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
-                        <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo
-                                    lỗi</span></a></li>
+                        <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo lỗi</span></a></li>
                         <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
                     </ul>
                 </li>
