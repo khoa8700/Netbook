@@ -902,3 +902,35 @@ def tagsList(request):
     return render(request,'Ebook/tags_list.html',{
         "tags" : tags,
     })
+
+@authenticated_user
+@author_or_admin
+def manageList(request):
+    user = User.objects.get(pk=request.user.pk)
+    userinfo = UserInfo.objects.get(user=user)
+    novels = Novel.objects.filter(userinfo=userinfo)
+    return render(request,'Ebook/manage_list.html',{
+        "novels" : novels,
+        "userinfo" : userinfo,
+    })
+
+@authenticated_user
+@author_or_admin
+def deleteNovel(request):
+    print("in delete novel 1")
+    if request.method=="POST" and request.is_ajax():
+        print("in delete novel 2")
+        slug = request.POST.get("slug")
+        print("# delete novel ",slug)
+        if slug is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                user = User.objects.get(pk=request.user.pk)
+                if user.userinfo==novel.userinfo:
+                    novel.delete()
+                    return JsonResponse({"ok":True})
+    return JsonResponse({"error":"something wrong"})
+        

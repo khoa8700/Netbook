@@ -39,4 +39,6 @@ urlpatterns=[
     path('action/<slug:slug>/create',views.createChapter,name="create_chapter"),
     path('action/<slug:slug>/edit',views.editNovel,name="edit_novel"),
     path('action/<slug:slug>/<int:chapter_number>/edit',views.editChapter,name="edit_chapter"),
+    path('action/manage_list/',views.manageList,name="manage_list"),
+    path('action/delete',views.deleteNovel,name="delete_novel"),
 ]
