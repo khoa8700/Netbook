@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 import urllib
 from django.core.files import File
 from django.views.decorators.cache import cache_control
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
 from datetime import timedelta
@@ -340,6 +340,11 @@ def createNovel(request):
 @author_or_admin
 @author_check
 def editNovel(request,slug=None):
+    navCheck=request.GET.get("nav")
+    if int(navCheck)==0:
+        navCheck=False
+    else:
+        navCheck=True
     novel = get_object_or_404(Novel,slug=slug)
     if request.method=="POST":
         form = CreateNovelForm(data=request.POST, files=request.FILES,instance=novel)
@@ -349,6 +354,7 @@ def editNovel(request,slug=None):
     return render(request, "Ebook/edit_novel.html",{
         "form":form,
         "slug":slug,
+        "navCheck":navCheck,
     })
 
 
@@ -909,6 +915,10 @@ def manageList(request):
     user = User.objects.get(pk=request.user.pk)
     userinfo = UserInfo.objects.get(user=user)
     novels = Novel.objects.filter(userinfo=userinfo)
+    keywords=request.GET.get("keywords")
+    if keywords is not None:
+        print("have keywords : ",keywords)
+        novels=novels.filter(title__icontains=keywords)
     return render(request,'Ebook/manage_list.html',{
         "novels" : novels,
         "userinfo" : userinfo,
@@ -934,3 +944,21 @@ def deleteNovel(request):
                     return JsonResponse({"ok":True})
     return JsonResponse({"error":"something wrong"})
         
+def manageNovel(request,slug=None):
+    if slug is not None:
+        novel=get_object_or_404(Novel,slug=slug)
+        return render(request,"Ebook/manage.html",{
+            "novel" : novel,
+        })
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def navbarNovel(request,slug):
+    if slug is not None:
+        novel=get_object_or_404(Novel,slug=slug)
+        chapters = Chapter.objects.filter(novel=novel).order_by("number")
+        return render(request,"Ebook/nav_novel.html",{
+            "novel" : novel,
+            "chapters" : chapters,
+            "slug" : slug,
+        })
+    return HttpResponseNotFound('<h1>Page not found</h1>')

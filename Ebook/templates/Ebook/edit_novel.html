@@ -1,7 +1,9 @@
 {% extends 'Ebook/base_control.html' %}
 {% block content %}
 <body>
+  {% if navCheck %}
   {% include 'Ebook/navbar_control.html' %}
+  {% endif %}
   <div class="container">
     <div class="row">
       <div class="col-md-10 col-md-offset-1">

@@ -108,6 +108,15 @@ class Novel(models.Model):
     def get_absolute_url(self):
         return reverse('detail',kwargs={'slug':self.slug})
     
+    def get_absolute_url_nav(self):
+        return reverse('navbar_novel',kwargs={'slug':self.slug})
+
+    def get_absolute_url_edit(self):
+        return reverse('edit_novel',kwargs={'slug':self.slug})
+    
+    def get_absolute_url_create_chapter(self):
+        return reverse('create_chapter',kwargs={'slug':self.slug})
+    
     def get_absolute_url_write_chapters(self):
         return reverse('my_work_detail',kwargs={'slug':self.slug})
     

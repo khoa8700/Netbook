@@ -150,3 +150,5 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
