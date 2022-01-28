@@ -245,7 +245,6 @@ $(document).ajaxError(function(e, t, n, o) {
     }), t(), $(".ln-comment-body").on("click", ".comment_see_more", function(e) {
         var t;
         (t = $(this)).prev().css("max-height", "initial"), t.remove()
-<<<<<<< HEAD
     }), $("form.comment_form input.button").on("click", function() {
         var t = tinymce.activeEditor.getContent();
         $.post("/action/comment/new", {
@@ -262,8 +261,6 @@ $(document).ajaxError(function(e, t, n, o) {
                 }), $("#ln-comment-submit").after($('<div class="ln-comment-group">' + t.html + "</div>").fadeIn(700)), tinymce.activeEditor.setContent(""), e($("#ln-comment-" + t.comment_id).find(".ln-comment-content"))
             } else alert(t.message)
         }, "json")
-=======
->>>>>>> 94faf6da0cdea6e2a8e35c1bd478586f22275fea
     }), $(".ln-comment-body").on("click", ".do-reply", function() {
         var e = $(this),
             t = e.closest(".ln-comment-item").data("comment"),
@@ -417,19 +414,6 @@ $(document).ajaxError(function(e, t, n, o) {
         return (t = n.parent().next()).is(":visible") ? (t.hide(), n.text("Click vào để hiển thị nội dung")) : (t.show(), n.text("Click vào để ẩn nội dung")), !1
     })
 }), $(document).ready(function() {
-    "undefined" != typeof series_id && series_id > 0 && $("span.star-evaluate-item").on("click", function() {
-        if ("1" == $('meta[name="logged-in"]').attr("content")) {
-            var e = $(this).data("value");
-            $.post("/action/series/updaterating", {
-                _token: $('meta[name="csrf-token"]').attr("content"),
-                series_id: series_id,
-                value: e
-            }, function(e) {
-                "success" == e.status ? alert("Cảm ơn bạn đã đánh giá truyện") : e.message ? alert(e.message) : alert("Error")
-            }, "json")
-        } else alert("Bạn phải đăng nhập để đánh giá truyện")
-    })
-}), $(document).ready(function() {
     if ($("main.search-page div.search-advance").length) {
         var e = new Set,
             t = new Set;
@@ -445,7 +429,7 @@ $(document).ajaxError(function(e, t, n, o) {
                     a = i.parents("label").data("genre-id");
                 i.hasClass("fa-check") ? e.add(a) : i.hasClass("fa-times") && t.add(a)
             });
-            var o = "?selectgenres=" + _toConsumableArray(e).join(",") + "&rejectgenres=" + _toConsumableArray(t).join(",");
+            var o = "?tags=" + _toConsumableArray(e).join(",") + "&rejecttags=" + _toConsumableArray(t).join(",");
             o += "&" + $(this).serialize(), window.location.href = window.location.href.split("?")[0] + o
         })
     }

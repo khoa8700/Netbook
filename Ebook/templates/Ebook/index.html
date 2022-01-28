@@ -479,7 +479,7 @@
                             <div class="comment-info">
                                 <span class="series-name"><a href="{{ comment.novel.get_absolute_url }}">{{ comment.novel }}</a></span>
                                 <div class="comment-content">
-                                    {{ comment.content }}
+                                    {{ comment.content | safe }}
                                 </div>
                                 <div class="comment-top">
                                     <div class="comment-user_ava">

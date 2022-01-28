@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['https://netbook102.herokuapp.com/','127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,3 +148,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'

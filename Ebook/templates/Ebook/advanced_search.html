@@ -1,0 +1,104 @@
+{% extends 'Ebook/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'Ebook/navbar.html' %}
+
+<body>
+    <div id="page-top"></div>
+    <div data-scrollto="#page-top" class="backtoTop"><i class="fas fa-angle-double-up"></i></div>
+    <main id="mainpart" class="search-page">
+        <header class="page-title">
+            <div class="page-name_wrapper">
+                <div class="container">
+                    <span class="page-name"><i class="fas fa-circle"></i>Tìm kiếm</span>
+                </div>
+            </div>
+        </header>
+        <div class="search-form_wrapper">
+            <div class="container">
+                <form class="search-form clear" action="tim-kiem-nang-cao" method="get">
+                    <input class="search-form in col-8 col-md-9 col-lg-10" type="text" name="title" size="40"
+                        value="">
+                    <input id="search-go" class="search-go_form search-form submit col-4 col-md-3 col-lg-2"
+                        type="submit" value="Tìm kiếm">
+                    <div style="clear: both"></div>
+                    <span class="search-advance_toggle"><i class="fas fa-filter"></i> Tìm kiếm nâng cao</span>
+                    <div style="clear: both"></div>
+                    <div class="search-advance" style="display: none">
+                        <div class="row">
+                            <div class="col-12 col-md-8 col-lg-4" style="margin-bottom: 20px;">
+                                <div>
+                                    <div class="search-form_sub-name">Tác giả</div>
+                                    <input class="search-form search-form_sub form-control" type="text" name="author"
+                                        size="40" placeholder="Có thể bỏ trống..." value="">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4 col-lg-2" style="margin-bottom: 20px;">
+                                <div class="search-status-name">Tình trạng</div>
+                                <select class="form-control" name="status">
+                                    <option value="0" selected>Tất cả</option>
+                                    <option value="1">Đang tiến hành</option>
+                                    <option value="2">Hoàn thành</option>
+                                </select>
+                            </div>
+                            <div class="search-gerne col-12 col-lg-6">
+                                <div class="search-gerne_name">Thể loại</div>
+                                <div class="row">
+                                    {% for tag in tags %}
+                                    <div class="search-gerne_item include col-4 col-md-3 col-lg-4 col-xl-3">
+                                        <label class="genre_label" data-genre-id="{{ tag.slug }}" }}>
+                                            <span class="gerne-icon">
+                                                <i class="far fa-square" aria-hidden="true"></i>
+                                            </span>
+                                            <span class="gerne-name">{{ tag.name }}</span>
+                                        </label>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="container">
+            <section class="basic-section has-pagination">
+                <main class="sect-body">
+                    <div class="row">
+                        {% for novel,chapter in novels_and_last_chapters %}
+                        <div class="thumb-item-flow col-4 col-md-3 col-lg-2">
+                            <div class="thumb-wrapper">
+                                <a href="{{ chapter.get_absolute_url }}" title="{{ chapter.title }}">
+                                    <div class="a6-ratio">
+                                        <div class="content img-in-ratio lazyload"
+                                            data-bg="{{ MEDIA_URL }}/{{ novel.thumbnail }}"></div>
+                                    </div>
+                                </a>
+                                <div class="thumb-detail">
+                                    <div class="thumb_attr chapter-title" title="{{ chapter.title }}"><a
+                                            href="{{ chapter.get_absolute_url }}" title="{{ chapter.title }}">{{ chapter.title }}</a></div>
+                                    <div class="thumb_attr volume-title">Chương {{ chapter.number }}</div>
+                                </div>
+                            </div>
+                            <div class="thumb_attr series-title"><a href="{{ novel.get_absolute_url }}"
+                                    title="{{ novel.title }}">{{ novel.title }}</a></div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </main>
+            </section>
+        </div>
+    </main>
+    <script>
+        // $(document).ready(function() {
+        //        $('.tooltip').tooltipster({
+        //            delay: 50,
+        //            side: 'right',
+        //            theme: 'tooltipster-borderless',
+        //            minWidth: 500,
+        //            maxWidth: 500
+        //        });
+        //    });
+    </script>
+</body>
+{% endblock %}

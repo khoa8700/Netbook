@@ -1,0 +1,355 @@
+{% extends 'Ebook/base_control.html' %}
+{% block content %}
+
+<body>
+    <script>
+        $(document).ready(function() {
+
+
+            var lichap = $('#chapter_' + '92690').closest('ul');
+            $('#chapter_' + '92690').addClass('current');
+            lichap.removeClass('hide');
+            lichap.addClass('show');
+            lichap.parent().find('.book-status').html('<i class="fas fa-minus-square"></i>');
+
+
+            $('ul.hide').each(function() {
+                if ($(this).find('li').length == 0) $(this).prev().prev().prev().hide();
+            });
+
+            $('ul.show').each(function() {
+                if ($(this).find('li').length == 0) $(this).prev().prev().prev().hide();
+            });
+        });
+    </script>
+    <style>
+        body {
+            overflow-x: hidden;
+        }
+
+        div#actiontree {
+            float: left;
+            font-family: Arial;
+            font-size: 15px;
+            margin-top: 10px;
+            margin-left: 25px;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        p.root {
+            font-weight: bold;
+            color: #369;
+            font-size: 18px;
+        }
+
+        .tree,
+        .tree ul {
+            margin: 0 0 0 1em;
+            /* indentation */
+            padding: 0;
+            list-style: none;
+            color: #369;
+            position: relative;
+        }
+
+        .tree ul {
+            margin-left: .5em
+        }
+
+        /* (indentation/2) */
+
+        .tree:before,
+        .tree ul:before {
+            content: "";
+            display: block;
+            width: 0;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            border-left: 1px solid;
+        }
+
+        .tree li {
+            margin: 0;
+            padding: 0 1.5em;
+            /* indentation + .5em */
+            padding-bottom: 0.5em;
+            line-height: 1.675em;
+            /* default list item's `line-height` */
+            font-weight: bold;
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .tree li:before {
+            content: "";
+            display: block;
+            width: 10px;
+            /* same with indentation */
+            height: 0;
+            border-top: 1px solid;
+            margin-top: -1px;
+            /* border top width */
+            position: absolute;
+            top: 1em;
+            /* (line-height/2) */
+            left: 0;
+        }
+
+        .tree li:last-child:before {
+            background: white;
+            /* same with body background */
+            height: auto;
+            top: 1em;
+            /* (line-height/2) */
+            bottom: 0;
+        }
+
+        ul.menu {
+            display: none;
+            position: absolute;
+            background: white;
+            z-index: 99;
+            padding: 8px 0;
+            width: 160px;
+            border: solid 1px #dfdfdf;
+            box-shadow: 1px 1px 2px #cfcfcf;
+        }
+
+        ul.menu li {
+            padding: 4px 12px;
+            color: #0066AA;
+            font-family: Arial;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        ul.menu li:hover {
+            color: white !important;
+            background: #0066AA;
+        }
+
+        .sep {
+            background: initial !important;
+            cursor: initial !important;
+            padding: 0 !important;
+            font-size: 10px !important;
+        }
+
+        #actiontree img {
+            width: 10px;
+            height: 10px;
+        }
+
+        .book-name,
+        .chapter-name {
+            cursor: context-menu;
+            line-height:
+        }
+
+        .book-name:hover,
+        .chapter-name:hover {
+            opacity: 0.6;
+        }
+
+        .book-name.current,
+        .chapter-name.current {
+            color: red;
+        }
+
+        .book-status,
+        .li-link {
+            margin-right: 6px;
+            font-size: 18px;
+            color: black;
+            cursor: pointer;
+        }
+
+        span.series_name {
+            cursor: context-menu;
+        }
+    </style>
+    <div id="actiontree">
+        <p class="root">
+            <a class="li-link" href="{{ novel.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            <span class="series_name" data-item="11596">{{ novel.title }}</span>
+        </p>
+        <ul class="tree">
+            {% for chapter in chapters %}
+            <li>
+                <a class="li-link" href="{{ chapter.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                <span class="book-name level1" id="{{ forloop.counter }}" data-item="{{ forloop.counter }}">Chương {{ chapter.number }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        <div style="width: 1px; height: 170px"></div>
+    </div>
+    <ul id="series" class="menu">
+        <li>Sửa truyện</li>
+        <li class="sep">&nbsp;</li>
+        <li class="sep">&nbsp;</li>
+        <li style="color: red">Xóa truyện</li>
+        <li class="sep">&nbsp;</li>
+        <li>Thêm tập</li>
+    </ul>
+    <ul id="book" class="menu">
+        <li>Sửa tập</li>
+        <li class="sep">&nbsp;</li>
+        <li style="color: red">Xóa tập</li>
+        <li class="sep">&nbsp;</li>
+    </ul>
+    <script>
+        var smallWidth = $(parent.window).width() < 992;
+
+        function openLink(frameLink, frameName, pushPath) {
+            window.open(frameLink, frameName);
+
+            if (frameName != '_parent') {
+                parent.$('#action-tree').addClass('hidden-xs hidden-sm');
+            }
+
+            if (pushPath) {
+                parent.history.pushState({}, '', parent.location.pathname + '?' + pushPath);
+            }
+        }
+
+        function closeAllMenus() {
+            var menus = document.getElementsByClassName('menu');
+
+            for (var i = 0; i < menus.length; i++) {
+                menus[i].style.display = 'none';
+            }
+        }
+
+        function prepareContextMenu(type, event) {
+            event.stopPropagation();
+            event.preventDefault();
+
+            closeAllMenus();
+
+            var element = event.target;
+            var menu = $('#' + type);
+            var chil = menu.children();
+
+            $('span').removeClass('current');
+            $(element).addClass('current');
+
+            for (var i = 0; i < chil.length; i++) {
+                var child = chil[i];
+                var id = element.getAttribute('data-item');
+
+                switch (child.innerText) {
+                    case 'Sửa truyện':
+                        child.onclick = () => openLink(
+                            '{{ novel.get_absolute_url_edit }}?nav=0',
+                            'action',
+                        );
+                        break;
+                    case 'Xóa truyện':
+                        child.onclick = () => openLink(
+                            'https://ln.hako.re/action/series/11596/delete',
+                            '_parent'
+                        );
+                        break;
+                    case 'Thêm tập':
+                        child.onclick = () => openLink(
+                            '{{ novel.get_absolute_url_create_chapter }}?navbar=0',
+                            'action',
+                            'action=createbook'
+                        );
+                        break;
+                    case 'Sửa tập':
+                        child.onclick = () => openLink(
+                            "{% url 'edit_chapter' slug 999999999 %}".replace(999999999, id),
+                            'action',
+                        );
+                        break;
+                    case 'Xóa tập':
+                        child.onclick = () => openLink(
+                            'https://ln.hako.re/action/book/' + id + '/delete?navbar=0',
+                            'action',
+                            'book_id=' + id + '&action=deletebook'
+                        );
+                        break;
+                    case 'Sắp xếp chương':
+                        child.onclick = () => openLink(
+                            'https://ln.hako.re/action/book/' + id + '/order?navbar=0',
+                            'action',
+                            'book_id=' + id + '&action=orderchapter'
+                        );
+                        break;
+                    case 'Thêm chương':
+                        child.onclick = () => openLink(
+                            'https://ln.hako.re/action/chapter/create/book=' + id + '?navbar=0',
+                            'action',
+                            'book_id=' + id + '&action=createchapter'
+                        );
+                        break;
+                    case 'Sửa chương':
+                        child.onclick = () => openLink(
+                            'https://ln.hako.re/action/chapter/' + id + '/edit?navbar=0',
+                            'action',
+                            'chapter_id=' + id + '&action=editchapter'
+                        );
+                        break;
+                    case 'Xóa chương':
+                        child.onclick = () => openLink(
+                            'https://ln.hako.re/action/chapter/' + id + '/delete?navbar=0',
+                            'action',
+                            'chapter_id=' + id + '&action=deletechapter'
+                        );
+                        break;
+                }
+            }
+
+            menu.css({
+                display: 'block',
+                position: 'absolute',
+                left: (event.pageX + 20 > (menuLeft = document.body.clientWidth - menu.width()) ? menuLeft : event.pageX + 20) + 'px',
+                top: event.pageY + 'px'
+            });
+
+            return false;
+        }
+
+        var home = document.getElementsByClassName('series_name')[0];
+        var book = document.getElementsByClassName('level1');
+        var chap = document.getElementsByClassName('level2');
+
+        var menuEvent = smallWidth ? 'click' : 'contextmenu';
+
+        home.addEventListener(menuEvent, function(event) {
+            prepareContextMenu('series', event);
+        });
+
+        for (var i = 0; i < book.length; i++) {
+            book[i].addEventListener(menuEvent, function(event) {
+                prepareContextMenu('book', event);
+            });
+        }
+
+        for (var i = 0; i < chap.length; i++) {
+            chap[i].addEventListener(menuEvent, function(event) {
+                prepareContextMenu('chapter', event);
+            });
+        }
+
+        document.addEventListener('click', function(event) {
+            closeAllMenus();
+        })
+
+        $(document).ready(function() {
+            $('.book-status').on('click', function(event) {
+                event.stopPropagation();
+                $(this).html($(this).find('.fa-minus-square').length > 0 ? '<i class="fas fa-plus-square"></i>' : '<i class="fas fa-minus-square"></i>');
+                $(this).nextAll('ul').toggleClass('show hide');
+            });
+        });
+    </script>
+</body>
+
+{% endblock %}

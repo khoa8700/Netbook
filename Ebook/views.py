@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from django.template.defaultfilters import slugify
 from django.views.decorators.cache import never_cache
 from django.core.exceptions import ObjectDoesNotExist
-from numpy import tile
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q, Count, Max, OuterRef, Subquery
 
@@ -18,7 +17,7 @@ from django.contrib.auth.models import User
 import urllib
 from django.core.files import File
 from django.views.decorators.cache import cache_control
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from datetime import datetime
 from datetime import timedelta
@@ -317,6 +316,7 @@ def myWork(request, slug=None):
 def createNovel(request):
     form = CreateNovelForm()
     if request.method == "POST":
+        print("inPOST_create_novel")
         form = CreateNovelForm(request.POST, request.FILES)
         if form.is_valid():
             # user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
@@ -338,6 +338,28 @@ def createNovel(request):
 
 @authenticated_user
 @author_or_admin
+@author_check
+def editNovel(request,slug=None):
+    navCheck=request.GET.get("nav")
+    if int(navCheck)==0:
+        navCheck=False
+    else:
+        navCheck=True
+    novel = get_object_or_404(Novel,slug=slug)
+    if request.method=="POST":
+        form = CreateNovelForm(data=request.POST, files=request.FILES,instance=novel)
+        if form.is_valid():
+            form.save()
+    form = CreateNovelForm(instance=novel)
+    return render(request, "Ebook/edit_novel.html",{
+        "form":form,
+        "slug":slug,
+        "navCheck":navCheck,
+    })
+
+
+@authenticated_user
+@author_or_admin
 @cache_control(no_cache=True, must_revalidate=True)
 def createChapter(request, slug=None):
     novel = get_object_or_404(Novel,slug=slug)
@@ -345,8 +367,9 @@ def createChapter(request, slug=None):
     if request.method == "POST":
         form = CreateChapterForm(request.POST)
         if form.is_valid():
-            chapter = form.save()
+            chapter = form.save(commit=False)
             chapter.novel = novel
+            chapter.update_date=datetime.now()
             chapter.save()
             return redirect('my_work_detail',slug=slug)
     context={
@@ -372,7 +395,9 @@ def editChapter(request, slug=None, chapter_number=None):
         else:
             form = CreateChapterForm(request.POST,instance=chapter)
             if form.is_valid():
-                form.save()
+                chapter = form.save(commit=False)
+                chapter.update_date=datetime.now()
+                chapter.save()
                 # return redirect('my_work_detail',slug=slug)
     
     # if slug is not None and chapter_number is not None:
@@ -770,3 +795,172 @@ def postComment(request):
                 comment.save()
                 return JsonResponse({"ok": True}, status=200)
     return JsonResponse({"error": "invalid"}, status=400)
+
+@never_cache
+@authenticated_user
+def nRate(request):
+    if request.method == "POST" and request.is_ajax():
+        slug = request.POST.get("slug")
+        novel = Novel.objects.get(slug=slug)
+        if novel is not None:
+            user = User.objects.get(pk=request.user.pk)
+            print("#type : ",type(user))
+            print("#name : ",user.userinfo.name)
+            rate = int(request.POST.get("rate"))
+            print("rate : ",rate)
+            rating = Rating()
+            rating.rate=rate
+            rating.novel = novel
+            rating.user = user
+            rating.save()
+
+            prev_number=novel.number_rating
+            sum_rate=prev_number*novel.avg_rate
+            sum_rate+=1.0*rating.rate
+            novel.number_rating+=1
+
+            novel.avg_rate=sum_rate/novel.number_rating
+            novel.save()
+
+            return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)
+
+def advancedSearch(request):
+
+    tags=list(Tag.objects.all())
+
+    ret=Novel.objects
+
+    found=False
+
+    title=request.GET.get("title")
+    if title is not None:
+        ret=ret.filter(title__icontains=title)
+        found=True
+
+    # print("after search : ",list(ret))
+
+    status=request.GET.get("status")
+    if status is not None:
+        status=int(status)
+        if status!=0:
+            if status==1:
+                status=False
+            if status==2:
+                status=True
+
+            ret=ret.filter(status=status)
+        found=True
+
+    author=request.GET.get("author")
+    if author is not None:
+        ret=ret.filter(userinfo__name__icontains=author)
+        found=True
+
+    filter_tags_slug=request.GET.get("tags")
+
+    if filter_tags_slug is not None:
+        if filter_tags_slug != "":
+            filter_tags_slug=filter_tags_slug.split(",")
+            # print("all tags : ",filter_tags_slug)
+            if len(filter_tags_slug)!=0:
+                for tag_slug in filter_tags_slug:
+                    ret=ret.filter(tags=Tag.objects.get(slug=tag_slug))
+        found=True
+    
+    reject_tags_slug=request.GET.get("rejecttags")
+    print("#reject_tags_slug : ",reject_tags_slug)
+    if reject_tags_slug is not None:
+        if reject_tags_slug != "":
+            reject_tags_slug=reject_tags_slug.split(",")
+            if len(filter_tags_slug)!=0:
+                for tag_slug in reject_tags_slug:
+                    ret=ret.exclude(tags=Tag.objects.get(slug=tag_slug))
+        found=True
+
+    # print("advanced search : ",list(ret))
+    dict={}
+    cnt=0
+    if not found:
+        ret=[]
+
+    novels_and_last_chapters=[]
+    for novel in ret:
+        if novel.chapter_set.count()==0:
+            continue
+        novels_and_last_chapters.append([novel,list(Chapter.objects.filter(novel=novel).order_by("-number"))[0]])
+
+    for novel in ret:
+        dict[cnt]=novel.slug
+        cnt+=1
+    return render(request,"Ebook/advanced_search.html",{
+        "novels_and_last_chapters" : novels_and_last_chapters,
+        "tags" : tags,
+    })
+
+def action(request):
+    novels_number=Novel.objects.all().count()
+    chapters_number=Chapter.objects.all().count()
+    return render(request,'Ebook/action.html',{
+        "novels_number" : novels_number,
+        "chapters_number" : chapters_number,
+    })
+def tagsList(request):
+    tags = list(Tag.objects.all())
+    return render(request,'Ebook/tags_list.html',{
+        "tags" : tags,
+    })
+
+@authenticated_user
+@author_or_admin
+def manageList(request):
+    user = User.objects.get(pk=request.user.pk)
+    userinfo = UserInfo.objects.get(user=user)
+    novels = Novel.objects.filter(userinfo=userinfo)
+    keywords=request.GET.get("keywords")
+    if keywords is not None:
+        print("have keywords : ",keywords)
+        novels=novels.filter(title__icontains=keywords)
+    return render(request,'Ebook/manage_list.html',{
+        "novels" : novels,
+        "userinfo" : userinfo,
+    })
+
+@authenticated_user
+@author_or_admin
+def deleteNovel(request):
+    print("in delete novel 1")
+    if request.method=="POST" and request.is_ajax():
+        print("in delete novel 2")
+        slug = request.POST.get("slug")
+        print("# delete novel ",slug)
+        if slug is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                user = User.objects.get(pk=request.user.pk)
+                if user.userinfo==novel.userinfo:
+                    novel.delete()
+                    return JsonResponse({"ok":True})
+    return JsonResponse({"error":"something wrong"})
+        
+def manageNovel(request,slug=None):
+    if slug is not None:
+        novel=get_object_or_404(Novel,slug=slug)
+        return render(request,"Ebook/manage.html",{
+            "novel" : novel,
+        })
+    return HttpResponseNotFound('<h1>Page not found</h1>')
+
+def navbarNovel(request,slug):
+    if slug is not None:
+        novel=get_object_or_404(Novel,slug=slug)
+        chapters = Chapter.objects.filter(novel=novel).order_by("number")
+        return render(request,"Ebook/nav_novel.html",{
+            "novel" : novel,
+            "chapters" : chapters,
+            "slug" : slug,
+        })
+    return HttpResponseNotFound('<h1>Page not found</h1>')

@@ -72,6 +72,7 @@ class UserInfo(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=200, null=True)
     slug = models.SlugField(null=False)
+    description = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.name
@@ -81,10 +82,12 @@ class Tag(models.Model):
             self.slug = slugify(self.name)
         return super().save(*args,**kwargs)
 
+BOOL_CHOICES = ((True, 'Finished'), (False, 'In proccessing'))
+
 class Novel(models.Model):
     title = models.CharField(max_length=200, null=True)
     slug = models.SlugField(null=False)
-    description = models.TextField()
+    description = RichTextField()
     thumbnail = models.ImageField(default="images/placeholder.png", null=True, blank=True,upload_to="images/")
     userinfo = ForeignKey(UserInfo,null=True, blank=True,on_delete=models.CASCADE)
     tags = ManyToManyField(Tag)
@@ -92,7 +95,7 @@ class Novel(models.Model):
     number_rating = IntegerField(default=0)
     views = IntegerField(default=0)
     publication_date = models.DateTimeField(null=True,blank=True)
-    status = models.BooleanField(default=False)
+    status = models.BooleanField(default=False,choices=BOOL_CHOICES)
 
     def __str__(self):    
         return self.title
@@ -105,6 +108,15 @@ class Novel(models.Model):
     def get_absolute_url(self):
         return reverse('detail',kwargs={'slug':self.slug})
     
+    def get_absolute_url_nav(self):
+        return reverse('navbar_novel',kwargs={'slug':self.slug})
+
+    def get_absolute_url_edit(self):
+        return reverse('edit_novel',kwargs={'slug':self.slug})
+    
+    def get_absolute_url_create_chapter(self):
+        return reverse('create_chapter',kwargs={'slug':self.slug})
+    
     def get_absolute_url_write_chapters(self):
         return reverse('my_work_detail',kwargs={'slug':self.slug})
     
@@ -112,7 +124,7 @@ class Novel(models.Model):
 class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
-    content = RichTextField(blank=True,null=True)
+    content = RichTextField(null=True,blank=True)
     title = models.CharField(max_length=200, null=True)
     views = IntegerField(default=0)
     update_date = models.DateTimeField(null=True,blank=True)
