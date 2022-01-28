@@ -349,7 +349,7 @@ def createNovel(request):
 @author_check
 def editNovel(request,slug=None):
     navCheck=request.GET.get("nav")
-    if int(navCheck)==0:
+    if navCheck is not None and int(navCheck)==0:
         navCheck=False
     else:
         navCheck=True
@@ -425,7 +425,6 @@ def profile_details(request):
     info = UserInfo.objects.get(user=user)
     if request.method == "POST": 
         form = CreateUserInfoForm(request.POST,instance=info)
-        print('111')
         print(form.data)
         if form.is_valid():
             print('ok')
@@ -433,6 +432,7 @@ def profile_details(request):
             return redirect('profile_details')
     
     form = CreateUserInfoForm(instance=info)
+    print("hello profile")
     # print(form)
     context={
         "form":form

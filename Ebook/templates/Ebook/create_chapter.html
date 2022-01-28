@@ -1,4 +1,5 @@
 {% extends 'Ebook/base_control.html' %}
+{% load static %}
 {% block content %}
 
 <body>
@@ -8,7 +9,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Chapter</div>
                     <div class="panel-body">
-                        <form method="POST" enctype="multipart/form-data"> {% csrf_token %}
+                        <form method="POST" enctype="multipart/form-data" id="form_create"> {% csrf_token %}
                             <!-- <div class="form-group clearfix required">
                                 <label class="col-md-2 control-label pt-7">Tiêu đề</label>
                                 <div class="col-md-8">
@@ -47,9 +48,14 @@
             </div>
         </div>
     </div>
-
+    <script>
+        $("#form_create").submit(function(e){
+            window.parent.location.reload();
+        });
+    </script>
     <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel='stylesheet' />
     <link href="https://ln.hako.re/scripts/plugins/upload/css/upload.css" rel="stylesheet" />
+    <script src="{% static 'js/jquery.iframe-transport.js' %}"></script>
 
    
 </body>

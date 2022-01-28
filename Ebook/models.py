@@ -32,8 +32,11 @@ class UserInfo(models.Model):
     name = models.CharField(max_length=200, null=True)
     email = models.CharField(max_length=200, null=True)
     phone = models.CharField(max_length=200, null=True)
-    address = models.CharField(max_length=200, null=True)
+    hobby = models.CharField(max_length=200, null=True)
+    job = models.CharField(max_length=200, null=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True,default=CUSTOMER)
+
+    self_introduction = RichTextField(null=True,blank=True)
 
     lock_out_time = models.DateTimeField(null=True,blank=True)
 

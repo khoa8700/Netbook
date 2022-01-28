@@ -16,13 +16,24 @@ class CreateUserForm(UserCreationForm):
 class CreateUserInfoForm(ModelForm):
 	class Meta:
 		model = UserInfo
-		fields = ['name' , 'email' , 'phone' , 'address']
+		fields = ['name' , 'email' , 'phone' , 'hobby', 'job', 'self_introduction']
 		widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.TextInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'hobby': forms.TextInput(attrs={'class': 'form-control'}),
+			'job': forms.TextInput(attrs={'class': 'form-control'}),
+			'self_introduction': forms.TextInput(attrs={'class': 'form-control'}),
     	}
+	def __init__(self,*args,**kwargs):
+		print("init of form")
+		super(CreateUserInfoForm,self).__init__(*args,**kwargs)
+		print("initial create form")
+		instance = getattr(self, 'instance', None)
+		print("instance : ",instance)
+		if instance and instance.pk:
+			self.fields['name'].widget.attrs['readonly'] = True
+			self.fields['email'].widget.attrs['readonly'] = True
 
 class CreateNovelForm(ModelForm):
 	class Meta:
@@ -33,11 +44,6 @@ class CreateNovelForm(ModelForm):
 			'description' : forms.TextInput(attrs={'class':'form-control'}),
 			'tags' : forms.TextInput(attrs={'class':'form-control'}),
 		}
-
-		def __init__(self, *args, **kwargs):
-			super(CreateNovelForm, self).__init__(*args, **kwargs)
-			self.fields["tags"].widget = forms.CheckboxSelectMultiple()
-			self.fields["tags"].queryset = Tag.objects.all()
 
 	tags = forms.ModelMultipleChoiceField(
         queryset=Tag.objects.all(),
