@@ -655,7 +655,9 @@ def novelList(request, first_letter = None):
         
     novel_chapter = []
     for novel in novels:
-        novel_chapter.append([novel, list(Chapter.objects.filter(novel=novel).order_by("-number"))[0]])
+        chapter = list(Chapter.objects.filter(novel=novel).order_by("-number"))
+        if len(chapter) > 0:
+            novel_chapter.append([novel, chapter[0]])
     
     page_number = request.GET.get('page')
     if page_number is None:
