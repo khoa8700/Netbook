@@ -1,88 +1,129 @@
-{% load static %}
-<!DOCTYPE html>
+{% extends 'Ebook/base_control.html' %}
+{% block content %}
 
-<head id="ctl00_Head1">
-    <title>Thông tin chung - Netbook</title>
-    <link rel="stylesheet" type="text/css" href="{% static '/css/styles.profile_details.css' %}" />
-    <link rel="icon" type="image/png" href="{% static '/css/favicon-netbook.png' %}" />
-</head>
-
-<body id="ctl00_Body" class="vi-vn site3">
-    <form method="POST">
-        {% csrf_token %}
-        <main class="main">
-            <div class="container">
-                <div class="row">
-                    <div id="ctl00_divCenter" class="full-width col-sm-12">
-                        <div class="row">
-                            <div class="col-md-3 col-sm-4">
-                                <nav class="user-sidelink clearfix">
-                                    <ul>
-                                        <li class="hvr-sweep-to-right">
-                                            <a href="{% url 'profile_general' %}"> Thông tin chung</a>
-                                        </li>
-                                        <li class="hvr-sweep-to-right active">
-                                            <a href="{% url 'profile_details' %}"> Thông tin tài khoản</a>
-                                        </li>
-                                        <li class="hvr-sweep-to-right">
-                                            <a href="{% url 'profile_follow' %}"> Truyện theo dõi</a>
-                                        </li>
-                                        {% comment %} <li class="hvr-sweep-to-right">
-                                            <a href="http://nhattruyenvip.com/Secure/Notifications.aspx"> Thông báo</a>
-                                        </li> {% endcomment %}
-                                        <li class="hvr-sweep-to-right">
-                                            <a href="{% url 'profile_change_pass' %}"> Đổi mật khẩu</a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
-                            <div class="col-md-9 col-sm-8">
-                                <div id="ctl00_mainContent_pnlUser" class="user-page clearfix">
-                                    <h1 class="postname">Thông tin tài khoản </h1>
-                                    <div class="account-info clearfix">
-                                        <h2 class="posttitle">Cập nhật thông tin tài khoản</h2>
-                                        <div class="account-form clearfix">
-                                            <div class="row">
-                                                <div class="col-sm-9">
-                                                    <div id="ctl00_mainContent_divUserName" class="form-group">
-                                                        <label for="user" class="control-label">Tài khoản</label>
-                                                        <input type="text" value="{{request.user.username}}"
-                                                            tabindex="10" class="form-control" readonly>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="email"
-                                                            class="control-label">Địa chỉ email</label>
-                                                        {{form.email}}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="name"
-                                                        class="control-label">Họ và Tên</label>
-                                                        {{form.name}}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="phone"
-                                                        class="control-label">Số điện thoại</label>
-                                                        {{form.phone}}
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <label for="address"
-                                                        class="control-label">Địa chỉ</label>
-                                                        {{form.address}}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="button-wrap">
-                                                <input type="submit" value="Cập nhật" class="btn btn-primary">
-                                            </div>
-                                        </div>
-                                    </div>
+<body>
+    {% include 'Ebook/navbar_control.html' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Hồ sơ
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" method="POST" action=""> {% csrf_token %}
+                            <!-- {{ form.media }} -->
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Tên</label>
+                                <div class="col-md-8">
+                                    {{ form.name }}
                                 </div>
                             </div>
-                        </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Email</label>
+                                <div class="col-md-8">
+                                   {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Số điện thoại</label>
+                                <div class="col-md-8">
+                                    {{ form.phone }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Sở thích</label>
+                                <div class="col-md-8">
+                                    {{ form.hobby }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Nghề nghiệp</label>
+                                <div class="col-md-8">
+                                    {{ form.job }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Giới thiệu bản thân</label>
+                                <div class="col-md-8">
+                                    {{ form.self_introduction }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        Cập nhật
+                                    </button>
+                                    <a href="javascript: history.back()" class="btn btn-warning">
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.1/tinymce.min.js"
+                            referrerpolicy="origin"></script>
+                        <script>
+                            tinymce.init({
+                                selector: 'textarea',
+                                height: 200,
+                                skin: 'oxide',
+                                content_css: 'default',
+                                branding: false,
+                                menubar: false,
+                                contextmenu: false,
+                                entities: '160,nbsp,38,amp,60,lt,62,gt',
+                                paste_word_valid_elements: 'b,strong,i,em,u,s,a,p,br,img',
+                                element_format: 'html',
+                                formats: {
+                                    strikethrough: {
+                                        inline: 's',
+                                        remove: 'all'
+                                    },
+                                    underline: {
+                                        inline: 'u',
+                                        remove: 'all'
+                                    },
+                                },
+                                plugins: 'wordcount link image code fullscreen paste',
+                                toolbar: 'undo redo | bold italic underline strikethrough forecolor | link image | removeformat | fullscreen'
+                            });
+                        </script>
+                        <script>
+                            $(document).ready(function () {
+                                $('input[name=dateofbirth]').datepicker({
+                                    format: 'dd-mm-yyyy',
+                                    defaultViewDate: {
+                                        year: 2000,
+                                        month: 0,
+                                        day: 1
+                                    }
+                                })
+                            })
+                        </script>
                     </div>
                 </div>
             </div>
-        </main>
-    </form>
+        </div>
+    </div>
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel='stylesheet' />
+    <link href="https://ln.hako.re/scripts/plugins/upload/css/upload.css" rel="stylesheet" />
+
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/jquery.ui.widget.js"></script>
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/jquery.iframe-transport.js"></script>
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/jquery.fileupload.js"></script>
+    <script>
+        uploadSeriesUrl = 'https://ln.hako.re/action/upload/series';
+        uploadBookUrl = 'https://ln.hako.re/action/upload/book';
+        uploadChapterUrl = 'https://ln.hako.re/action/upload/image';
+        uploadAvatarUrl = 'https://ln.hako.re/action/upload/avatar';
+        remoteUploadUrl = 'https://ln.hako.re/action/upload/remote';
+
+        coverSeriesUrl = 'https://ln.hako.re/covers/series';
+        coverBookUrl = 'https://ln.hako.re/covers/books';
+    </script>
+
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/upload.js?v=7"></script>
 </body>
-</html>
+
+{% endblock %}
