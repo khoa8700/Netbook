@@ -43,4 +43,5 @@ urlpatterns=[
     path('action/<slug:slug>/manage',views.manageNovel,name="manage"),
     path('action/nav/<slug:slug>',views.navbarNovel,name="navbar_novel"),
     path('action/profile',views.profile_details,name="profile_details"),
+    path('action/<slug:slug>/<int:chapter_number>/delete_chapter',views.deleteChapter,name="delete_chapter"),
 ]

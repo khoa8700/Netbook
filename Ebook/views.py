@@ -962,3 +962,22 @@ def navbarNovel(request,slug):
             "slug" : slug,
         })
     return HttpResponseNotFound('<h1>Page not found</h1>')
+
+@authenticated_user
+@author_or_admin
+def deleteChapter(request,slug=None,chapter_number=None):
+    if slug is not None and chapter_number is not None:
+        try:
+            novel = Novel.objects.get(slug=slug)
+        except Novel.DoesNotExist:
+            novel = None
+        if novel is not None:
+            try:
+                chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+            except Chapter.DoesNotExist:
+                chapter = None
+            if chapter is not None:
+                user = User.objects.get(pk=request.user.pk)
+                if user.userinfo==novel.userinfo:
+                    chapter.delete()
+    return redirect('edit_novel',slug=slug)
