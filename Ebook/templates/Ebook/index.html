@@ -3,33 +3,7 @@
 {% block content %}
 {% include 'Ebook/navbar.html' %}
 <main id="mainpart" class="at-index">
-
     <div class="container" style="margin-bottom: 40px;">
-        <!-- <div class="row">
-            <div class="no-push col-12 push-2-l col-8-l">
-                <div id="announcements" class="index-top_notification">
-                    <div class="annoucement-item">
-                        <a href="/thao-luan/2267-khong-dang-manga" style=" color:  red">Không đăng Manga</a>
-                    </div>
-                    <div class="annoucement-item">
-                        <a href="/thao-luan/2250-hako-faqs-nhung-cau-hoi-thuong-gap-tren-hako"
-                            style=" color:  blue">(HAKO FAQs) NHỮNG CÂU HỎI THƯỜNG GẶP TRÊN HAKO</a>
-                    </div>
-                    <div class="annoucement-item">
-                        <a href="/thao-luan/2222-ve-viec-nhieu-truyen-bi-danh-gia-rate-linh-tinh"
-                            style=" color:  red">Về việc nhiều truyện bị Đánh giá (Rate) linh tinh</a>
-                    </div>
-                    <div class="annoucement-item">
-                        <a href="/thao-luan/1122-thu-nghiem-thong-bao-chuong-moi" style="">Thử nghiệm thông báo
-                            chương mới</a>
-                    </div>
-                    <div class="annoucement-item">
-                        <a href="/thao-luan/20-quy-dinh-chung-doi-voi-cac-du-an-dang-tai-cong-light-novel-bao-gom-truyen-dichconvert-va-oln"
-                            style=" color:  red">Quy định chung đối với các dự án đăng tại Cổng Light Novel</a>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <div class="row">
             <div class="col-12 col-lg-9">
                 <div class="daily-recent_views">
@@ -41,7 +15,7 @@
                         <div class="popular-thumb-item mr-1">
                             <div class="thumb-wrapper">
                                 <a href="{{ novel.get_absolute_url }}"
-                                    title="{{ novel.title }}">
+                                    title="{{ novel.title|title }}">
                                     <div class="a6-ratio">
                                         <div class="content img-in-ratio"
                                             style="background-image: url('{{ MEDIA_URL }}/{{ novel.thumbnail }}')">
@@ -50,14 +24,15 @@
                                 </a>
                                 <div class="thumb-detail">
                                     <div class="thumb_attr series-title"
-                                        title="{{ novel.title }}">
+                                        title="{{ novel.title|title }}">
                                         <a href="{{ novel.get_absolute_url }}"
-                                            title="{{ novel.title }}">{{ novel.title }}</a></div>
+                                            title="{{ novel.title|title }}">{{ novel.title|title }}
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
-                        
                     </main>
                 </div>
             </div>
@@ -67,213 +42,18 @@
                         <span class="sts-bold">Theo dõi</span><span class="sts-empty">nhiều</span>
                     </header>
                     <main>
-                        {% for novel,cnt in top_followed_novels_with_count %}
+                        {% for novel in top_followed_novels %}
                         <div class="rank-circle-item">
                             <span class="rank-number">{{ forloop.counter }}</span>
                             <div class="series-detail clear">
                                 <h5 class="series-title"><a href="{{ novel.get_absolute_url }}"
-                                        title="{{ novel.title }}">{{ novel.title }}</a></h5>
-                                <small class="rank-count">{{ cnt }} theo dõi</small>
+                                        title="{{ novel.title|title }}">{{ novel.title|title }}</a></h5>
+                                <small class="rank-count">{{ novel.follow }} theo dõi</small>
                             </div>
                         </div>
                         {% endfor %}
-                        
-                        <!-- <div class="rank-circle-item">
-                            <span class="rank-number">6</span>
-                            <div class="series-detail clear">
-                                <h5 class="series-title"><a href="/truyen/424-tensei-shitara-slime-datta-ken"
-                                        title="Tensei Shitara Slime datta ken">Tensei Shitara Slime datta
-                                        ken</a></h5>
-                                <small class="rank-count">6,029 theo dõi</small>
-                            </div>
-                        </div>
-                        <div class="rank-circle-item">
-                            <span class="rank-number">7</span>
-                            <div class="series-detail clear">
-                                <h5 class="series-title"><a
-                                        href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
-                                        title="Ryoushin no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi">Ryoushin
-                                        no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi</a></h5>
-                                <small class="rank-count">5,823 theo dõi</small>
-                            </div>
-                        </div>
-                        <div class="rank-circle-item">
-                            <span class="rank-number">8</span>
-                            <div class="series-detail clear">
-                                <h5 class="series-title"><a
-                                        href="/truyen/3009-ankoku-kishi-monogatari-yuusha-wo-taosu-tameni-maou-ni-shoukansaremashita"
-                                        title="Ankoku kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~">Ankoku
-                                        kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~</a>
-                                </h5>
-                                <small class="rank-count">5,375 theo dõi</small>
-                            </div>
-                        </div>
-                        <div class="rank-circle-item">
-                            <span class="rank-number">9</span>
-                            <div class="series-detail clear">
-                                <h5 class="series-title"><a
-                                        href="/truyen/6947-shinja-zero-no-megami-sama-to-hajimeru-isekai-kouryaku-classmate-saijaku-no-mahou-tsukai"
-                                        title="Shinja Zero no Megami-sama to Hajimeru Isekai Kouryaku">Shinja
-                                        Zero no Megami-sama to Hajimeru Isekai Kouryaku</a></h5>
-                                <small class="rank-count">5,242 theo dõi</small>
-                            </div>
-                        </div>
-                        <div class="rank-circle-item">
-                            <span class="rank-number">10</span>
-                            <div class="series-detail clear">
-                                <h5 class="series-title"><a
-                                        href="/truyen/8252-kurasu-no-daikirai-na-joshi-to-kekkon-suru-koto-ni-natta"
-                                        title="Kurasu no daikirai na joshi to kekkon suru koto ni natta.">Kurasu
-                                        no daikirai na joshi to kekkon suru koto ni natta.</a></h5>
-                                <small class="rank-count">4,866 theo dõi</small>
-                            </div>
-                        </div> -->
                     </main>
                 </section>
-                <!-- <section class="last-topics index-section">
-                    <header class="section-title">
-                        <a href="https://ln.hako.re/thao-luan"><span class="sts-bold">Thảo</span><span
-                                class="sts-empty">Luận</span></a>
-                    </header>
-                    <main>
-
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #28e1e8; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/2311-gop-y-ve-viec-lam-bai-review-va-danh-gia-mal?comment_id=1640110&amp;reply_id=1640112#ln-comment-1640112"
-                                        title="Góc review và recommend MAL (Manga-Anime-Light Novel)">
-                                        Góc review và recommend MAL (Manga-Anime-Light Novel)
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 22:31:37"
-                                        datetime="2022-01-20T22:31:37+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/614-cam-nang-cho-cac-translator?comment_id=1639051&amp;reply_id=1640093#ln-comment-1640093"
-                                        title="Phòng hỗ trợ dịch thuật">
-                                        Phòng hỗ trợ dịch thuật
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 22:25:58"
-                                        datetime="2022-01-20T22:25:58+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/2263-hoi-truyen-tu-az-goc-8-nham-cho-dich-gia-20?comment_id=1639860&amp;reply_id=1640043#ln-comment-1640043"
-                                        title="Hỏi Truyện từ A&gt;Z. Góc 8 nhảm cho dịch giả 2.0">
-                                        Hỏi Truyện từ A&gt;Z. Góc 8 nhảm cho dịch giả 2.0
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 21:50:00"
-                                        datetime="2022-01-20T21:50:00+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/2266-thao-luan-cho-tac-gia-oln?comment_id=1639889&amp;reply_id=1640029#ln-comment-1640029"
-                                        title="Thảo luận cho tác giả OLN">
-                                        Thảo luận cho tác giả OLN
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 21:40:41"
-                                        datetime="2022-01-20T21:40:41+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/1859-15-death-flag-co-ban-ki-nang-sinh-ton?comment_id=1639975#ln-comment-1639975"
-                                        title="15 death flag cơ bản (kĩ năng sinh tồn)">
-                                        15 death flag cơ bản (kĩ năng sinh tồn)
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 21:06:57"
-                                        datetime="2022-01-20T21:06:57+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/2237-box-giang-hoa-thang-bai-tai-ky-nang?comment_id=1639907&amp;reply_id=1639937#ln-comment-1639937"
-                                        title="BOX Giảng hòa: Thắng bại tại kỹ năng">
-                                        BOX Giảng hòa: Thắng bại tại kỹ năng
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 20:42:01"
-                                        datetime="2022-01-20T20:42:01+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #eb1d57; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi?comment_id=1639843&amp;reply_id=1639890#ln-comment-1639890"
-                                        title="Góp ý và báo lỗi">
-                                        Góp ý và báo lỗi
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 20:14:39"
-                                        datetime="2022-01-20T20:14:39+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #1ee865; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/85-de-xuat-lnwn-cho-cac-trans?comment_id=1639508#ln-comment-1639508"
-                                        title="Đề xuất LN/WN cho các trans">
-                                        Đề xuất LN/WN cho các trans
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 15:02:20"
-                                        datetime="2022-01-20T15:02:20+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="topic-item">
-                            <div class="row">
-                                <div class="col-9 line-ellipsis">
-                                    <i class="fas fa-circle" style="color: #eb1d57; margin-right: 4px;"></i>
-                                    <a href="/thao-luan/392-bao-cao-vi-pham-cho-mang-truyen-dich?comment_id=1639372#ln-comment-1639372"
-                                        title="BOX xử lý truyện dịch">
-                                        BOX xử lý truyện dịch
-                                    </a>
-                                </div>
-                                <div class="col-3 topic-data text-right">
-                                    <time class="timeago" title="20-01-2022 12:34:12"
-                                        datetime="2022-01-20T12:34:12+07:00"></time>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-                </section> -->
             </div>
         </div>
     </div>
@@ -289,9 +69,9 @@
                     <main class="row">
                         {% for chapter in latest_chapters %}
                         <div class="thumb-item-flow col-4 col-lg-2">
-                            <div class="thumb-wrapper">
+                            {% comment %} <div class="thumb-wrapper">
                                 <a href="{{ chapter.get_absolute_url }}"
-                                    title="Chương {{ chapter.number }}: {{ chapter.title }}">
+                                    title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
                                     <div class="a6-ratio">
                                         <div class="content img-in-ratio lazyload"
                                             data-bg="{{ MEDIA_URL }}/{{ chapter.novel.thumbnail }}">
@@ -299,16 +79,16 @@
                                     </div>
                                 </a>
                                 <div class="thumb-detail">
-                                    <div class="thumb_attr chapter-title"
-                                        title="Chương {{ chapter.number }}: {{ chapter.novel }}"><a
-                                            href="{{ chapter.get_absolute_url }}"
-                                            title="Chương {{ chapter.number }}: {{ chapter.title }}">Chương {{ chapter.number }}: {{ chapter.title }}</a></div>
-                                    <div class="thumb_attr volume-title">{{ chapter.novel.userinfo.name }}</div>
+                                    <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                        <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">Chương {{ chapter.number }}</a>
+                                    </div>
+                                    <div class="thumb_attr volume-title">{{ chapter.title|title }}</div>
                                 </div>
                             </div>
-                            <div class="thumb_attr series-title"><a
-                                    href="{{ chapter.novel.get_absolute_url }}"
-                                    title="{{ chapter.novel.title }}">{{ chapter.novel.title }}</a></div>
+                            <div class="thumb_attr series-title">
+                                <a href="{{ novel.get_absolute_url }}" title="{{ novel.title|title }}">{{ novel.title|title }}</a>
+                            </div> {% endcomment %}
+                            {% include 'Ebook/novel_thumbnail.html' %}
                         </div>
                         {% endfor %}
                         <div class="thumb-item-flow col-4 col-lg-2 see-more">
@@ -317,7 +97,7 @@
                                     <div class="content img-in-ratio"
                                         style="background-image: url('{% static 'img/nocover.png' %}');"></div>
                                 </div>
-                                <a href="https://ln.hako.re/danh-sach?truyendich=1&amp;sapxep=capnhat">
+                                <a href="/list/?sapxep=capnhat">
                                     <div class="thumb-see-more">
                                         <div class="see-more-inside">
                                             <div class="see-more-content">
@@ -332,141 +112,6 @@
                         </div>
                     </main>
                 </section>
-                <!-- <section class="index-section thumb-section-flow last-chapter original one-row">
-                    <header class="section-title"><span class="sts-bold">Sáng tác</span><span class="sts-empty">Mới
-                            Nhất</span></header>
-                    <main class="row">
-                        <div class="thumb-item-flow col-4 col-lg-2">
-                            <div class="thumb-wrapper">
-                                <a href="/sang-tac/11556-tien-de/c92527-chuong-01" title="Chương 01">
-                                    <div class="a6-ratio">
-                                        <div class="content img-in-ratio lazyload"
-                                            data-bg="https://c1.hako.re/lightnovel/covers/s11556-0659ef6b-a45c-484f-8204-d57da2962bb0-m.jpg">
-                                        </div>
-                                    </div>
-                                </a>
-                                <div class="thumb-detail">
-                                    <div class="thumb_attr chapter-title" title="Chương 01"><a
-                                            href="/sang-tac/11556-tien-de/c92527-chuong-01" title="Chương 01">Chương
-                                            01</a></div>
-                                    <div class="thumb_attr volume-title">Tập Một</div>
-                                </div>
-                            </div>
-                            <div class="thumb_attr series-title"><a href="/sang-tac/11556-tien-de"
-                                    title="Tiên Đế">Tiên Đế</a></div>
-                        </div>
-                        <div class="thumb-item-flow col-4 col-lg-2">
-                            <div class="thumb-wrapper">
-                                <a href="/sang-tac/11528-dang-du-ky-nguyen-hon-gioi/c92526-chuong-01-vu-tru-duoc-hinh-thanh-nhu-the-nao"
-                                    title="Vũ trụ được hình thành như thế nào?">
-                                    <div class="a6-ratio">
-                                        <div class="content img-in-ratio lazyload"
-                                            data-bg="https://c1.hako.re/lightnovel/covers/s11528-688ba563-822b-4e0e-a404-a3bc8c5424de-m.jpg">
-                                        </div>
-                                    </div>
-                                </a>
-                                <div class="thumb-detail">
-                                    <div class="thumb_attr chapter-title"
-                                        title="Vũ trụ được hình thành như thế nào?"><a
-                                            href="/sang-tac/11528-dang-du-ky-nguyen-hon-gioi/c92526-chuong-01-vu-tru-duoc-hinh-thanh-nhu-the-nao"
-                                            title="Vũ trụ được hình thành như thế nào?">Vũ trụ được hình thành như
-                                            thế nào?</a></div>
-                                    <div class="thumb_attr volume-title">Cái này là tiền truyện của tiền truyện
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="thumb_attr series-title"><a
-                                    href="/sang-tac/11528-dang-du-ky-nguyen-hon-gioi"
-                                    title="Đấng Du Ký Nguyền Hồn Giới">Đấng Du Ký Nguyền Hồn Giới</a></div>
-                        </div>
-                        <div class="thumb-item-flow col-4 col-lg-2">
-                            <div class="thumb-wrapper">
-                                <a href="/sang-tac/11534-mot-cau-chuyen-hai-nhan-vat-chinh/c92516-chuong-6-hi-vong"
-                                    title="Chương 6: Hi vọng">
-                                    <div class="a6-ratio">
-                                        <div class="content img-in-ratio lazyload"
-                                            data-bg="https://ln.hako.re/img/nocover.png"></div>
-                                    </div>
-                                </a>
-                                <div class="thumb-detail">
-                                    <div class="thumb_attr chapter-title" title="Chương 6: Hi vọng"><a
-                                            href="/sang-tac/11534-mot-cau-chuyen-hai-nhan-vat-chinh/c92516-chuong-6-hi-vong"
-                                            title="Chương 6: Hi vọng">Chương 6: Hi vọng</a></div>
-                                    <div class="thumb_attr volume-title">Tập 01: Đàn em trong nghề</div>
-                                </div>
-                            </div>
-                            <div class="thumb_attr series-title"><a
-                                    href="/sang-tac/11534-mot-cau-chuyen-hai-nhan-vat-chinh"
-                                    title="Một câu chuyện, hai nhân vật chính?">Một câu chuyện, hai nhân vật
-                                    chính?</a></div>
-                        </div>
-                        <div class="thumb-item-flow col-4 col-lg-2">
-                            <div class="thumb-wrapper">
-                                <a href="/sang-tac/11537-tro-ve-cung-em/c92509-chuong-02-du-o-dau-thi-cung-phai-lam-viec-ma-thoi"
-                                    title="Chương 02: Dù ở đâu thì cũng phải làm việc mà thôi">
-                                    <div class="a6-ratio">
-                                        <div class="content img-in-ratio lazyload"
-                                            data-bg="https://c1.hako.re/lightnovel/covers/s11537-8e8f9a73-54b3-482d-b9d8-9c793692a25f-m.jpg">
-                                        </div>
-                                    </div>
-                                </a>
-                                <div class="thumb-detail">
-                                    <div class="thumb_attr chapter-title"
-                                        title="Chương 02: Dù ở đâu thì cũng phải làm việc mà thôi"><a
-                                            href="/sang-tac/11537-tro-ve-cung-em/c92509-chuong-02-du-o-dau-thi-cung-phai-lam-viec-ma-thoi"
-                                            title="Chương 02: Dù ở đâu thì cũng phải làm việc mà thôi">Chương 02: Dù
-                                            ở đâu thì cũng phải làm việc mà thôi</a></div>
-                                    <div class="thumb_attr volume-title">Tập 1</div>
-                                </div>
-                            </div>
-                            <div class="thumb_attr series-title"><a href="/sang-tac/11537-tro-ve-cung-em"
-                                    title="Trở Về Cùng Em">Trở Về Cùng Em</a></div>
-                        </div>
-                        <div class="thumb-item-flow col-4 col-lg-2">
-                            <div class="thumb-wrapper">
-                                <a href="/sang-tac/9748-tui-minh-tot-nghiep-roi-hang-yeu-duong/c92491-chuong-24-le-chao-mung-tan-binh-bat-dau"
-                                    title="Chương 24 – Lễ chào mừng Tân Binh bắt đầu!!!">
-                                    <div class="a6-ratio">
-                                        <div class="content img-in-ratio lazyload"
-                                            data-bg="https://c1.hako.re/lightnovel/covers/s9748-d3ffd9e7-92ce-47d9-b372-f536f3e2aeef-m.jpg">
-                                        </div>
-                                    </div>
-                                </a>
-                                <div class="thumb-detail">
-                                    <div class="thumb_attr chapter-title"
-                                        title="Chương 24 – Lễ chào mừng Tân Binh bắt đầu!!!"><a
-                                            href="/sang-tac/9748-tui-minh-tot-nghiep-roi-hang-yeu-duong/c92491-chuong-24-le-chao-mung-tan-binh-bat-dau"
-                                            title="Chương 24 – Lễ chào mừng Tân Binh bắt đầu!!!">Chương 24 – Lễ chào
-                                            mừng Tân Binh bắt đầu!!!</a></div>
-                                    <div class="thumb_attr volume-title">Mục Lục</div>
-                                </div>
-                            </div>
-                            <div class="thumb_attr series-title"><a
-                                    href="/sang-tac/9748-tui-minh-tot-nghiep-roi-hang-yeu-duong"
-                                    title="Tụi Mình Tốt Nghiệp Rồi Hẵng Yêu Đương">Tụi Mình Tốt Nghiệp Rồi Hẵng Yêu
-                                    Đương</a></div>
-                        </div>
-                        <div class="thumb-item-flow col-4 col-lg-2 see-more">
-                            <div class="thumb-wrapper">
-                                <div class="a6-ratio">
-                                    <div class="content img-in-ratio"
-                                        style="background-image: url('img/nocover.png');"></div>
-                                </div>
-                                <a href="https://ln.hako.re/danh-sach?sangtac=1&amp;sapxep=capnhat">
-                                    <div class="thumb-see-more">
-                                        <div class="see-more-inside">
-                                            <div class="see-more-content">
-                                                <div class="see-more-icon"><i class="fas fa-arrow-circle-right"></i>
-                                                </div>
-                                                <div class="see-more-text">Xem thêm</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </main>
-                </section> -->
             </div>
             <div class="col-12 col-lg-3">
                 <section id="recent-comments" class="index-section">
@@ -477,31 +122,31 @@
                         {% for comment in recently_comments %}
                         <div class="comment-item-at-index">
                             <div class="comment-info">
-                                <span class="series-name"><a href="{{ comment.novel.get_absolute_url }}">{{ comment.novel }}</a></span>
+                                <span class="series-name"><a href="{{ comment.novel.get_absolute_url }}">{{ comment.novel.title|title }}</a></span>
                                 <div class="comment-content">
-                                    {{ comment.content | safe }}
+                                    {{ comment.content | safe | truncatechars:100}}
                                 </div>
                                 <div class="comment-top">
                                     <div class="comment-user_ava">
-                                        <i href="https://ln.hako.re/thanh-vien/43175">
+                                        {% comment %} <i href="/user/{{ user.id}}"> {% endcomment %}
+                                        <i href="#">
                                             <img
                                                 src="{% static 'images/avatar.png' %}">
                                         </i>
                                     </div>
                                     <i rel="nofollow" class="comment-user_name strong">{{ comment.user.userinfo.name }}</i>
                                     <small class="comment-location">
-                                        <i>
-                                            <time class="timeago" title="{{ comment.publication_date }}"
-                                                datetime="{{ comment.publication_date }}">
-                                                {{ comment.publication_date }}
+                                        <a href="{{comment.novel.get_absolute_url|add:'#ln-comment-'}}{{comment.id }}">
+                                            <time class="timeago" title="{{ comment.publication_date|date:'d-m-Y H:i:s' }}"
+                                                datetime="{{ comment.publication_date|date:'c' }}">
+                                                {{ comment.publication_date|date:'d-m-Y H:i:s' }}
                                             </time>
-                                        </i>
+                                        </a>
                                     </small>
                                 </div>
                             </div>
                         </div>
                         {% endfor %}
-                        
                     </main>
                 </section>
             </div>
@@ -509,358 +154,32 @@
     </div>
     <div style="text-align: center; margin: 0 auto 10px auto;">
     </div>
-    <!-- <div class="bottom-part at-index">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-md-8 col-lg-9">
-                    <section class="index-section new-series">
-                        <header class="section-title"><span class="sts-bold">Truyện</span><span
-                                class="sts-empty">Vừa Đăng</span>
-                        </header>
-                        <main class="sect-body">
-                            <div class="row">
-                                <article class="list-item col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-4 col-md-3 col-lg-4">
-                                            <div class="series-cover">
-                                                <a href="/truyen/11554-hentai-ouji-to-warawanai-neko">
-                                                    <div class="a6-ratio">
-                                                        <div class="content img-in-ratio lazyload"
-                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11554-047461ab-73d7-4e49-8e48-0c415cd53369-m.jpg">
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-md-9 col-lg-8">
-                                            <div class="list-detail">
-                                                <h4 class="series-title"><a
-                                                        href="/truyen/11554-hentai-ouji-to-warawanai-neko">Hentai
-                                                        Ouji to Warawanai Neko</a></h4>
-                                                <div class="series-summary">Yokodera cũng giống như những cậu bé
-                                                    tuổi teen khác: sự biến thái là bản năng của cậu. Cậu luôn ham
-                                                    muốn được ngắm phần...</div>
-                                                <div class="lastest-chapter">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="list-item col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-4 col-md-3 col-lg-4">
-                                            <div class="series-cover">
-                                                <a
-                                                    href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga">
-                                                    <div class="a6-ratio">
-                                                        <div class="content img-in-ratio lazyload"
-                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11544-567916d0-60c0-4f80-addb-eb7bc82f4ff8-m.jpg">
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-md-9 col-lg-8">
-                                            <div class="list-detail">
-                                                <h4 class="series-title"><a
-                                                        href="/truyen/11544-yousei-bishoujo-ga-nounai-de-tasuke-wo-motometekurundaga">Yousei
-                                                        Bishoujo ga Nounai de Tasuke wo Motometekurundaga?</a></h4>
-                                                <div class="series-summary">Atsushi Yamagami bị những người bạn cùng
-                                                    lớp xa lánh bởi vì có tin đồn rằng cậu đã đánh vào mặt của một
-                                                    cô gái học ở trư...</div>
-                                                <div class="lastest-chapter">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="list-item col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-4 col-md-3 col-lg-4">
-                                            <div class="series-cover">
-                                                <a href="/truyen/11535-jojos-bizarre-adventure-over-heaven">
-                                                    <div class="a6-ratio">
-                                                        <div class="content img-in-ratio lazyload"
-                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11535-c43aee4e-c306-4cfa-8c0e-d56342f9fe82-m.jpg">
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-md-9 col-lg-8">
-                                            <div class="list-detail">
-                                                <h4 class="series-title"><a
-                                                        href="/truyen/11535-jojos-bizarre-adventure-over-heaven">JoJo&#039;s
-                                                        Bizarre Adventure Over Heaven</a></h4>
-                                                <div class="series-summary">    JoJo's Bizarre Adventure Over Heaven
-                                                    là nội dung từ cuốn nhật ký của DIO đã bị Kujo Jotaro đốt bỏ ở
-                                                    phần Stardust Cr...</div>
-                                                <div class="lastest-chapter">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="list-item col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-4 col-md-3 col-lg-4">
-                                            <div class="series-cover">
-                                                <a
-                                                    href="/truyen/11527-prove-your-eternal-love-there-shall-be-no-heroine-correction">
-                                                    <div class="a6-ratio">
-                                                        <div class="content img-in-ratio lazyload"
-                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11527-5f128811-16a1-4024-ab02-1c37e1a13022-m.jpg">
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-md-9 col-lg-8">
-                                            <div class="list-detail">
-                                                <h4 class="series-title"><a
-                                                        href="/truyen/11527-prove-your-eternal-love-there-shall-be-no-heroine-correction">Question
-                                                        1: Prove Your Eternal Love. There Shall Be No Heroine
-                                                        Correction.</a></h4>
-                                                <div class="series-summary">Ngày hôm đó, tôi chuẩn bị đi tỏ tình.
-                                                    Tôi chuẩn bị đi tỏ tình với Tokiwa Nagisa, một bé đàn em người
-                                                    đã thổ lộ tình cảm...</div>
-                                                <div class="lastest-chapter">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="list-item col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-4 col-md-3 col-lg-4">
-                                            <div class="series-cover">
-                                                <a href="/truyen/11522-magika-no-kenshin-to-shoukan-maou">
-                                                    <div class="a6-ratio">
-                                                        <div class="content img-in-ratio lazyload"
-                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11522-5a5b6c9d-aa00-4a3d-9ed9-838aa2568641-m.jpg">
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-md-9 col-lg-8">
-                                            <div class="list-detail">
-                                                <h4 class="series-title"><a
-                                                        href="/truyen/11522-magika-no-kenshin-to-shoukan-maou">Magika
-                                                        no Kenshin to Shoukan Maou</a></h4>
-                                                <div class="series-summary">15 năm trước, thế giới tìm ra ma thuật
-                                                    cũng như những sinh vật huyền thoại trong một không gian khác.
-                                                    Con người học được...</div>
-                                                <div class="lastest-chapter">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                                <article class="list-item col-12 col-lg-6">
-                                    <div class="row">
-                                        <div class="col-4 col-md-3 col-lg-4">
-                                            <div class="series-cover">
-                                                <a
-                                                    href="/truyen/11521-its-not-cheating-if-its-with-your-stepsister">
-                                                    <div class="a6-ratio">
-                                                        <div class="content img-in-ratio lazyload"
-                                                            data-bg="https://c1.hako.re/lightnovel/covers/s11521-fd579344-dcd8-43f9-9aaa-967a153f76b9-m.jpg">
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="col-8 col-md-9 col-lg-8">
-                                            <div class="list-detail">
-                                                <h4 class="series-title"><a
-                                                        href="/truyen/11521-its-not-cheating-if-its-with-your-stepsister">It’s
-                                                        not cheating if it’s with your stepsister</a></h4>
-                                                <div class="series-summary">Tôi có một cô bạn gái, tên cô ấy là
-                                                    Shiori Hoshino. Cô được biết đến với danh xưng “Nữ hoàng băng
-                                                    giá” vì vẻ ngoài ấn tư...</div>
-                                                <div class="lastest-chapter">
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </article>
-                            </div>
-                        </main>
-                        <div class="see-more_cover">
-                            <a class="see-more"
-                                href="https://ln.hako.re/danh-sach?truyendich=1&amp;sapxep=truyenmoi">
-                                <i class="fas fa-hand-point-right"></i>Xem thêm
-                            </a>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-12 col-md-4 col-lg-3">
-                    <section class="index-section rank-cirle most-followed">
-                        <header class="section-title">
-                            <span class="sts-bold">Theo dõi</span><span class="sts-empty">nhiều</span>
-                        </header>
-                        <main>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">1</span>
-                                <div class="series-detail clear">
-                                    <div class="series-cover">
-                                        <div class="a6-ratio">
-                                            <div class="content img-in-ratio"
-                                                style="background-image: url('https://c1.hako.re/lightnovel/covers/s3569-4f9d3270-6d42-4301-8ad7-761e917fc3b6-m.jpg') ">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h5 class="series-title"><a
-                                            href="/truyen/3569-in-no-jitsury-okusha-ni-naritakute-new"
-                                            title="In no jitsury okusha ni naritakute!">In no jitsury okusha ni
-                                            naritakute!</a></h5>
-                                    <small class="rank-count">8,841 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">2</span>
-                                <div class="series-detail clear">
-                                    <div class="series-cover">
-                                        <div class="a6-ratio">
-                                            <div class="content img-in-ratio"
-                                                style="background-image: url('https://c1.hako.re/lightnovel/covers/s139-e57efbf8-0c46-4f8f-8287-9aa586c555c6-m.jpg') ">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h5 class="series-title"><a href="/truyen/139-that-nghiep-tai-sinh"
-                                            title="Mushoku Tensei - Isekai Ittara Honki Dasu">Mushoku Tensei -
-                                            Isekai Ittara Honki Dasu</a></h5>
-                                    <small class="rank-count">7,201 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">3</span>
-                                <div class="series-detail clear">
-                                    <div class="series-cover">
-                                        <div class="a6-ratio">
-                                            <div class="content img-in-ratio"
-                                                style="background-image: url('https://c1.hako.re/lightnovel/covers/s767-2679cd16-9be4-40b8-ad73-7c8dd4b2a31c-m.jpg') ">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <h5 class="series-title"><a
-                                            href="/truyen/767-arifureta-shokugyou-de-sekai-saikyou"
-                                            title="Arifureta Shokugyou de Sekai Saikyou">Arifureta Shokugyou de
-                                            Sekai Saikyou</a></h5>
-                                    <small class="rank-count">6,800 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">4</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a href="/truyen/3601-maou-gakuin-no-futekigousha"
-                                            title="Maou Gakuin no Futekigousha ~Shijou Saikyou no Maou no Shiso, Tensei shite Shison tachi no Gakkou e Kayou~">Maou
-                                            Gakuin no Futekigousha ~Shijou Saikyou no Maou no Shiso, Tensei shite
-                                            Shison tachi no Gakkou e Kayou~</a></h5>
-                                    <small class="rank-count">6,706 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">5</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a
-                                            href="/truyen/10712-toi-bi-ten-senpai-ntr-mat-ban-gai-nen-toi-ntr-lai-ban-gai-cua-han"
-                                            title="Tôi bị tên senpai NTR mất bạn gái, nên tôi NTR lại bạn gái của hắn">Tôi
-                                            bị tên senpai NTR mất bạn gái, nên tôi NTR lại bạn gái của hắn</a></h5>
-                                    <small class="rank-count">6,405 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">6</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a href="/truyen/424-tensei-shitara-slime-datta-ken"
-                                            title="Tensei Shitara Slime datta ken">Tensei Shitara Slime datta
-                                            ken</a></h5>
-                                    <small class="rank-count">6,029 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">7</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a
-                                            href="/truyen/8115-ryoushin-no-shakkin-wo-katagawari-shite-morau-jouken-wa-nihon-ichi"
-                                            title="Ryoushin no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi">Ryoushin
-                                            no Shakkin wo Katagawari shite Morau Jouken wa Nihon Ichi</a></h5>
-                                    <small class="rank-count">5,823 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">8</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a
-                                            href="/truyen/3009-ankoku-kishi-monogatari-yuusha-wo-taosu-tameni-maou-ni-shoukansaremashita"
-                                            title="Ankoku kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~">Ankoku
-                                            kishi monogatari~Yuusha wo taosu tameni Maou ni Shoukansaremashita~</a>
-                                    </h5>
-                                    <small class="rank-count">5,375 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">9</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a
-                                            href="/truyen/6947-shinja-zero-no-megami-sama-to-hajimeru-isekai-kouryaku-classmate-saijaku-no-mahou-tsukai"
-                                            title="Shinja Zero no Megami-sama to Hajimeru Isekai Kouryaku">Shinja
-                                            Zero no Megami-sama to Hajimeru Isekai Kouryaku</a></h5>
-                                    <small class="rank-count">5,242 theo dõi</small>
-                                </div>
-                            </div>
-                            <div class="rank-circle-item">
-                                <span class="rank-number">10</span>
-                                <div class="series-detail clear">
-                                    <h5 class="series-title"><a
-                                            href="/truyen/8252-kurasu-no-daikirai-na-joshi-to-kekkon-suru-koto-ni-natta"
-                                            title="Kurasu no daikirai na joshi to kekkon suru koto ni natta.">Kurasu
-                                            no daikirai na joshi to kekkon suru koto ni natta.</a></h5>
-                                    <small class="rank-count">4,866 theo dõi</small>
-                                </div>
-                            </div>
-                        </main>
-                    </section>
-                </div>
-            </div>
-        </div>
-    </div> -->
     <div class="container pad-top-40">
         <section class="index-section js-finished-series">
             <header class="section-title">
                 <span class="sts-bold">Truyện</span><span class="sts-empty">đã hoàn thành</span>
             </header>
             <main class="row slider">
-                {% for novel,chapter in latest_novels_full_and_last_chapters %}
+                {% for chapter in latest_finished_novels %}
                 <div class="thumb-item-flow thumb-slider">
-                    <div class="thumb-wrapper">
+                    {% comment %} <div class="thumb-wrapper">
                         <a href="{{ chapter.get_absolute_url }}"
-                            title="Chương {{ chapter.number }}: {{ chapter.title }}">
+                            title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
                             <div class="a6-ratio">
                                 <div class="content img-in-ratio lazyload"
-                                    data-bg="{{ MEDIA_URL }}/{{ novel.thumbnail }}">
+                                    data-bg="{{ MEDIA_URL }}/{{ chapter.novel.thumbnail }}">
                                 </div>
                             </div>
                         </a>
                         <div class="thumb-detail">
-                            <div class="thumb_attr chapter-title"
-                                title="Chương {{ chapter.number }}: {{ chapter.title }}"><a
-                                    href="{{ chapter.get_absolute_url }}"
-                                    title="Chương {{ chapter.number }}: {{ chapter.title }}">Chương {{ chapter.number }}: {{ chapter.title }}</a></div>
-                            <div class="thumb_attr volume-title">Chương {{ chapter.number }} [Đã hoàn thành]</div>
+                            <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">Chương {{ chapter.number }}</a>
+                            </div>
+                            <div class="thumb_attr volume-title">{{ chapter.title|title }}</div>
                         </div>
                     </div>
-                    <div class="thumb_attr series-title"><a
-                            href="{{ novel.get_absolute_url }}"
-                            title="{{ novel.title }}">{{ novel.title }}</a></div>
+                    <div class="thumb_attr series-title"><a href="{{ chapter.novel.get_absolute_url }}" title="{{ chapter.novel.title|title }}">{{ chapter.novel.title|title }}</a></div> {% endcomment %}
+                    {% include 'Ebook/novel_thumbnail.html' %}
                 </div>
                 {% endfor %}
                 <div class="thumb-item-flow see-more">
@@ -869,7 +188,7 @@
                             <div class="content img-in-ratio" style="background-image: url('img/nocover.png');">
                             </div>
                         </div>
-                        <a href="https://ln.hako.re/danh-sach?truyendich=1&amp;hoanthanh=1&amp;sapxep=capnhat">
+                        <a href="/list/hoanthanh=1&amp;sapxep=capnhat">
                             <div class="thumb-see-more">
                                 <div class="see-more-inside">
                                     <div class="see-more-content">
@@ -886,14 +205,10 @@
     </div>
     <script>
         $(document).ready(function () {
-
             $(".mobile-toggle header").click(function () {
                 $(this).parent().find(".listall_summary").toggle();
                 $(this).parent().find(".sect-body").toggle();
             });
-
-            //listab(".daily-recent_views");
-
         });
     </script>
 </main>

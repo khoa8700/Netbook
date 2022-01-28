@@ -1,23 +1,17 @@
 {% extends 'Ebook/base_control.html' %}
 {% block content %}
-
 <body>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
 
-            var lichap = $('#chapter_' + '92690').closest('ul');
-            $('#chapter_' + '92690').addClass('current');
+            var lichap = $('#chapter_' + '92691').closest('ul');
+            $('#chapter_' + '92691').addClass('current');
             lichap.removeClass('hide');
             lichap.addClass('show');
-            lichap.parent().find('.book-status').html('<i class="fas fa-minus-square"></i>');
-
+            lichap.parent().find('.series-status').html('<i class="fas fa-minus-square"></i>');
 
             $('ul.hide').each(function() {
-                if ($(this).find('li').length == 0) $(this).prev().prev().prev().hide();
-            });
-
-            $('ul.show').each(function() {
                 if ($(this).find('li').length == 0) $(this).prev().prev().prev().hide();
             });
         });
@@ -39,12 +33,6 @@
             list-style: none;
         }
 
-        p.root {
-            font-weight: bold;
-            color: #369;
-            font-size: 18px;
-        }
-
         .tree,
         .tree ul {
             margin: 0 0 0 1em;
@@ -61,7 +49,6 @@
 
         /* (indentation/2) */
 
-        .tree:before,
         .tree ul:before {
             content: "";
             display: block;
@@ -145,23 +132,22 @@
             height: 10px;
         }
 
-        .book-name,
+
         .chapter-name {
             cursor: context-menu;
-            line-height:
         }
 
-        .book-name:hover,
+  
         .chapter-name:hover {
             opacity: 0.6;
         }
 
-        .book-name.current,
+ 
         .chapter-name.current {
             color: red;
         }
 
-        .book-status,
+        .series-status,
         .li-link {
             margin-right: 6px;
             font-size: 18px;
@@ -171,36 +157,38 @@
 
         span.series_name {
             cursor: context-menu;
+            font-weight: bold;
+            color: #369;
+            font-size: 18px;
         }
     </style>
     <div id="actiontree">
-        <p class="root">
-            <a class="li-link" href="{{ novel.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-            <span class="series_name" data-item="11596">{{ novel.title }}</span>
-        </p>
         <ul class="tree">
-            {% for chapter in chapters %}
-            <li>
-                <a class="li-link" href="{{ chapter.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-                <span class="book-name level1" id="{{ forloop.counter }}" data-item="{{ forloop.counter }}">Chương {{ chapter.number }}</span>
-            </li>
-            {% endfor %}
+            <span class="series-status"><i class="fas fa-plus-square"></i></span>
+            <a class="li-link" href="{{ novel.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                <span class="series_name" data-item="{{ novel.id }}">{{ novel.title }}</span>
+                <ul class="hide">
+                    {% for chapter in chapters %}
+                    <li>
+                        <a class="li-link" href="{{ chapter.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                        <span class="chapter-name level1" id="chapter_{{ chapter.id }}" data-item="{{ chapter.id}}">Chương {{ forloop.counter }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
         </ul>
         <div style="width: 1px; height: 170px"></div>
     </div>
     <ul id="series" class="menu">
         <li>Sửa truyện</li>
         <li class="sep">&nbsp;</li>
-        <li class="sep">&nbsp;</li>
         <li style="color: red">Xóa truyện</li>
         <li class="sep">&nbsp;</li>
-        <li>Thêm tập</li>
+        <li>Thêm chương</li>
     </ul>
-    <ul id="book" class="menu">
-        <li>Sửa tập</li>
+    <ul id="chapter" class="menu">
+        <li>Sửa chương</li>
         <li class="sep">&nbsp;</li>
-        <li style="color: red">Xóa tập</li>
-        <li class="sep">&nbsp;</li>
+        <li style="color: red">Xóa chương</li>
     </ul>
     <script>
         var smallWidth = $(parent.window).width() < 992;
@@ -245,60 +233,34 @@
                 switch (child.innerText) {
                     case 'Sửa truyện':
                         child.onclick = () => openLink(
-                            '{{ novel.get_absolute_url_edit }}?nav=0',
+                            '/action/series/11596/edit?navbar=0',
                             'action',
+                            'action=editseries'
                         );
                         break;
                     case 'Xóa truyện':
                         child.onclick = () => openLink(
-                            'https://ln.hako.re/action/series/11596/delete',
+                            '/action/series/11596/delete',
                             '_parent'
-                        );
-                        break;
-                    case 'Thêm tập':
-                        child.onclick = () => openLink(
-                            '{{ novel.get_absolute_url_create_chapter }}?navbar=0',
-                            'action',
-                            'action=createbook'
-                        );
-                        break;
-                    case 'Sửa tập':
-                        child.onclick = () => openLink(
-                            "{% url 'edit_chapter' slug 999999999 %}".replace(999999999, id),
-                            'action',
-                        );
-                        break;
-                    case 'Xóa tập':
-                        child.onclick = () => openLink(
-                            'https://ln.hako.re/action/book/' + id + '/delete?navbar=0',
-                            'action',
-                            'book_id=' + id + '&action=deletebook'
-                        );
-                        break;
-                    case 'Sắp xếp chương':
-                        child.onclick = () => openLink(
-                            'https://ln.hako.re/action/book/' + id + '/order?navbar=0',
-                            'action',
-                            'book_id=' + id + '&action=orderchapter'
                         );
                         break;
                     case 'Thêm chương':
                         child.onclick = () => openLink(
-                            'https://ln.hako.re/action/chapter/create/book=' + id + '?navbar=0',
+                            '/action/chapter/create/book=' + id + '?navbar=0',
                             'action',
                             'book_id=' + id + '&action=createchapter'
                         );
                         break;
                     case 'Sửa chương':
                         child.onclick = () => openLink(
-                            'https://ln.hako.re/action/chapter/' + id + '/edit?navbar=0',
+                            '/action/chapter/' + id + '/edit?navbar=0',
                             'action',
                             'chapter_id=' + id + '&action=editchapter'
                         );
                         break;
                     case 'Xóa chương':
                         child.onclick = () => openLink(
-                            'https://ln.hako.re/action/chapter/' + id + '/delete?navbar=0',
+                            '/action/chapter/' + id + '/delete?navbar=0',
                             'action',
                             'chapter_id=' + id + '&action=deletechapter'
                         );
@@ -317,33 +279,26 @@
         }
 
         var home = document.getElementsByClassName('series_name')[0];
-        var book = document.getElementsByClassName('level1');
-        var chap = document.getElementsByClassName('level2');
+        var chap = document.getElementsByClassName('level1');
 
         var menuEvent = smallWidth ? 'click' : 'contextmenu';
 
-        home.addEventListener(menuEvent, function(event) {
+        home.addEventListener(menuEvent, function (event) {
             prepareContextMenu('series', event);
         });
 
-        for (var i = 0; i < book.length; i++) {
-            book[i].addEventListener(menuEvent, function(event) {
-                prepareContextMenu('book', event);
-            });
-        }
-
         for (var i = 0; i < chap.length; i++) {
-            chap[i].addEventListener(menuEvent, function(event) {
+            chap[i].addEventListener(menuEvent, function (event) {
                 prepareContextMenu('chapter', event);
             });
         }
 
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             closeAllMenus();
         })
 
-        $(document).ready(function() {
-            $('.book-status').on('click', function(event) {
+        $(document).ready(function () {
+            $('.series-status').on('click', function (event) {
                 event.stopPropagation();
                 $(this).html($(this).find('.fa-minus-square').length > 0 ? '<i class="fas fa-plus-square"></i>' : '<i class="fas fa-minus-square"></i>');
                 $(this).nextAll('ul').toggleClass('show hide');
@@ -351,5 +306,7 @@
         });
     </script>
 </body>
+
+</html>
 
 {% endblock %}

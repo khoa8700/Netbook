@@ -16,22 +16,16 @@
                                 class="fas fa-search"></i></button>
                     </form>
                 </div>
-                <li><a class="nav-menu_item" href="/sang-tac"><span class="">Sáng tác</span></a></li>
-                <li><a class="nav-menu_item" href="/convert"><span class="">Convert</span></a></li>
-                <li><a class="nav-menu_item" href="/xuat-ban"><span class="">Xuất bản</span></a></li>
-                <li><a class="nav-menu_item" href="/thao-luan"><span class="">Thảo luận</span></a></li>
                 <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
+                <li><a class="nav-menu_item" href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                <li><a class="nav-menu_item" href="/privacy-policy"><span>Privacy Policy</span></a></li>
                 <li class="nav-has-submenu">
                     <a class="nav-menu_item">
                         <span class="">Hướng dẫn</span>
                         <i class="fas fa-chevron-down dropdown-icon" style="float: right; margin-top: 6px"></i>
                     </a>
                     <ul class="nav-submenu list-unstyled none">
-                        <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
-                        <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
-                        <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo
-                                    lỗi</span></a></li>
-                        <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
                     </ul>
                 </li>
             </ul>
@@ -39,6 +33,7 @@
         <div class="navbar-logo-wrapper">
             <a href="/" class="navbar-logo" style="background-image: url('{% static '/img/logo-9.png' %}')" title="Trang chủ"></a>
         </div>
+        {% if request.user.is_authenticated %}
         <div id="navbar-user">
             <div class="nav-user_icon">
                 <div class="nav-user_avatar">
@@ -48,8 +43,7 @@
                 
                 <ul class="account-sidebar hidden-block unstyled none">
                     <li>
-                        <a href="https://ln.hako.re/thanh-vien/111847"><i class="fas fa-user"></i><span>Tài
-                                khoản</span></a>
+                        <a href="https://ln.hako.re/thanh-vien/111847"><i class="fas fa-user"></i><span>Tài khoản</span></a>
                     </li>
                     <li>
                         <a href="/lich-su-doc"><i class="fas fa-history"></i><span>Lịch sử</span></a>
@@ -80,13 +74,13 @@
                     </li>
                 </ul>
             </div>
-            <div id="noti-icon" class="user-sublink">
+            {% comment %} <div id="noti-icon" class="user-sublink">
                 <div class="icon-wrapper">
                     <i class="fas fa-bell"></i>
                 </div>
                 <div id="noti-sidebar" class="noti-sidebar hidden-block none">
                     <div class="noti-wrapper">
-
+                        
                         <div id="noti-content" class="noti-content no-padding">
                             Không có thông báo
                         </div>
@@ -95,15 +89,20 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> {% endcomment %}
             <div id="series-unread-icon" class="user-sublink appearing">
-                <a class="link-item" href="https://ln.hako.re/ke-sach">
+                <a class="link-item" href="{% url 'novel_list' %}">
                     <div class="icon-wrapper">
                         <i class="fas fa-heart"></i>
                     </div>
                 </a>
             </div>
         </div>
+        {% else %}
+        <div id="navbar-user" class="guest">
+            <a class="login-link" href="/login">Đăng nhập</a>
+        </div>
+        {% endif %}
         <div class="navbar-mainblock">
             <div class="navbar-search none block-m">
                 <form class="" action="{% url 'search' %}" method="get">
@@ -114,29 +113,10 @@
                 </form>
             </div>
             <ul class="navbar-menu at-navbar none d-lg-block unstyled">
-                <li><a class="nav-menu_item" href="/sang-tac"><i class="fas fa-pen-nib menu-icon"></i><span
-                            class="">Sáng tác</span></a></li>
-                <li><a class="nav-menu_item" href="/convert"><i class="fas fa-book menu-icon"></i><span
-                            class="">Convert</span></a></li>
-                <li><a class="nav-menu_item" href="/xuat-ban"><i class="fas fa-calendar menu-icon"></i><span
-                            class="">Xuất bản</span></a></li>
-                <li><a class="nav-menu_item" href="/thao-luan"><i class="fas fa-users menu-icon"></i><span
-                            class="">Thảo luận</span></a></li>
-                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span
-                            class="">Danh sách</span></a></li>
-                <li class="nav-has-submenu">
-                    <a class="nav-menu_item">
-                        <i class="fas fa-question menu-icon"></i><span class="">Hướng dẫn</span>
-                        <i class="fas fa-chevron-down dropdown-icon"></i>
-                        <i class="fas fa-chevron-right dropdown-icon"></i>
-                    </a>
-                    <ul class="nav-submenu hidden-block unstyled none">
-                        <li><a href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
-                        <li><a href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
-                        <li><a href="/thao-luan/1-mo-trang-thao-luan-gop-y-va-bao-loi"><span>Góp ý - Báo lỗi</span></a></li>
-                        <li><a href="/privacy-policy"><span>Privacy Policy</span></a></li>
-                    </ul>
-                </li>
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
+                <li><a class="nav-menu_item" href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                <li><a class="nav-menu_item" href="/privacy-policy"><span>Privacy Policy</span></a></li>
             </ul>
         </div>
 
