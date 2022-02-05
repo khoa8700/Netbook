@@ -42,6 +42,18 @@ LATEST_CHAPTERS_PER_PAGE=CHAPTERS_PER_ROW*NUMBER_ROW_LATEST_CHAPTERS-1
 LATEST_NOVELS_FULL=16
 LATEST_COMMENTS_PER_PAGE=6
 
+JSON_OK=JsonResponse({"ok":True})
+JSON_ERROR=JsonResponse({"error":"error"})
+
+ADMIN=1
+AUTHOR=2
+CUSTOMER=3
+
+ROLE_CHOICES=[
+    [AUTHOR,'author'],
+    [CUSTOMER,'customer'],
+]
+
 
 def index(request):
     trending_novels=list(Novel.objects.filter().order_by('-publication_date')[:TRENDING_NOVELS_PER_PAGE])
@@ -541,12 +553,13 @@ def top_rates_novel_list(request):
     context={"novel_list" : novel_list}
     return context
 
+@authenticated_user
 @admin_only
 def manage(request):
     
     name = request.GET.get('name')
     if name is not None:
-        userinfos=list(UserInfo.objects.filter(name=name).exclude(role=UserInfo.ADMIN))
+        userinfos=list(UserInfo.objects.filter(name__icontains=name).exclude(role=UserInfo.ADMIN))
     else:
         userinfos=list(UserInfo.objects.all().exclude(role=UserInfo.ADMIN))
     page_number = request.GET.get('page')
@@ -569,8 +582,10 @@ def manage(request):
     return render(request,"Ebook/user_manage.html",{
         "userinfos" : userinfos,
         "page_obj" : page_obj,
+        "ROLE_CHOICES" : ROLE_CHOICES,
     })
 
+@authenticated_user
 @admin_only
 def ban(request):
     # print("date : ",datetime.now())
@@ -611,6 +626,7 @@ def ban(request):
                             userinfo.save()
     return redirect('user_manage')
 
+@authenticated_user
 @admin_only
 def lock_out(request):
     print("in lock out")
@@ -981,3 +997,69 @@ def deleteChapter(request,slug=None,chapter_number=None):
                 if user.userinfo==novel.userinfo:
                     chapter.delete()
     return redirect('edit_novel',slug=slug)
+
+@authenticated_user
+@admin_only
+def unBanComment(request):
+    print("welcome unban")
+    if request.method == "POST" and request.is_ajax():
+        username = request.POST.get("username")
+        print("username : ",username)
+        if username is not None:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = None
+            if user is not None:
+                try:
+                    userinfo = UserInfo.objects.get(user=user)
+                except UserInfo.DoesNotExist:
+                    userinfo = None
+                if userinfo is not None:
+                    userinfo.ban_time = None
+                    userinfo.prev_ban_level = 0
+                    userinfo.save()
+                    return JSON_OK
+    return JSON_ERROR
+
+@authenticated_user
+@admin_only
+def unLockout(request):
+    if request.method == "POST" and request.is_ajax():
+        username = request.POST.get("username")
+        print("username : ",username)
+        if username is not None:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = None
+            if user is not None:
+                try:
+                    userinfo = UserInfo.objects.get(user=user)
+                except UserInfo.DoesNotExist:
+                    userinfo = None
+                if userinfo is not None:
+                    userinfo.lock_out_time = None
+                    userinfo.save()
+                    return JSON_OK
+    return JSON_ERROR
+
+@authenticated_user
+@admin_only
+def modifyRole(request):
+    if request.method == "POST" and request.is_ajax():
+        username = request.POST.get("username")
+        role = request.POST.get("role")
+        if username is not None and role is not None:
+            print("username : ",username)
+            print("role : ",role)
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = None
+            if user is not None:
+                userinfo = UserInfo.objects.get(user=user)
+                userinfo.role = role
+                userinfo.save()
+                return JSON_OK
+    return JSON_ERROR

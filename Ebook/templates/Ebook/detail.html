@@ -194,7 +194,7 @@
                                         <div class="series-summary">
                                             <h4>Tóm tắt</h4>
                                             <div class="summary-content">
-                                                <p>{{ novel.description }}</p>
+                                                <p>{{ novel.description | safe }}</p>
                                             </div>
                                             <div class="summary-more none more-state">
                                                 <div class="see_more">Xem thêm</div>
@@ -397,6 +397,8 @@
 
                                     </header>
                                     <main class="ln-comment-body">
+                                        {% if request.user.is_authenticated %}
+                                        {% if not userinfo.is_banned %} 
                                         <div id="ln-comment-submit" class="ln-comment-form clear">
                                             <form class="comment_form">
                                                 <textarea class="comment_content"></textarea>
@@ -405,6 +407,8 @@
                                                 </div>
                                             </form>
                                         </div>
+                                        {% endif %}
+                                        {% endif %}
                                         {% for comment in comments %}
                                         <div class="ln-comment-group">
                                             <div id="ln-comment-615965" class="ln-comment-item clear"

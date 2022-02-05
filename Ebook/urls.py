@@ -23,7 +23,9 @@ urlpatterns=[
     path('follow/',views.follow,name="follow"),
     path('manage/',views.manage,name="user_manage"),
     path('ban/',views.ban,name="ban"),
+    path('unban/',views.unBanComment,name="unban"),
     path('lock_out/',views.lock_out,name="lock_out"),
+    path('unlock_out/',views.unLockout,name="unlock_out"),
     path('about_us/',views.about_us,name="about_us"),
     path('list/',views.novelList,name="novel_list"),
     path('list/<str:first_letter>/',views.novelList,name="novel_list"),
@@ -44,4 +46,5 @@ urlpatterns=[
     path('action/nav/<slug:slug>',views.navbarNovel,name="navbar_novel"),
     path('action/profile',views.profile_details,name="profile_details"),
     path('action/<slug:slug>/<int:chapter_number>/delete_chapter',views.deleteChapter,name="delete_chapter"),
+    path('modify_role',views.modifyRole,name="modify_role"),
 ]
