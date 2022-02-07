@@ -16,11 +16,11 @@ class CreateUserForm(UserCreationForm):
 class CreateUserInfoForm(ModelForm):
 	class Meta:
 		model = UserInfo
-		fields = ['name' , 'email' , 'phone' , 'hobby', 'job', 'self_introduction']
+		fields = ['name' , 'email' , 'birthday' , 'hobby', 'job', 'self_introduction']
 		widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.TextInput(attrs={'class': 'form-control'}),
-            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'birthday': forms.TextInput(attrs={'class': 'form-control'}),
             'hobby': forms.TextInput(attrs={'class': 'form-control'}),
 			'job': forms.TextInput(attrs={'class': 'form-control'}),
 			'self_introduction': forms.TextInput(attrs={'class': 'form-control'}),

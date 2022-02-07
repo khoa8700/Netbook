@@ -19,7 +19,7 @@
     <meta name="logged-in" content="1">
     <link rel="canonical" href="https://ln.hako.re">
     <meta property="og:image" content="{% static 'img/nocover.png' %}">
-    <meta property="fb:app_id" content="1864643850436909">
+    {% comment %} <meta property="fb:app_id" content="1864643850436909"> {% endcomment %}
     <link rel="prefetch" href="{% static '/fonts/OpenSans-Regular.ttf' %}" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="prefetch" href="{% static '/fonts/OpenSans-SemiBold.ttf' %}" as="font" type="font/ttf" crossorigin="anonymous">
     <link rel="shortcut icon" href="{% static '/img/favicon.png' %}">
@@ -30,8 +30,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"
         integrity="sha256-BtbhCIbtfeVWGsqxk1vOHEYXS6qcvQvLMZqjtpWUEx8=" crossorigin="anonymous" />
     <script src="{% static '/scripts/plugins.js' %}"></script>
-    <script async src="https://www.googletagmanager.com/gtag/js"></script>
-    <script>
+    {% comment %} <script async src="https://www.googletagmanager.com/gtag/js"></script> {% endcomment %}
+    {% comment %} <script>
         window.dataLayer = window.dataLayer || [];
 
         function gtag() {
@@ -43,11 +43,10 @@
         });
         gtag('js', new Date());
         gtag('config', 'UA-34864968-3');
-    </script>
+    </script> {% endcomment %}
 </head>
 
 <body>
-    <div id="page-top"></div>
     <div data-scrollto="#page-top" class="backtoTop"><i class="fas fa-angle-double-up"></i></div>
     {% block content %}
     {% endblock %}

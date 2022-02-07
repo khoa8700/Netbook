@@ -30,9 +30,9 @@
                                 <div class="row">
                                     <div class="left-column col-12 col-md-3">
                                         <div class="series-cover">
-                                            <div class="series-type">
+                                            {% comment %} <div class="series-type">
                                                 <span>Truyện dịch</span>
-                                            </div>
+                                            </div> {% endcomment %}
                                             <div class="a6-ratio">
                                                 <div class="content img-in-ratio"
                                                     style="background-image: url('{{ MEDIA_URL }}/{{ novel.thumbnail }}')">
@@ -44,7 +44,7 @@
                                         <div class="series-name-group">
                                             <span class="series-name">
                                                 <a
-                                                    href="{{ novel.get_absolute_url }}">{{ novel.title }}</a>
+                                                    href="{{ novel.get_absolute_url }}">{{ novel.title|title }}</a>
                                             </span>
                                         </div>
                                         <div class="series-information">
@@ -98,7 +98,7 @@
                                             <div class="info-item">
                                                 <span class="info-name">Tình trạng:</span>
                                                 <span class="info-value">
-                                                    {% if novel.status %}Đã hoàn thành{% else %}Vẫn còn{% endif %}
+                                                    {% if novel.status %}Đã hoàn thành{% else %}Đang tiến hành{% endif %}
                                                 </span>
                                             </div>
                                         </div>
@@ -177,8 +177,12 @@
                                             <div class="col-12 col-md-3 statistic-item block-wide at-mobile">
                                                 <div class="statistic-name">Lần cuối</div>
                                                 <div class="statistic-value"><time class="timeago"
-                                                        title="{{ novel.publication_date }}"
-                                                        datetime="{{ novel.publication_date }}">{{ novel.publication_date }}</time></div>
+                                                        title="{{ novel.publication_date|date:'d-m-Y H:i:s' }}"
+                                                        datetime="{{ novel.publication_date|date:'c' }}">{{ novel.publication_date|date:'d-m-Y H:i:s' }}</time></div>
+                                            </div>
+                                            <div class="col-4 col-md-3 statistic-item">
+                                                <div class="statistic-name"> Số chương</div>
+                                                <div class="statistic-value">{{ novel.chapter_set.count }}</div>
                                             </div>
                                             <div class="col-4 col-md-3 statistic-item">
                                                 <div class="statistic-name"> {{ novel.number_rating }} đánh giá</div>
@@ -194,7 +198,7 @@
                                         <div class="series-summary">
                                             <h4>Tóm tắt</h4>
                                             <div class="summary-content">
-                                                <p>{{ novel.description }}</p>
+                                                <p>{{ novel.description|safe }}</p>
                                             </div>
                                             <div class="summary-more none more-state">
                                                 <div class="see_more">Xem thêm</div>
@@ -285,11 +289,11 @@
                                         {% for chapter in chapters %}
                                         <li class="{% if chapter.number > 5 %}none{% endif %}">
                                             <div class="chapter-name">
-                                                <i class="fas fa-image" aria-hidden="true" title="Có chứa ảnh"></i>
+                                                {% comment %} <i class="fas fa-image" aria-hidden="true" title="Có chứa ảnh"></i> {% endcomment %}
                                                 <a href="{{ chapter.get_absolute_url }}"
-                                                    title="Chương {{ chapter.number }} : {{ chapter.title }}">Chương {{ chapter.number }} : {{ chapter.title }}</a>
+                                                    title="Chương {{ chapter.number }} : {{ chapter.title|title }}">Chương {{ chapter.number }} : {{ chapter.title|title }}</a>
                                             </div>
-                                            <div class="chapter-time">{{ chapter.update_date }}</div>
+                                            <div class="chapter-time">{{ chapter.update_date|date:'d/m/Y' }}</div>
                                         </li>
                                         {% endfor %}
                                         

@@ -124,7 +124,7 @@
                             <div class="comment-info">
                                 <span class="series-name"><a href="{{ comment.novel.get_absolute_url }}">{{ comment.novel.title|title }}</a></span>
                                 <div class="comment-content">
-                                    {{ comment.content | safe | truncatechars:100}}
+                                    {{ comment.content|striptags|safe|truncatechars:150 }}
                                 </div>
                                 <div class="comment-top">
                                     <div class="comment-user_ava">
@@ -134,7 +134,7 @@
                                                 src="{% static 'images/avatar.png' %}">
                                         </i>
                                     </div>
-                                    <i rel="nofollow" class="comment-user_name strong">{{ comment.user.userinfo.name }}</i>
+                                    <a href="{{comment.novel.get_absolute_url|add:'#ln-comment-'}}{{comment.id }}" rel="nofollow" class="comment-user_name strong">{{ comment.user.userinfo.name }}</i>
                                     <small class="comment-location">
                                         <a href="{{comment.novel.get_absolute_url|add:'#ln-comment-'}}{{comment.id }}">
                                             <time class="timeago" title="{{ comment.publication_date|date:'d-m-Y H:i:s' }}"

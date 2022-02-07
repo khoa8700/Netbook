@@ -16,9 +16,9 @@
                                 class="fas fa-search"></i></button>
                     </form>
                 </div>
-                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><span class="">Danh sách</span></a></li>
-                <li><a class="nav-menu_item" href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
-                <li><a class="nav-menu_item" href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                <li><a class="nav-menu_item" href="/list"><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="/"><span>Đăng truyện</span></a></li>
+                <li><a class="nav-menu_item" href="/"><span>Giới thiệu</span></a></li>
                 <li><a class="nav-menu_item" href="/privacy-policy"><span>Privacy Policy</span></a></li>
                 <li class="nav-has-submenu">
                     <a class="nav-menu_item">
@@ -43,29 +43,29 @@
                 
                 <ul class="account-sidebar hidden-block unstyled none">
                     <li>
-                        <a href="https://ln.hako.re/thanh-vien/111847"><i class="fas fa-user"></i><span>Tài khoản</span></a>
+                        <a href="/profile"><i class="fas fa-user"></i><span>Tài khoản</span></a>
                     </li>
-                    <li>
+                    {% comment %} <li>
                         <a href="/lich-su-doc"><i class="fas fa-history"></i><span>Lịch sử</span></a>
                     </li>
                     <li>
                         <a href="/bookmark"><i class="fas fa-bookmark"></i><span>Đánh dấu</span></a>
-                    </li>
+                    </li> {% endcomment %}
                     <li>
                         <a href="/ke-sach"><i class="fas fa-heart"></i><span>Kệ sách</span></a>
                     </li>
-                    <li>
+                    {% comment %} <li>
                         <a href="/tin-nhan"><i class="fas fa-envelope"></i><span>Tin nhắn</span>
                             <div class="at-user_list"></div>
                         </a>
-                    </li>
+                    </li> {% endcomment %}
                     <hr class="none block-l">
-                    <li>
+                    {% comment %} <li>
                         <div class="nightmode-toggle">
                             <i class="fas fa-moon"></i><span>Nền tối</span>
                             <div class="toggle-icon"><i class="fas fa-toggle-off"></i></div>
                         </div>
-                    </li>
+                    </li> {% endcomment %}
                     <li>
                         <a href="/action"><i class="fas fa-cog"></i><span>Hệ thống</span></a>
                     </li>
