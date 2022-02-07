@@ -474,8 +474,8 @@ def profile_general(request):
     return render(request,"Ebook/profile_general.html",{"userinfo":userinfo})
 
 @authenticated_user
-def profile(request):
-    user = User.objects.get(pk=request.user.pk)
+def profile(request,id):
+    user = User.objects.get(id=id)
     userinfo = UserInfo.objects.get(user=user)
     follow = userinfo.user.following_set.count()
     novels = userinfo.novel_set.all()
