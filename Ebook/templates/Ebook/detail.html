@@ -1,0 +1,534 @@
+{% extends 'Ebook/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<body>
+    <div id="page-top"></div>
+    <div data-scrollto="#page-top" class="backtoTop"><i class="fas fa-angle-double-up"></i></div>
+    {% include 'Ebook/navbar.html' %}
+    <main id="mainpart" class="project-page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-9">
+                    <div class="page-breadcrumb">
+                        <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
+                        <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
+                        <span class="breadcrum-level"><a href="{% url 'index' %}">Truyện dịch</a></span>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row d-block clearfix">
+                <div class="col-12 col-lg-9 float-left">
+                    <section class="feature-section at-series clear">
+                        <main class="section-body">
+                            <div class="top-part">
+                                <div class="row">
+                                    <div class="left-column col-12 col-md-3">
+                                        <div class="series-cover">
+                                            {% comment %} <div class="series-type">
+                                                <span>Truyện dịch</span>
+                                            </div> {% endcomment %}
+                                            <div class="a6-ratio">
+                                                <div class="content img-in-ratio"
+                                                    style="background-image: url('{{ MEDIA_URL }}/{{ novel.thumbnail }}')">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-9">
+                                        <div class="series-name-group">
+                                            <span class="series-name">
+                                                <a
+                                                    href="{{ novel.get_absolute_url }}">{{ novel.title|title }}</a>
+                                            </span>
+                                        </div>
+                                        <div class="series-information">
+                                            <div class="series-gernes" x-data="{ more: false }">
+                                                {% for tag in tags %}
+                                                <a class="series-gerne-item"
+                                                    href="{% url 'novel_list' tag.slug %}"
+                                                {% if forloop.counter > 5 %}
+                                                    style="display: none;" x-show="more"
+                                                    :class="{ 'fade-in': more }"
+                                                {% endif %}
+                                                    >{{ tag.name }}</a>
+                                                {% endfor %}
+                                                <!-- <a class="series-gerne-item"
+                                                    href="https://ln.hako.re/the-loai/action">Action</a>
+                                                <a class="series-gerne-item"
+                                                    href="https://ln.hako.re/the-loai/adventure">Adventure</a>
+                                                <a class="series-gerne-item"
+                                                    href="https://ln.hako.re/the-loai/drama">Drama</a>
+                                                <a class="series-gerne-item"
+                                                    href="https://ln.hako.re/the-loai/fantasy">Fantasy</a>
+                                                <a class="series-gerne-item"
+                                                    href="https://ln.hako.re/the-loai/horror">Horror</a>
+                                                <a class="series-gerne-item"
+                                                    href="https://ln.hako.re/the-loai/mature">Mature</a>
+                                                <a class="series-gerne-item animation" style="display: none;"
+                                                    href="https://ln.hako.re/the-loai/shoujo-ai" x-show="more"
+                                                    :class="{ 'fade-in': more }">
+                                                    Shoujo ai
+                                                </a>
+                                                <a class="series-gerne-item animation" style="display: none;"
+                                                    href="https://ln.hako.re/the-loai/tragedy" x-show="more"
+                                                    :class="{ 'fade-in': more }">
+                                                    Tragedy
+                                                </a> -->
+                                                {% if tags|length > 5 %}
+                                                <a class="series-gerne-item" x-show="!more" @click="more = true;"><i
+                                                    class="fas fa-ellipsis-h"></i></a>
+                                                {% endif %}
+                                            </div>
+                                            <div class="info-item">
+                                                <span class="info-name">Tác giả:</span>
+                                                <span class="info-value ">{{ novel.userinfo.name }}</span>
+                                            </div>
+                                            <!-- <div class="info-item">
+                                                <span class="info-name">Họa sĩ:</span>
+                                                <span class="info-value"><a
+                                                        href="https://ln.hako.re/hoa-si/Kinta%2C%20%E3%82%AD%E3%83%B3%E3%82%BF">Kinta,
+                                                        キンタ</a></span>
+                                            </div> -->
+                                            <div class="info-item">
+                                                <span class="info-name">Tình trạng:</span>
+                                                <span class="info-value">
+                                                    {% if novel.status %}Đã hoàn thành{% else %}Đang tiến hành{% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="side-features">
+                                            <div class="row">
+                                                <div class="col-4 col-md feature-item width-auto-xl">
+                                                    <a id="collect" class="side-feature-button button-follow follow">
+                                                        <span class="block feature-value"><i
+                                                                class="{% if is_followed %}fas{% else %}far{% endif %} fa-heart"></i></span>
+                                                        <span class="block feature-name"> {{ follow_number }} </span>
+                                                    </a>
+                                                </div>
+                                                <div class="col-4 col-md feature-item width-auto-xl">
+                                                    <div class="series-rating rated">
+                                                        <label for="open-rating"
+                                                            class="side-feature-button button-rate">
+                                                            <span class="block feature-value"><i
+                                                                    class="far fa-star"></i></span>
+                                                            <span class="block feature-name">Đánh giá</span>
+                                                        </label>
+                                                        <input type="checkbox" id="open-rating" />
+                                                        <div class="series-evaluation clear">
+                                                            <span class="star-evaluate-item star-5" data-value="5"><i
+                                                                    class="fas fa-star"></i></span>
+                                                            <span class="star-evaluate-item star-4" data-value="4"><i
+                                                                    class="fas fa-star"></i></span>
+                                                            <span class="star-evaluate-item star-3" data-value="3"><i
+                                                                    class="fas fa-star"></i></span>
+                                                            <span class="star-evaluate-item star-2" data-value="2"><i
+                                                                    class="fas fa-star"></i></span>
+                                                            <span class="star-evaluate-item star-1" data-value="1"><i
+                                                                    class="fas fa-star"></i></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="col-4 col-md feature-item width-auto-xl">
+                                                    <div class="catalog-icon side-feature-button">
+                                                        <span class="block feature-value"><i
+                                                                class="fas fa-list"></i></span>
+                                                        <span class="block feature-name">Mục lục</span>
+                                                    </div>
+                                                </div> -->
+                                                <div class="col-4 col-md feature-item width-auto-xl">
+                                                    <a href="{% url 'detail' slug %}#series-comments"
+                                                        class="side-feature-button">
+                                                        <span class="block feature-value"><i
+                                                                class="fas fa-comments"></i></span>
+                                                        <span class="block feature-name">Bàn luận</span>
+                                                    </a>
+                                                </div>
+                                                <!-- <div class="col-4 col-md feature-item width-auto-xl">
+                                                    <label for="open-sharing" class="side-feature-button">
+                                                        <span class="block feature-value"><i
+                                                                class="fas fa-share-alt"></i></span>
+                                                        <span class="block feature-name">Chia sẻ</span>
+                                                    </label>
+                                                    <input type="checkbox" id="open-sharing" />
+                                                    <div class="sharing-box">
+                                                        <a class="sharing-item"
+                                                            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fln.hako.re%2Ftruyen%2F5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai"
+                                                            target="_blank"><i class="fab fa-facebook-f"></i></a>
+                                                        <a class="sharing-item"
+                                                            href="https://twitter.com/intent/tweet?text=&quot;Omae Gotoki ga Maou ni Kateru to Omou na&quot; to Gachizei ni Yuusha Party wo Tsuihou Sareta node, Outo de Kimama ni Kurashitai&url=https%3A%2F%2Fln.hako.re%2Ftruyen%2F5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai"
+                                                            target="_blank"><i class="fab fa-twitter"></i></a>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottom-part">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row statistic-list">
+                                            <div class="col-12 col-md-3 statistic-item block-wide at-mobile">
+                                                <div class="statistic-name">Lần cuối</div>
+                                                <div class="statistic-value"><time class="timeago"
+                                                        title="{{ novel.publication_date|date:'d-m-Y H:i:s' }}"
+                                                        datetime="{{ novel.publication_date|date:'c' }}">{{ novel.publication_date|date:'d-m-Y H:i:s' }}</time></div>
+                                            </div>
+                                            <div class="col-4 col-md-3 statistic-item">
+                                                <div class="statistic-name"> Số chương</div>
+                                                <div class="statistic-value">{{ novel.chapter_set.count }}</div>
+                                            </div>
+                                            <div class="col-4 col-md-3 statistic-item">
+                                                <div class="statistic-name"> {{ novel.number_rating }} đánh giá</div>
+                                                <div class="statistic-value">{{ novel.avg_rate }}<small>/5</small></div>
+                                            </div>
+                                            <div class="col-4 col-md-3 statistic-item">
+                                                <div class="statistic-name">Lượt xem</div>
+                                                <div class="statistic-value">{{ novel.views }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="summary-wrapper col-12">
+                                        <div class="series-summary">
+                                            <h4>Tóm tắt</h4>
+                                            <div class="summary-content">
+                                                <p>{{ novel.description|safe }}</p>
+                                            </div>
+                                            <div class="summary-more none more-state">
+                                                <div class="see_more">Xem thêm</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="other-facts col-12">
+                                        <div class="fact-item">
+                                            <div class="fact-name">Tên khác:</div>
+                                            <div class="fact-value">
+                                                <div class="block pad-bottom-5">
+                                                    「お前ごときが魔王に勝てると思うな」とガチ勢に勇者パーティを追放されたので、王都で気ままに暮らしたい</div>
+                                                <div class="block pad-bottom-5">Do You Think Someone Like You Can Defeat
+                                                    the Demon King?</div>
+                                                <div class="block pad-bottom-5">Apricot</div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </main>
+                    </section>
+                </div>
+                <div id="rd-sidebar" class="col-12 col-lg-3 float-right">
+                    <div class="row top-group">
+                        <div class="col-12 no-push push-3-m col-md-6 no-push-l col-lg-12">
+                            <section class="series-users">
+                                <main>
+                                    <div class="series-owner group-mem">
+                                        <img width="50px" height="50px" src="https://ln.hako.re/img/noava.png" />
+                                        <div class="series-owner-title">
+                                            <span class="series-owner_name"><a
+                                                    href="https://ln.hako.re/thanh-vien/26627">cac</a></span>
+                                        </div>
+                                    </div>
+                                    <div class="fantrans-section">
+                                        <div class="fantrans-name">Nhóm dịch</div>
+                                        <div class="fantrans-value"><a
+                                                href="https://ln.hako.re/nhom-dich/967-moe-la-chan-li">cac</a></div>
+                                    </div>
+                                    <div class="series-owner_share">
+                                        <span class="owner_share-title" title="Tham gia">Tham gia</span>
+                                        <a class="ln_info-name" href="https://ln.hako.re/thanh-vien/18762"
+                                            style="padding-left: 5px;">cac</a>
+                                    </div>
+                                    <div class="owner-donate" style="padding: 0">
+
+                                    </div>
+                                </main>
+                            </section>
+                        </div>
+                    </div>
+                    <section class="series-note basic-section gradual-mobile">
+                        <header class="sect-header"><span class="sect-title">Chú thích thêm</span><span
+                                class="mobile-icon"><i class="fas fa-chevron-down"></i></span></header>
+                        <main class="d-lg-block">
+                            <div class="long-text" style='word-wrap: break-word;'>
+                            </div>
+                        </main>
+                    </section>
+                </div>
+                <div class="col-12 col-lg-9 float-left">
+                    <div style="text-align: center; margin: 0 auto 10px auto;">
+                    </div>
+                    <section class="volume-list at-series basic-section volume-mobile gradual-mobile ">
+                        <header id="volume_8648" class="sect-header">
+                            <span class="mobile-icon"><i class="fas fa-chevron-down"></i></span>
+                            <span class="sect-title">
+                                Danh sách chương
+                            </span>
+                        </header>
+                        <main class="d-lg-block">
+                            <div class="row">
+                                <div class="col-12 col-md-2">
+                                    <div class="volume-cover">
+                                        <a
+                                            href="{{ novel.get_absolute_url }}">
+                                            <div class="a6-ratio">
+                                                <div class="content img-in-ratio"
+                                                    style="background-image: url('{{ MEDIA_URL }}/{{ novel.thumbnail }}')">
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-10">
+                                    <ul class="list-chapters at-series">
+                                        {% for chapter in chapters %}
+                                        <li class="{% if chapter.number > 5 %}none{% endif %}">
+                                            <div class="chapter-name">
+                                                {% comment %} <i class="fas fa-image" aria-hidden="true" title="Có chứa ảnh"></i> {% endcomment %}
+                                                <a href="{{ chapter.get_absolute_url }}"
+                                                    title="Chương {{ chapter.number }} : {{ chapter.title|title }}">Chương {{ chapter.number }} : {{ chapter.title|title }}</a>
+                                            </div>
+                                            <div class="chapter-time">{{ chapter.update_date|date:'d/m/Y' }}</div>
+                                        </li>
+                                        {% endfor %}
+                                        
+                                        {% if chapters|length > 5 %}
+                                        <div class="mobile-more">
+                                            <div class="see_more">
+                                                <span>Xem tiếp ({{ chapters|length }} chương)</span>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </main>
+                    </section>
+                    <section id="series-comments" class="basic-section">
+                        <header class="sect-header tab-list">
+                            <span class="sect-title tab-title" data-tab-index="1">Bình luận <span
+                                    class="comments-count">({{ novel.comment_set.count }})</span></span>
+                        </header>
+                        <main id="fbcmt_root" class="comment-wrapper d-lg-block clear">
+                            <div id="tab-content-1" class="tab-content clear">
+                                <section class="ln-comment">
+                                    <header>
+                                        <h3>{{ novel.comment_set.count }} Bình luận </h3>
+
+                                    </header>
+                                    <main class="ln-comment-body">
+                                        <div id="ln-comment-submit" class="ln-comment-form clear">
+                                            <form class="comment_form">
+                                                <textarea class="comment_content"></textarea>
+                                                <div class="comment_toolkit clear">
+                                                    <input class="button" type="button" value="Đăng bình luận">
+                                                </div>
+                                            </form>
+                                        </div>
+                                        {% for comment in comments %}
+                                        <div class="ln-comment-group">
+                                            <div id="ln-comment-{{ comment.id }}" class="ln-comment-item clear"
+                                                data-comment="{{ comment.id }}" data-parent="{{ comment.id }}">
+                                                <div class="ln-comment-user_ava">
+                                                    <img src="{% static 'img/anime/review-1.jpg' %}">
+                                                </div>
+                                                <div class="ln-comment-info">
+                                                    <div class="ln-comment-wrapper">
+                                                        <div class="ln-comment-user_name">
+                                                            <a href="/user/{{ comment.user.id }}"
+                                                                class="strong">{{ comment.user.userinfo.name }}</a>
+                                                        </div>
+                                                        <div class="ln-comment-content long-text">
+                                                            <p>{{ comment.content | safe }}</p>      
+                                                        </div>
+                                                        <div class="comment_see_more expand none">Xem thêm</div>
+                                                    </div>
+                                                    <div class="visible-toolkit">
+                                                        <span class="ln-comment-time">
+                                                            <a href="{{comment.novel.get_absolute_url|add:'#ln-comment-'}}{{comment.id }}">
+                                                                <time class="timeago" title="{{ comment.publication_date|date:'d-m-Y H:i:s' }}"
+                                                                    datetime="{{ comment.publication_date|date:'c' }}">
+                                                                    {{ comment.publication_date|date:'d-m-Y H:i:s' }}
+                                                                </time>
+                                                            </a>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="ln-comment-menu" x-data="{ show: false }">
+                                                    <div class="ln-comment-toolkit-icon" @click="show = !show">
+                                                        <i class="fas fa-angle-down"></i>
+                                                    </div>
+                                                    <div class="ln-comment-toolkit none" :class="{ 'none': !show }"
+                                                        @click.away="show = false">
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        <div class="ln-comment-page">
+                                            <div class="pagination-footer">
+                                                <div class="pagination_wrap">
+                                                    <a href=""
+                                                        class="paging_item paging_prevnext prev  disabled ">Trước</a>
+                                                    <a href="https://ln.hako.re/truyen/5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai?page=2"
+                                                        class="paging_item paging_prevnext next">Sau</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </main>
+                                    <script>
+                                        var token = 'GiQu1LG7Mm1kZXGiSaIJxgY4ehOwc7igJ2i6zk0S';
+                                        var comment_type = 'series';
+                                        var comment_typeid = '5091';
+                                    </script>
+                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.1/tinymce.min.js"
+                                        referrerpolicy="origin"></script>
+                                    <script>
+                                        tinymce.init({
+                                            selector: 'textarea',
+                                            height: 200,
+                                            skin: 'oxide',
+                                            content_css: 'default',
+                                            branding: false,
+                                            menubar: false,
+                                            contextmenu: false,
+                                            entities: '160,nbsp,38,amp,60,lt,62,gt',
+                                            paste_word_valid_elements: 'b,strong,i,em,u,s,a,p,br,img',
+                                            element_format: 'html',
+                                            formats: {
+                                                strikethrough: {
+                                                    inline: 's',
+                                                    remove: 'all'
+                                                },
+                                                underline: {
+                                                    inline: 'u',
+                                                    remove: 'all'
+                                                },
+                                            },
+                                            plugins: 'wordcount link image code fullscreen paste',
+                                            toolbar: 'undo redo | bold italic underline strikethrough forecolor | link image | removeformat | fullscreen'
+                                        });
+                                    </script>
+                                </section>
+                            </div>
+                        </main>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        $("#collect").on("click", function() {
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'follow' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                },
+                success: function (response) {
+                    // alert(response["number"]);
+                    // var data=JSON.parse(JSON.stringify(response))
+                    // console.log(data)
+                    location.reload();  
+                    
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        })
+        $("form.comment_form input.button").on("click", function() {
+            alert("comment send");
+            var t = tinymce.activeEditor.getContent();
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'post_comment' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                    "content" : t,
+                },
+                success: function (response) {
+                    // alert(response["number"]);
+                    // var data=JSON.parse(JSON.stringify(response))
+                    // console.log(data)
+                    location.reload();  
+                    
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+        }),
+        $("span.star-evaluate-item").on("click", function() {
+
+            {% if request.user.is_authenticated %}
+            {% if rating is None %}
+            var e = $(this).data("value");
+            $.ajax({
+                type: 'POST',
+                url : "{% url  'n_rate' %}",
+                data : {
+                    "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                    "slug" : "{{ slug }}",
+                    "rate" : e,
+                },
+                success: function (response) {
+                    // alert(response["number"]);
+                    // var data=JSON.parse(JSON.stringify(response))
+                    // console.log(data)
+                    location.reload();  
+                    
+                },
+                error: function (response) {
+                    alert(response["responseJSON"]["error"]);
+                }
+            })
+            {% else %}
+            alert("Bạn đã đánh giá rồi");
+            {% endif %}
+            {% else %}
+            alert("Phải đăng nhập mới đăng nhập đc")
+            {% endif %}
+        })
+    </script>
+    <script>
+        $(document).ready(function () {
+            listab("#series-comments");
+            // Switch to FB tab if request fb_comment_id
+            if (getParameterByName('fb_comment_id') != null) {
+                $('span[data-tab-index="2"]').click();
+            }
+
+            $('ol.list-volume li').on('click', function () {
+                var vol = $(this);
+                var scrollTo = vol.data('scrollto');
+                $('html, body').animate({
+                    scrollTop: $(scrollTo).offset().top
+                });
+            });
+
+            $('.catalog-icon').on('click', function () {
+                $('#list-vol').toggleClass('animation fade-in-right');
+                $('#list-vol').toggle();
+            });
+
+            $('.list-vol_off').on('click', function () {
+                $('#list-vol').hide();
+            });
+        });
+
+        series_id = parseInt('5091');
+    </script>
+    
+    <script src="/scripts/app.js?id=abbe46948765a4d10a28"></script>
+    <script type='text/javascript'
+        src='//pl16314303.safestcontentgate.com/d5/6b/4b/d56b4bd6c3d2c1e161c4ab3c78c27670.js'></script>
+</body>
+{% endblock %}

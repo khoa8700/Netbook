@@ -1,0 +1,37 @@
+<div class="pagination-footer">
+    <div class="pagination_wrap">
+        <a href="javascript:window.location.href = getPage(1);" class="paging_item paging_prevnext prev  {% if page_obj.number == 1 %} disabled {% endif %} ">Đầu</a>
+        
+        {% if page_obj.has_previous %}
+        <a href="javascript:window.location.href = getPage({{page_obj.previous_page_number}});">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+
+        <a href="#" class="paging_item page_num  current ">{{ page_obj.number }}</a>
+
+        {% if page_obj.has_next %}
+        <a href="javascript:window.location.href = getPage({{page_obj.next_page_number}});" class="paging_item page_num ">{{ page_obj.next_page_number }}</a>
+        {% endif %}
+
+        <a href="javascript:window.location.href = getPage({{page_obj.paginator.num_pages}});" class="paging_item paging_prevnext next {% if page_obj.number == page_obj.paginator.num_pages %} disabled {% endif %}">Cuối</a>
+    </div>
+</div>
+
+<script> 
+    function getPage(pageNumber)
+    {
+        var url = window.location.href;
+        if(url.match(/page=\d*/))
+        {
+            url = url.replace(/page=\d*/, 'page='+pageNumber);
+        }
+        else if(url.charAt(url.length-1) == '/')
+        {
+            url += '?page=' + pageNumber;
+        }
+        else
+        {
+            url += '&page=' + pageNumber;
+        }
+        return url;
+    }
+</script>

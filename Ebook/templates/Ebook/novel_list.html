@@ -1,0 +1,180 @@
+{% extends 'Ebook/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'Ebook/navbar.html' %}
+    {% comment %} <div class="page-top-group ">
+        <div class="index-background"></div>
+    </div> {% endcomment %}
+    <form method="get">
+        <main id="mainpart" class="browser-page">
+            <div style="text-align: center; margin: 0 auto 10px auto;">
+            </div>
+            <div class="container">
+                <div class="page-breadcrumb">
+                    <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
+                    <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
+                    <span class="breadcrum-level"><a href="{% url 'novel_list'%}">Danh sách</a></span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row d-block clear">
+                    <div class="col-12 none d-lg-block col-lg-3 float-right filters-wrapper">
+                        <div class="none-l pad-bottom-20 text-right pad-top-20">
+                            <span class="js-off-filters-wrapper button button-red">Tắt bộ lọc</span>
+                        </div>
+                        <section class="sub-index-style">
+                            <div class="title-wrapper">
+                                <div class="section-title">Chữ cái</div>
+                            </div>
+                            <div class="browse-alphabet">
+                                <a class="alphabet_item
+                                {% if first_letter == None %}  current {% endif %} 
+                                " href="{% url 'novel_list' %}">Tất cả</a>
+                                <a class="alphabet_item 
+                                {% if first_letter == 'khac' %}  current {% endif %} 
+                                " href="{% url 'novel_list' 'khac' %}">#</a>
+                                {% for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+                                {% comment %} <a class="alphabet_item  current " href="https://ln.hako.re/danh-sach">Tất cả</a> {% endcomment %}
+                                    <a class="alphabet_item
+                                    {% if first_letter == letter %}  current {% endif %} 
+                                    " href="{% url 'novel_list' letter %}">{{letter}}</a>
+                                {% endfor %}
+                            </div>
+                        </section>
+                        {% comment %} <section class="sub-index-style filter-section">
+                            <div class="title-wrapper">
+                                <div class="section-title">Phân loại</div>
+                            </div>
+                            <div class="section-content">
+                                <ul class="filter-type unstyled">
+                                    <li><input type="checkbox" name="truyendich" value="1" checked> Truyện dịch</li>
+                                    <li><input type="checkbox" name="sangtac" value="1"> Truyện sáng tác</li>
+                                    <li><input type="checkbox" name="convert" value="1"> Convert</li>
+                                </ul>
+                                <div class="submit-wrapper">
+                                    <input type="submit" class="button button-primary-green" value="Áp dụng">
+                                </div>
+                            </div>
+                        </section> {% endcomment %}
+                        <section class="sub-index-style filter-section">
+                            <div class="title-wrapper">
+                                <div class="section-title">Tình trạng</div>
+                            </div>
+                            <div class="section-content">
+                                <ul class="filter-type unstyled">
+                                    <li><input type="checkbox" name="dangtienhanh" value="1"
+                                        {% if ongoing %} checked {% endif %}> Đang tiến hành</li>
+                                    <li><input type="checkbox" name="hoanthanh" value="1" 
+                                        {% if complete %} checked {% endif %}> Đã hoàn thành</li>
+                                </ul>
+                                <div class="submit-wrapper">
+                                    <input type="submit" class="button button-primary-green" value="Áp dụng">
+                                </div>
+                            </div>
+                        </section>
+                        <section class="sub-index-style">
+                            <div class="title-wrapper">
+                                <div class="section-title">Phân loại</div>
+                            </div>
+                            <div class="section-content">
+                                <ul class="filter-type unstyled clear">
+                                    {% for tag in tag_list %}
+                                    <li class="filter-type_item"><a href="{% url 'novel_list' tag.slug %}">{{ tag.name|title }}</a> </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="col-12 float-left col-lg-9">
+                        <section class="thumb-section-flow">
+                            <header class="filter-container pad-bottom-10">
+
+                                <select name="sapxep" onchange="this.form.submit()" class="block inline-m">
+                                    <option value="tentruyen" {% if order == 'tentruyen' %} selected="selected" {% endif %}>A - Z</option>
+                                    <option value="tentruyenza" {% if order == 'tentruyenza' %} selected="selected" {% endif %}>Z - A</option>
+                                    <option value="capnhat" {% if order == 'capnhat' %} selected="selected" {% endif %}>Mới cập nhật</option>
+                                    <option value="truyenmoi" {% if order == 'truyenmoi' %} selected="selected" {% endif %}>Truyện mới</option>
+                                    <option value="theodoi" {% if order == 'theodoi' %} selected="selected" {% endif %}>Theo dõi</option>
+                                    <option value="top" {% if order == 'top' %} selected="selected" {% endif %}>Top toàn thời gian</option>
+                                </select>
+                                <div class="text-right inline-block-m right-m none-l">
+                                    <span class="button button-green js-call-filters-wrapper"><i class="fas fa-filter" style="margin-right: 10px;"></i>Bộ lọc</span>
+                                </div>
+                            </header>
+                            <main class="row">
+                                {% for novel, chapter in novels %}
+                                <div class="thumb-item-flow col-4 col-md-3 col-lg-2">
+                                    <div class="thumb-wrapper ln-tooltip" data-tooltip-content="#series_{{novel.id}}">
+                                        <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                            <div class="a6-ratio">
+                                                <div class="content img-in-ratio lazyload" data-bg="{{ MEDIA_URL }}/{{ novel.thumbnail }}"></div>
+                                            </div>
+                                        </a>
+                                        <div class="thumb-detail">
+                                            <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+                                                <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">Chương {{ chapter.number }}</a>
+                                            </div>
+                                            <div class="thumb_attr volume-title">{{ chapter.title|title }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="thumb_attr series-title">
+                                        <a href="{{ novel.get_absolute_url }}" title="{{ novel.title|title }}">{{ novel.title|title }}</a>
+                                    </div>
+                                </div>
+
+                                <div style="display: none">
+                                    <div id="series_{{novel.id}}">
+                                        <div style="margin: 10px 0; width: 250px">
+                                            <p style="color: white; font-weight: bold">
+                                                {{ novel.title }}
+                                            </p>
+                                            <p>
+                                                <div>Lượt xem: {{novel.views}}</div>
+                                                <div>Lượt theo dõi: {{novel.follow}}</div>
+                                            </p>
+                                            {{ novel.description|truncatechars:100 }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </main>
+                            {% include 'Ebook/paginator.html' %}
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </form>
+    <script>
+        $(document).ready(function() {
+            $('.js-call-filters-wrapper').on('click', function() {
+                $('.filters-wrapper').toggle();
+                $('html').toggleClass('overflow-hiden');
+            });
+            $('.js-off-filters-wrapper').on('click', function() {
+                $('.filters-wrapper').hide();
+                $('html').removeClass('overflow-hiden');
+            });
+
+            tippy('.ln-tooltip', {
+                delay: 50,
+                maxWidth: 500,
+                interactive: false,
+                touch: ['hold', 1000],
+                placement: 'right',
+                ignoreAttributes: true,
+                content(ref) {
+                    const selector = ref.getAttribute('data-tooltip-content');
+                    const template = document.querySelector(selector);
+                    return template.innerHTML;
+                },
+                onShow(instance) {
+                    tippyHideAll({
+                        exclude: instance
+                    });
+                }
+            });
+        });
+    </script>
+    {% endblock %}
+    

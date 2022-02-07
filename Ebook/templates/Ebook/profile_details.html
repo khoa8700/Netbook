@@ -1,0 +1,129 @@
+{% extends 'Ebook/base_control.html' %}
+{% block content %}
+
+<body>
+    {% include 'Ebook/navbar_control.html' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Hồ sơ
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" method="POST" action=""> {% csrf_token %}
+                            <!-- {{ form.media }} -->
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Tên</label>
+                                <div class="col-md-8">
+                                    {{ form.name }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Email</label>
+                                <div class="col-md-8">
+                                   {{ form.email }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Số điện thoại</label>
+                                <div class="col-md-8">
+                                    {{ form.phone }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Sở thích</label>
+                                <div class="col-md-8">
+                                    {{ form.hobby }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Nghề nghiệp</label>
+                                <div class="col-md-8">
+                                    {{ form.job }}
+                                </div>
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Giới thiệu bản thân</label>
+                                <div class="col-md-8">
+                                    {{ form.self_introduction }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <button type="submit" class="btn btn-primary">
+                                        Cập nhật
+                                    </button>
+                                    <a href="javascript: history.back()" class="btn btn-warning">
+                                        Quay lại
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.1/tinymce.min.js"
+                            referrerpolicy="origin"></script>
+                        <script>
+                            tinymce.init({
+                                selector: 'textarea',
+                                height: 200,
+                                skin: 'oxide',
+                                content_css: 'default',
+                                branding: false,
+                                menubar: false,
+                                contextmenu: false,
+                                entities: '160,nbsp,38,amp,60,lt,62,gt',
+                                paste_word_valid_elements: 'b,strong,i,em,u,s,a,p,br,img',
+                                element_format: 'html',
+                                formats: {
+                                    strikethrough: {
+                                        inline: 's',
+                                        remove: 'all'
+                                    },
+                                    underline: {
+                                        inline: 'u',
+                                        remove: 'all'
+                                    },
+                                },
+                                plugins: 'wordcount link image code fullscreen paste',
+                                toolbar: 'undo redo | bold italic underline strikethrough forecolor | link image | removeformat | fullscreen'
+                            });
+                        </script>
+                        <script>
+                            $(document).ready(function () {
+                                $('input[name=dateofbirth]').datepicker({
+                                    format: 'dd-mm-yyyy',
+                                    defaultViewDate: {
+                                        year: 2000,
+                                        month: 0,
+                                        day: 1
+                                    }
+                                })
+                            })
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow:400,700" rel='stylesheet' />
+    <link href="https://ln.hako.re/scripts/plugins/upload/css/upload.css" rel="stylesheet" />
+
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/jquery.ui.widget.js"></script>
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/jquery.iframe-transport.js"></script>
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/jquery.fileupload.js"></script>
+    <script>
+        uploadSeriesUrl = 'https://ln.hako.re/action/upload/series';
+        uploadBookUrl = 'https://ln.hako.re/action/upload/book';
+        uploadChapterUrl = 'https://ln.hako.re/action/upload/image';
+        uploadAvatarUrl = 'https://ln.hako.re/action/upload/avatar';
+        remoteUploadUrl = 'https://ln.hako.re/action/upload/remote';
+
+        coverSeriesUrl = 'https://ln.hako.re/covers/series';
+        coverBookUrl = 'https://ln.hako.re/covers/books';
+    </script>
+
+    <script src="https://ln.hako.re/scripts/plugins/upload/js/upload.js?v=7"></script>
+</body>
+
+{% endblock %}
