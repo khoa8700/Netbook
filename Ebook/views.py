@@ -1086,7 +1086,7 @@ def deleteChapter(request, id_novel=None, id_chapter=None):
     except:
         return JsonResponse({"error":"something wrong"})
     print('delete')
-    redirect('edit_novel', id_novel=id_novel)
+    return redirect('edit_novel', id_novel=id_novel)
 
 # @authenticated_user
 # @author_or_admin
