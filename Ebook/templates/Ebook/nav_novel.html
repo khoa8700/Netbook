@@ -171,7 +171,7 @@
                     {% for chapter in chapters %}
                     <li>
                         <a class="li-link" href="{{ chapter.get_absolute_url }}" target="_blank"><i class="fas fa-external-link-alt"></i></a>
-                        <span class="chapter-name level1" id="chapter_{{ chapter.id }}" data-item="{{ chapter.id}}">Chương {{ forloop.counter }}</span>
+                        <span class="chapter-name level1" id="chapter_{{ chapter.id }}" data-item="{{ chapter.id }}">Chương {{ forloop.counter }}</span>
                     </li>
                     {% endfor %}
                 </ul>
@@ -232,34 +232,34 @@
                 switch (child.innerText) {
                     case 'Sửa truyện':
                         child.onclick = () => openLink(
-                            '/action/series/11596/edit?navbar=0',
+                            '/action/'+ id +'/edit?navbar=0',
                             'action',
                             'action=editseries'
                         );
                         break;
                     case 'Xóa truyện':
                         child.onclick = () => openLink(
-                            '/action/series/11596/delete',
+                            '/action/delete?slug='+ {{ novel.slug }} ,
                             '_parent'
                         );
                         break;
                     case 'Thêm chương':
                         child.onclick = () => openLink(
-                            '/action/chapter/create/book=' + id + '?navbar=0',
+                            '/action/'+ {{ novel.id }} +'/create?navbar=0',
                             'action',
                             'book_id=' + id + '&action=createchapter'
                         );
                         break;
                     case 'Sửa chương':
                         child.onclick = () => openLink(
-                            '/action/chapter/' + id + '/edit?navbar=0',
+                            '/action/'+ {{ novel.id }} +'/' + id + '/edit?navbar=0',
                             'action',
                             'chapter_id=' + id + '&action=editchapter'
                         );
                         break;
                     case 'Xóa chương':
                         child.onclick = () => openLink(
-                            '/action/chapter/' + id + '/delete?navbar=0',
+                            '/action/delete?'+ {{ novel.id }} +'/' + id + ?navbar=0',
                             'action',
                             'chapter_id=' + id + '&action=deletechapter'
                         );

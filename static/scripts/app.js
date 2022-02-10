@@ -322,26 +322,6 @@ $(document).ajaxError(function(e, t, n, o) {
                 n.find(".ln-comment-content").html("(Bình luận đã bị xóa)"), n.find("hr.ln-comment").remove(), n.find(".ln-comment-toolkit").remove()
             } else alert(e.message)
         })
-    }), $(".ln-comment-body").on("click", ".paging_item, #refresh_comment", function(e) {
-        e.preventDefault();
-        var n = $(this);
-        "refresh_comment" == n.attr("id") && n.addClass("refresher");
-        var o = getParameterByName("page", n.attr("href")) || 1;
-        return $.post("/comment/ajax_paging", {
-            _token: token,
-            type: comment_type,
-            type_id: comment_typeid,
-            page: o
-        }, function(e) {
-            if ("success" == e.status && "" != e.html) {
-                $(".ln-comment-body").find(".ln-comment-group, .ln-comment-page").remove(), $(".ln-comment-body").append(e.html);
-                var o = $(".ln-comment-body").parent();
-                t(), $("html,body").animate({
-                    scrollTop: o.offset().top - $("body").offset().top + o.scrollTop()
-                })
-            } else alert(e.message);
-            n.removeClass("refresher")
-        }, "json"), !1
     }), $(".ln-comment-body").on("click", ".fetch_reply", function(e) {
         var n = $(this);
         n.next().show(), $.post("/comment/fetch_reply", {

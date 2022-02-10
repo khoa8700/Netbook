@@ -64,6 +64,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'Ebook.views.noti',
                 'Ebook.views.top_rates_novel_list',
                 'Ebook.views.tag_list',
                 'django.template.context_processors.debug',
@@ -124,7 +125,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -152,3 +152,9 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+CKEDITOR_CONFIGS = {   
+    'default': {
+        'width': '100%',
+    },
+}

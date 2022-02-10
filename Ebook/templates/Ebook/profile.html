@@ -8,8 +8,8 @@
             <div class="profile-feature">
                 <div class="profile-cover">
                     <div class="fourone-ratio">
-                        <div class="content img-in-ratio" style="background-image: url('img/user-cover.gif');">
-                        </div>
+                        {% comment %} <div class="content img-in-ratio">
+                        </div> {% endcomment %}
                     </div>
                     <!-- <div id="profile-changer_cover" class="profile-changer none block-m">
                         <div class="p-c_wrapper">
@@ -17,16 +17,16 @@
                             <span class="p-c_text">Yêu cầu 1200 x 300 px</span>
                         </div>
                     </div> -->
-                    <input type="file" id="user_cover_file" style="display: none">
-                    <input type="file" id="user_avatar_file" style="display: none">
-                </div>
+                    {% comment %} <input type="file" id="user_cover_file" style="display: none"> {% endcomment %}
+                    {% comment %} <input type="file" id="user_avatar_file" style="display: none"> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
                 <div class="profile-nav">
                     <div class="profile-ava-wrapper">
                         <div class="profile-ava">
-                            <div id="profile-changer_ava" class="profile-changer">
+                            {% comment %} <div id="profile-changer_ava" class="profile-changer">
                                 <span class="p-c_text"><i class="fas fa-camera"></i></span>
-                            </div>
-                            <img src="img/noava.png">
+                            </div> {% endcomment %}
+                            <img src="{{ MEDIA_URL }}/{{ userinfo.avatar }}">
                         </div>
                     </div>
                     <!-- <div class="profile-function at-desktop none block-m">
@@ -61,7 +61,7 @@
                 <section class="basic-section clear">
                     <ul class="statistic-top row">
                         <li class="col-6">
-                            <div class="statistic-value">1</div>
+                            <div class="statistic-value">{{nchapter}}</div>
                             <div class="statistic-name">Chương đã đăng</div>
                         </li>
                         <li class="col-6">
@@ -131,8 +131,8 @@
                                                 <span class="status-name">Lần cuối:</span>
                                                 <span class="status-value">
                                                     <time class="timeago"
-                                                        title="{{ novel.publication_date|date:'d-m-Y H:i:s' }}"
-                                                        datetime="{{ novel.publication_date|date:'c' }}">{{ novel.publication_date|date:'d-m-Y H:i:s' }}</time>
+                                                        title="{{ novel.update_date|date:'d-m-Y H:i:s' }}"
+                                                        datetime="{{ novel.update_date|date:'c' }}">{{ novel.update_date|date:'d-m-Y H:i:s' }}</time>
                                                 </span>
                                             </div>
                                         </div>
@@ -149,7 +149,7 @@
         </div>
     </div>
 </main>
-<script>
+{% comment %} <script>
     $(document).ready(function () {
         listab(".profile-tabs");
         var token = 'vK8B8V43MrwNGMM2WtGrIrBn2D7MvjPqDJK1cZnr';
@@ -204,5 +204,5 @@
             });
         });
     });
-</script>
+</script> {% endcomment %}
 {% endblock %}

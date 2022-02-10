@@ -9,8 +9,8 @@
             </div>
             <ul class="navbar-menu none hidden-block at-mobile unstyle">
                 <div class="navbar-search block none-m in-navbar-menu">
-                    <form class="" action="{% url 'search' %}" method="get">
-                        <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="keyword"
+                    <form class="" action="{% url 'advanced_search' %}" method="get">
+                        <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="title"
                             value="">
                         <button class="search-submit" type="submit" value="Tìm kiếm"><i
                                 class="fas fa-search"></i></button>
@@ -37,13 +37,13 @@
         <div id="navbar-user">
             <div class="nav-user_icon">
                 <div class="nav-user_avatar">
-                    <img src="https://ln.hako.re/img/noava.png">
+                    <img src="{{ MEDIA_URL }}/{{ user.userinfo.avatar }}">
                 </div>
                 <div class="at-user_avatar"></div>
                 
                 <ul class="account-sidebar hidden-block unstyled none">
                     <li>
-                        <a href="/profile/{{user.id}}"><i class="fas fa-user"></i><span>Tài khoản</span></a>
+                        <a href="{% url 'profile' user.id %}"><i class="fas fa-user"></i><span>Tài khoản</span></a>
                     </li>
                     {% comment %} <li>
                         <a href="/lich-su-doc"><i class="fas fa-history"></i><span>Lịch sử</span></a>
@@ -52,7 +52,7 @@
                         <a href="/bookmark"><i class="fas fa-bookmark"></i><span>Đánh dấu</span></a>
                     </li> {% endcomment %}
                     <li>
-                        <a href="/ke-sach"><i class="fas fa-heart"></i><span>Kệ sách</span></a>
+                        <a href="{% url 'profile_follow' %}"><i class="fas fa-heart"></i><span>Kệ sách</span></a>
                     </li>
                     {% comment %} <li>
                         <a href="/tin-nhan"><i class="fas fa-envelope"></i><span>Tin nhắn</span>
@@ -91,9 +91,12 @@
                 </div>
             </div> {% endcomment %}
             <div id="series-unread-icon" class="user-sublink appearing">
-                <a class="link-item" href="{% url 'novel_list' %}">
+                <a class="link-item" href="{% url 'profile_follow' %}">
                     <div class="icon-wrapper">
                         <i class="fas fa-heart"></i>
+                        {% if noti > 0 %}
+                            <span class="noti-unread">{{ noti }}</span>
+                        {% endif %}
                     </div>
                 </a>
             </div>
@@ -105,8 +108,8 @@
         {% endif %}
         <div class="navbar-mainblock">
             <div class="navbar-search none block-m">
-                <form class="" action="{% url 'search' %}" method="get">
-                    <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="keyword"
+                <form class="" action="{% url 'advanced_search' %}" method="get">
+                    <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="title"
                         value="">
                     <button class="search-submit" type="submit" value="Tìm kiếm"><i
                             class="fas fa-search"></i></button>
@@ -115,7 +118,7 @@
             <ul class="navbar-menu at-navbar none d-lg-block unstyled">
                 <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
                 <li><a class="nav-menu_item" href="/thao-luan/368-huong-dan-dang-truyen"><span>Đăng truyện</span></a></li>
-                <li><a class="nav-menu_item" href="/thao-luan/2-gioi-thieu-cong-light-novel"><span>Giới thiệu</span></a></li>
+                <li><a class="nav-menu_item" href="/introduce"><span>Giới thiệu</span></a></li>
                 <li><a class="nav-menu_item" href="/privacy-policy"><span>Privacy Policy</span></a></li>
             </ul>
         </div>

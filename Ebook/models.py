@@ -29,12 +29,13 @@ class UserInfo(models.Model):
 
     
     user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, null=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
     email = models.CharField(max_length=200, null=True)
     # phone = models.CharField(max_length=200, null=True)
-    birthday = models.DateField(null=True,blank=True)
-    hobby = models.CharField(max_length=200, null=True)
-    job = models.CharField(max_length=200, null=True)
+    avatar = models.ImageField(default="images/noava.png", null=True, blank=True,upload_to="images/")
+    birthday = models.DateField(blank=True, null=True)
+    hobby = models.CharField(max_length=200, blank=True, null=True)
+    job = models.CharField(max_length=200, blank=True, null=True)
     role = models.PositiveSmallIntegerField(choices=ROLE_CHOICES,blank=True,null=True,default=CUSTOMER)
 
     self_introduction = RichTextField(null=True,blank=True)
@@ -86,7 +87,7 @@ class Tag(models.Model):
             self.slug = slugify(self.name)
         return super().save(*args,**kwargs)
 
-BOOL_CHOICES = ((True, 'Finished'), (False, 'In proccessing'))
+BOOL_CHOICES = ((True, 'Finished'), (False, 'Ongoing'))
 
 class Novel(models.Model):
     title = models.CharField(max_length=200, null=True)
@@ -100,7 +101,6 @@ class Novel(models.Model):
     views = IntegerField(default=0)
     publication_date = models.DateTimeField(null=True,blank=True)
     status = models.BooleanField(default=False,choices=BOOL_CHOICES)
-
     def __str__(self):    
         return self.title
     
@@ -113,10 +113,10 @@ class Novel(models.Model):
         return reverse('detail',kwargs={'slug':self.slug})
     
     def get_absolute_url_nav(self):
-        return reverse('navbar_novel',kwargs={'slug':self.slug})
+        return reverse('navbar_novel',kwargs={'id_novel':self.id})
 
     def get_absolute_url_edit(self):
-        return reverse('edit_novel',kwargs={'slug':self.slug})
+        return reverse('edit_novel',kwargs={'id_novel':self.id})
     
     def get_absolute_url_create_chapter(self):
         return reverse('create_chapter',kwargs={'slug':self.slug})
@@ -145,12 +145,12 @@ class Chapter(models.Model):
         return reverse('edit_chapter',kwargs={'slug':slug,'chapter_number':self.number})
     
 
-class NovelTag(models.Model):
-    novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
-    tag = ForeignKey(Tag,null=True, blank=True,on_delete=models.CASCADE)
+# class NovelTag(models.Model):
+#     novel = ForeignKey(Novel,null=True, blank=True,on_delete=models.CASCADE)
+#     tag = ForeignKey(Tag,null=True, blank=True,on_delete=models.CASCADE)
     
-    def __str__(self):
-        return str(self.novel.title)+" "+str(self.tag.name)
+#     def __str__(self):
+#         return str(self.novel.title)+" "+str(self.tag.name)
 
 class Rating(models.Model):
     rate = IntegerField()
@@ -189,5 +189,5 @@ class Bookmark(models.Model):
     number = IntegerField()
     class Meta:
         constraints = [
-            UniqueConstraint(fields=['user', 'novel'], name='recently_chapter_once'),
+            UniqueConstraint(fields=['user', 'novel','number'], name='read_chapter'),
         ]

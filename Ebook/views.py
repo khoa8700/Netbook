@@ -32,6 +32,7 @@ import string
 # Create your views here.
 TRENDING_NOVELS_PER_PAGE=8
 NOVELS_PER_PAGE=2
+COMMENTS_PER_PAGE=5
 NOVELS_IN_TOP_RATES=3
 USERS_PER_PAGE=2
 LOCK_OUT_TIME = 7 # (days)
@@ -40,7 +41,7 @@ CHAPTERS_PER_ROW=6
 NUMBER_ROW_LATEST_CHAPTERS=3
 LATEST_CHAPTERS_PER_PAGE=CHAPTERS_PER_ROW*NUMBER_ROW_LATEST_CHAPTERS
 LATEST_FINISHED_NOVELS= 10
-LATEST_COMMENTS_PER_PAGE=6
+LATEST_COMMENTS=6
 
 
 def index(request):
@@ -64,7 +65,7 @@ def index(request):
             latest_finished_novels_chapter.append(list(Chapter.objects.filter(novel=novel).order_by("-update_date"))[0])
     latest_finished_novels_chapter = latest_finished_novels_chapter[:LATEST_FINISHED_NOVELS]
     
-    recently_comments=list(Comment.objects.all().order_by('-publication_date')[:LATEST_COMMENTS_PER_PAGE])
+    recently_comments=list(Comment.objects.all().order_by('-publication_date')[:LATEST_COMMENTS])
     # print("recently_comments : ",recently_comments)
     # print("# lastest chapter : ",latest_chapters)
     # page_number = request.GET.get('page')
@@ -198,6 +199,47 @@ def myWorkDetail(request,slug=None):
     chapters = list(Chapter.objects.filter(novel=novel))
     return render(request,"Ebook/my_work_detail.html",{"chapters":chapters})
 
+@authenticated_user
+def bookmark(request):
+    if request.method == "POST" and request.accepts('ajax'):
+        print("hello bookmark")
+        slug = request.POST.get("slug")
+        chapter_number = request.POST.get("chapter_number")
+        # print("slug : ",slug)
+        # print("chapter_number : ",chapter_number)
+        novel = Novel.objects.get(slug=slug)
+        user = request.user
+        try:
+            bookmark = Bookmark.objects.get(novel=novel,user=user,number=chapter_number)
+        except:
+            bookmark = None
+        if not bookmark:
+            print('k co bookmark')
+            bookmark=Bookmark(user=user,novel=novel,number=chapter_number)
+            bookmark.save()
+        return JsonResponse({"ok": True}, status=200)
+    return JsonResponse({"error": "invalid"}, status=400)
+
+@authenticated_user
+def usermarkread(request):
+    if request.method == "POST":
+        novels_id = request.POST.get('series_id').split(',')
+        user = request.user
+        for id in novels_id:
+            novel = Novel.objects.get(id=id)
+            for chapter_number in range(1,novel.chapter_set.count()+1):
+                try:
+                    bookmark = Bookmark.objects.get(novel=novel,user=user,number=chapter_number)
+                except:
+                    bookmark = None
+                if not bookmark:
+                    # print('k co bookmark')
+                    bookmark=Bookmark(user=user,novel=novel,number=chapter_number)
+                    bookmark.save()
+        return JsonResponse({"status": 'success'}, status=200)
+        # print(novels_id)
+    return JsonResponse({"error": "invalid"}, status=400)
+
 def read(request,slug=None,chapter_number=None):
     if slug is not None and chapter_number is not None:
         novel = get_object_or_404(Novel,slug=slug)
@@ -205,20 +247,20 @@ def read(request,slug=None,chapter_number=None):
         cnt = novel.chapter_set.count()
         print("count : ",cnt)
         chapter = get_object_or_404(Chapter,novel=novel,number=chapter_number)
-        if request.user.is_authenticated:
-            user = User.objects.get(pk=request.user.pk)
-            print("#user : ",user)
-            print("#novel : ",novel)
-            try:
-                bookmark = Bookmark.objects.get(user=user,novel=novel)
-            except Bookmark.DoesNotExist:
-                bookmark = None
-            if bookmark is None:
-                bookmark=Bookmark()
-                bookmark.user=user
-                bookmark.novel=novel
-            bookmark.number=chapter_number
-            bookmark.save()
+        # if request.user.is_authenticated:
+        #     user = User.objects.get(pk=request.user.pk)
+        #     print("#user : ",user)
+        #     print("#novel : ",novel)
+        #     try:
+        #         bookmark = Bookmark.objects.get(user=user,novel=novel)
+        #     except Bookmark.DoesNotExist:
+        #         bookmark = None
+        #     if bookmark is None:
+        #         bookmark=Bookmark()
+        #         bookmark.user=user
+        #         bookmark.novel=novel
+        #     bookmark.number=chapter_number
+        #     bookmark.save()
         return render(request,'Ebook/read.html',{
             "novel" : novel,
             "chapter" : chapter,
@@ -233,10 +275,8 @@ def read(request,slug=None,chapter_number=None):
 def detail(request,slug=None):
     if slug is not None:
         userinfo = None
-        if request.user.is_authenticated:
-            user = User.objects.get(pk=request.user.pk)
-            userinfo = UserInfo.objects.get(user=user)
         novel = get_object_or_404(Novel,slug=slug)
+        novel = Novel.objects.annotate(update_date=Max('chapter__update_date')).get(slug=slug)
         form = CreateRatingForm()
         tags = list(novel.tags.all())
         follow_number = Following.objects.filter(novel=novel,is_followed=True).count()
@@ -254,21 +294,48 @@ def detail(request,slug=None):
         ############ endtest
 
         chapters = list(Chapter.objects.filter(novel=novel))
-        if len(chapters)>0:
-            first_chapter = chapters[0]
-            if request.user.is_authenticated:
-                user = User.objects.get(pk=request.user.pk)
+        chapters_mark = []
+        if request.user.is_authenticated:
+            user = User.objects.get(pk=request.user.pk)
+            for chapter in chapters:
                 try:
-                    bookmark = Bookmark.objects.get(user=user,novel=novel)
+                    bookmark = Bookmark.objects.get(user=user,novel=novel,number=chapter.number)
                 except Bookmark.DoesNotExist:
                     bookmark = None
+                mark = False
                 if bookmark is not None:
-                    first_chapter = chapters[bookmark.number-1]
+                    mark = True
+                chapters_mark.append([chapter,mark])
 
         else:
-            first_chapter = None
+            chapters_mark = [[chapter,False] for chapter in chapters]
+        # if len(chapters)>0:
+        #     first_chapter = chapters[0]
+        #     if request.user.is_authenticated:
+        #         user = User.objects.get(pk=request.user.pk)
+        #         try:
+        #             bookmark = Bookmark.objects.get(user=user,novel=novel)
+        #         except Bookmark.DoesNotExist:
+        #             bookmark = None
+        #         if bookmark is not None:
+        #             first_chapter = chapters[bookmark.number-1]
+        # else:
+        #     first_chapter = None
         comments = Comment.objects.filter(novel=novel).order_by("-publication_date")
+        paginator = Paginator(comments, COMMENTS_PER_PAGE)
+        page_number = request.GET.get('page')
+        if not page_number:
+            page_number = 1
+        try:
+            page = paginator.page(page_number)
+        except:
+            # page = paginator.page(paginator.num_pages)
+            raise Http404
 
+        comments = page.object_list
+        print(page, comments)
+        page_obj = paginator.get_page(page_number)
+        
         is_followed = False
         rating = None
         if request.user.is_authenticated:
@@ -298,16 +365,17 @@ def detail(request,slug=None):
         print("tags : ",tags)
         return render(request,'Ebook/detail.html',{
             "slug" : slug,
-            "userinfo" : userinfo,
+            # "userinfo" : userinfo,
             "novel" : novel,
             "tags" : tags,
-            "chapters" : chapters,
+            "chapters_mark" : chapters_mark,
             "form": form,
             "is_followed" : is_followed,
             "comments" : comments,
-            "first_chapter" : first_chapter,
+            # "first_chapter" : first_chapter,
             "rating" : rating,
             "follow_number" : follow_number,
+            "page_obj":page_obj,
         })
     return redirect('index')
 
@@ -336,7 +404,7 @@ def createNovel(request):
             novel.userinfo=userInfo
             novel.save()
             print(novel.tags.all())
-        return redirect('login')
+        return redirect('manage_list')
     context={
         "form":form,
     }
@@ -347,13 +415,13 @@ def createNovel(request):
 @authenticated_user
 @author_or_admin
 @author_check
-def editNovel(request,slug=None):
-    navCheck=request.GET.get("nav")
-    if navCheck is not None and int(navCheck)==0:
-        navCheck=False
-    else:
-        navCheck=True
-    novel = get_object_or_404(Novel,slug=slug)
+def editNovel(request,id_novel=None):
+    navCheck=request.GET.get("navbar")
+    # if navCheck is not None and int(navCheck)==0:
+    #     navCheck=False
+    # else:
+    #     navCheck=True
+    novel = get_object_or_404(Novel,id=id_novel)
     if request.method=="POST":
         form = CreateNovelForm(data=request.POST, files=request.FILES,instance=novel)
         if form.is_valid():
@@ -361,7 +429,6 @@ def editNovel(request,slug=None):
     form = CreateNovelForm(instance=novel)
     return render(request, "Ebook/edit_novel.html",{
         "form":form,
-        "slug":slug,
         "navCheck":navCheck,
     })
 
@@ -369,8 +436,8 @@ def editNovel(request,slug=None):
 @authenticated_user
 @author_or_admin
 @cache_control(no_cache=True, must_revalidate=True)
-def createChapter(request, slug=None):
-    novel = get_object_or_404(Novel,slug=slug)
+def createChapter(request, id_novel):
+    novel = get_object_or_404(Novel,id=id_novel)
     form = CreateChapterForm()
     if request.method == "POST":
         form = CreateChapterForm(request.POST)
@@ -379,7 +446,7 @@ def createChapter(request, slug=None):
             chapter.novel = novel
             chapter.update_date=datetime.now()
             chapter.save()
-            return redirect('my_work_detail',slug=slug)
+            # return redirect('my_work_detail',slug=slug)
     context={
         "form":form
     }
@@ -389,24 +456,24 @@ def createChapter(request, slug=None):
 @authenticated_user
 @author_or_admin
 @author_check
-def editChapter(request, slug=None, chapter_number=None):
-    novel = get_object_or_404(Novel,slug=slug)
+def editChapter(request, id_novel=None, id_chapter=None):
+    novel = get_object_or_404(Novel, id=id_novel)
     # novel = Novel.objects.get(slug=slug)
-    chapter = get_object_or_404(Chapter,novel=novel,number=chapter_number)
+    chapter = get_object_or_404(Chapter,novel=novel,id=id_chapter)
     # chapter = Chapter.objects.get(novel=novel,number=chapter_number)
     # form = CreateChapterForm()
     if request.method == "POST": 
-        is_delete = request.POST.get("delete")
-        if is_delete is not None: 
-            chapter.delete()
-            return redirect('my_work_detail',slug=slug)
-        else:
-            form = CreateChapterForm(request.POST,instance=chapter)
-            if form.is_valid():
-                chapter = form.save(commit=False)
-                chapter.update_date=datetime.now()
-                chapter.save()
-                # return redirect('my_work_detail',slug=slug)
+        # is_delete = request.POST.get("delete")
+        # if is_delete is not None: 
+        #     chapter.delete()
+        #     return redirect('my_work_detail',slug=slug)
+        # else:
+        form = CreateChapterForm(request.POST,instance=chapter)
+        if form.is_valid():
+            chapter = form.save(commit=False)
+            chapter.update_date=datetime.now()
+            chapter.save()
+            # return redirect('my_work_detail',slug=slug)
     
     # if slug is not None and chapter_number is not None:
         # novel = Novel.objects.get(slug=slug)
@@ -424,15 +491,18 @@ def profile_details(request):
     user = User.objects.get(username=username)
     info = UserInfo.objects.get(user=user)
     if request.method == "POST": 
-        form = CreateUserInfoForm(request.POST,instance=info)
+        form = CreateUserInfoForm(data=request.POST, files=request.FILES,instance=info)
         print(form.data)
+        print(form.errors)
         if form.is_valid():
             print('ok')
             form.save()
             return redirect('profile_details')
+        else:
+            print('error')
     
     form = CreateUserInfoForm(instance=info)
-    print("hello profile")
+    # print("hello profile")
     # print(form)
     context={
         "form":form
@@ -478,18 +548,24 @@ def profile(request,id):
     user = User.objects.get(id=id)
     userinfo = UserInfo.objects.get(user=user)
     follow = userinfo.user.following_set.count()
-    novels = userinfo.novel_set.all()
+    novels = userinfo.novel_set.all().annotate(update_date=Max('chapter__update_date'))
+    nchapter = 0
+    for novel in novels:
+        nchapter += novel.chapter_set.count()
     print(follow)
     return render(request,"Ebook/profile.html",{
         "userinfo":userinfo,
         "nfollow":follow,
-        "novels":novels})
+        "novels":novels,
+        "nchapter":nchapter
+        }
+    )
 
 
 @authenticated_user
 @csrf_exempt
 def follow(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         print("in POST")
         slug = request.POST.get("slug")
         if slug is not None:
@@ -519,36 +595,45 @@ def profile_follow(request):
         bookmark_novel=[]
         
         try:
-            bookmark = Bookmark.objects.get(user=user,novel=following.novel)
+            n_bookmark = Bookmark.objects.filter(user=user,novel=following.novel).count()
+            print(bookmark)
         except Bookmark.DoesNotExist:
-            bookmark = None
-
-        bookmark_novel.append(bookmark)
-        bookmark_novel.append(following.novel)
+            n_bookmark = 0
+        n_unread = following.novel.chapter_set.count()-n_bookmark
+        latest_chapter = Chapter.objects.get(novel=following.novel,number=following.novel.chapter_set.count())
+        bookmark_novel.append(n_unread)
+        bookmark_novel.append(latest_chapter)
         bookmark_novels.append(bookmark_novel)
-    print("#### bookmark_novels : ",bookmark_novels)
-    return render(request,"Ebook/profile_follow.html",{"bookmark_novels":bookmark_novels})
+    # print("#### bookmark_novels : ",bookmark_novels)
+    return render(request,"Ebook/favourite.html",{"bookmark_novels":bookmark_novels})
     # return render(request,"Ebook/profile_follow.html")
 
+def introduce(request):
+    return render(request,"Ebook/introduce.html")
 @authenticated_user
-def profile_change_pass(request):
+def updatePassword(request):
     user = User.objects.get(pk=request.user.pk)
     print("current password : ",user.password)
     if request.method == "POST":
-        old_password = request.POST.get("old_password")
-        new_password1 = request.POST.get("new_password1")
-        new_password2 = request.POST.get("new_password2")
-        flag = user.check_password(old_password)
-        print("flag : ",flag)
-        if flag and new_password1==new_password2:
-            user.set_password(new_password1)
-            user.save()
-            update_session_auth_hash(request,user)
-            messages.success(request, ('Your password was successfully updated!'))
-            return redirect('profile_change_pass')
-        else:
-            messages.error(request, ('Please correct the error below.'))
-    return render(request,"Ebook/profile_change_pass.html")
+        oldpassword = request.POST.get("oldpassword")
+        newpassword = request.POST.get("newpassword")
+        newpassword_confirmation = request.POST.get("newpassword_confirmation")
+        checkoldpass = user.check_password(oldpassword)
+        messages = []
+        if not checkoldpass:
+            return render(request,"Ebook/update_password.html",context={'message':"Mật khẩu cũ không đúng"})
+        if newpassword != newpassword_confirmation:
+            return render(request,"Ebook/update_password.html",context={'message':"Xác nhận mật khẩu không đúng"})
+        if len(newpassword) < 8:
+            return render(request,"Ebook/update_password.html",context={'message':"Độ dài mật khẩu mới nhỏ hơn 8 ký tự"})
+        user.set_password(newpassword)
+        user.save()
+        update_session_auth_hash(request,user)
+        # messages.success(request, ('Your password was successfully updated!'))
+        logout(request)
+        return redirect('login')
+        # return redirect('update_password')
+    return render(request,"Ebook/update_password.html")
 
 def tag_list(request):
     tag_list = list(Tag.objects.all())
@@ -764,7 +849,7 @@ def search_tag(request, slug=None):
 @csrf_exempt
 def increase_views(request):
     print("welcome")
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         print("hello increase views")
         slug = request.POST.get("slug")
         chapter_number = request.POST.get("chapter_number")
@@ -795,7 +880,7 @@ def base(request):
 
 @csrf_exempt
 def postComment(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         print("## in post comment")
         slug = request.POST.get("slug")
         print("## slug in comment : ",slug)
@@ -820,7 +905,7 @@ def postComment(request):
 @never_cache
 @authenticated_user
 def nRate(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         slug = request.POST.get("slug")
         novel = Novel.objects.get(slug=slug)
         if novel is not None:
@@ -855,6 +940,7 @@ def advancedSearch(request):
     found=False
 
     title=request.GET.get("title")
+    print(title)
     if title is not None:
         ret=ret.filter(title__icontains=title)
         found=True
@@ -951,7 +1037,27 @@ def manageList(request):
 @author_or_admin
 def deleteNovel(request):
     print("in delete novel 1")
-    if request.method=="POST" and request.is_ajax():
+    if request.method=="POST" :
+        print("in delete novel 2")
+        slug = request.POST.get("slug")
+        print("# delete novel ",slug)
+        if slug is not None:
+            try:
+                novel = Novel.objects.get(slug=slug)
+            except Novel.DoesNotExist:
+                novel = None
+            if novel is not None:
+                user = User.objects.get(pk=request.user.pk)
+                if user.userinfo==novel.userinfo:
+                    novel.delete()
+                    return JsonResponse({"ok":True})
+    return JsonResponse({"error":"something wrong"})
+
+@authenticated_user
+@author_or_admin
+def deleteChapter(request):
+    print("in delete novel 1")
+    if request.method=="POST" and request.accepts('ajax'):
         print("in delete novel 2")
         slug = request.POST.get("slug")
         print("# delete novel ",slug)
@@ -967,21 +1073,42 @@ def deleteNovel(request):
                     return JsonResponse({"ok":True})
     return JsonResponse({"error":"something wrong"})
         
-def manageNovel(request,slug=None):
-    if slug is not None:
-        novel=get_object_or_404(Novel,slug=slug)
-        return render(request,"Ebook/manage.html",{
-            "novel" : novel,
-        })
-    return HttpResponseNotFound('<h1>Page not found</h1>')
+def manageNovel(request,id_novel):
+    # if slug is not None:
+    novel=get_object_or_404(Novel,id=id_novel)
+    return render(request,"Ebook/manage.html",{
+        "novel" : novel,
+    })
+    # return HttpResponseNotFound('<h1>Page not found</h1>')
 
-def navbarNovel(request,slug):
-    if slug is not None:
-        novel=get_object_or_404(Novel,slug=slug)
+def navbarNovel(request, id_novel):
+    # if slug is not None:
+        novel=get_object_or_404(Novel,id=id_novel)
         chapters = Chapter.objects.filter(novel=novel).order_by("number")
         return render(request,"Ebook/nav_novel.html",{
             "novel" : novel,
             "chapters" : chapters,
-            "slug" : slug,
         })
-    return HttpResponseNotFound('<h1>Page not found</h1>')
+    # return HttpResponseNotFound('<h1>Page not found</h1>')
+
+
+def noti(request):
+    noti = 0
+    print('hello')
+    if request.user.is_authenticated:
+        print('ok')
+        user = User.objects.get(pk=request.user.pk)
+        followings = list(Following.objects.filter(user=user,is_followed=True))
+        for following in followings:
+            try:
+                n_bookmark = Bookmark.objects.filter(user=user,novel=following.novel).count()
+            except Bookmark.DoesNotExist:
+                n_bookmark = 0
+            noti += following.novel.chapter_set.count() - n_bookmark
+        print('noti',noti)
+        return { 
+            "noti" : noti,
+        }
+    return { 
+        "noti" : noti,
+    }

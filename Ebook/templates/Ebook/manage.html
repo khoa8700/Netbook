@@ -38,10 +38,10 @@
         </div>
         <div class="col-xs-12 col-sm-12 col-md-3 hidden-xs hidden-sm" id="action-tree"
             style="border-right: 1px solid #ccc; padding: 0">
-            <iframe name="nav" src="{{ novel.get_absolute_url_nav }}"></iframe>
+            <iframe name="nav" src="{% url 'navbar_novel' novel.id %}"></iframe>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-9" style="padding: 0 0px">
-            <iframe name="action" src="{{ novel.get_absolute_url_edit }}?nav=0"></iframe>
+            <iframe name="action" src="{% url 'edit_novel' novel.id %}?navbar=0"></iframe>
         </div>
     </div>
     <script>

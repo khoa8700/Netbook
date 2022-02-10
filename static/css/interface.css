@@ -12270,7 +12270,7 @@ ul.others-list li {
     display: block;
     content: "";
     width: 100%;
-    padding-top: 25%
+    padding-top: 10%
 }
 
 .fourone-ratio>.content {
@@ -15114,7 +15114,7 @@ table.listext-table .update-status.no-chapters {
 
 .profile-feature .profile-cover {
     width: 100%;
-    background-color: #fff;
+    background-color: #f1f1f1;
     background-size: cover;
     position: relative
 }

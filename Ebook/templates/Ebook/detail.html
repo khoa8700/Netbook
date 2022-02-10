@@ -87,7 +87,7 @@
                                             </div>
                                             <div class="info-item">
                                                 <span class="info-name">Tác giả:</span>
-                                                <span class="info-value ">{{ novel.userinfo.name }}</span>
+                                                <span class="info-value "><a href="{% url 'advanced_search' %}?author={{ novel.userinfo.name }}">{{ novel.userinfo.name }}</a></span>
                                             </div>
                                             <!-- <div class="info-item">
                                                 <span class="info-name">Họa sĩ:</span>
@@ -177,8 +177,8 @@
                                             <div class="col-12 col-md-3 statistic-item block-wide at-mobile">
                                                 <div class="statistic-name">Lần cuối</div>
                                                 <div class="statistic-value"><time class="timeago"
-                                                        title="{{ novel.publication_date|date:'d-m-Y H:i:s' }}"
-                                                        datetime="{{ novel.publication_date|date:'c' }}">{{ novel.publication_date|date:'d-m-Y H:i:s' }}</time></div>
+                                                        title="{{ novel.update_date|date:'d-m-Y H:i:s' }}"
+                                                        datetime="{{ novel.update_date|date:'c' }}">{{ novel.update_date|date:'d-m-Y H:i:s' }}</time></div>
                                             </div>
                                             <div class="col-4 col-md-3 statistic-item">
                                                 <div class="statistic-name"> Số chương</div>
@@ -228,37 +228,38 @@
                             <section class="series-users">
                                 <main>
                                     <div class="series-owner group-mem">
-                                        <img width="50px" height="50px" src="https://ln.hako.re/img/noava.png" />
+                                        <img width="50px" height="50px" src="{{ MEDIA_URL }}/{{ novel.userinfo.avatar }}" />
                                         <div class="series-owner-title">
                                             <span class="series-owner_name"><a
-                                                    href="https://ln.hako.re/thanh-vien/26627">cac</a></span>
+                                                href="{% url 'profile' novel.userinfo.user.id %}">{{ novel.userinfo.name }}</a></span>
                                         </div>
                                     </div>
                                     <div class="fantrans-section">
-                                        <div class="fantrans-name">Nhóm dịch</div>
-                                        <div class="fantrans-value"><a
-                                                href="https://ln.hako.re/nhom-dich/967-moe-la-chan-li">cac</a></div>
+                                        <div class="fantrans-name">Ngày đăng</div>
+                                        <div class="fantrans-value">
+                                            <span class="info-value">{{ novel.publication_date|date:'d/m/Y'}}</span>
+                                        </div>
                                     </div>
-                                    <div class="series-owner_share">
+                                    {% comment %} <div class="series-owner_share">
                                         <span class="owner_share-title" title="Tham gia">Tham gia</span>
                                         <a class="ln_info-name" href="https://ln.hako.re/thanh-vien/18762"
                                             style="padding-left: 5px;">cac</a>
                                     </div>
                                     <div class="owner-donate" style="padding: 0">
 
-                                    </div>
+                                    </div> {% endcomment %}
                                 </main>
                             </section>
                         </div>
                     </div>
-                    <section class="series-note basic-section gradual-mobile">
+                    {% comment %} <section class="series-note basic-section gradual-mobile">
                         <header class="sect-header"><span class="sect-title">Chú thích thêm</span><span
                                 class="mobile-icon"><i class="fas fa-chevron-down"></i></span></header>
                         <main class="d-lg-block">
                             <div class="long-text" style='word-wrap: break-word;'>
                             </div>
                         </main>
-                    </section>
+                    </section> {% endcomment %}
                 </div>
                 <div class="col-12 col-lg-9 float-left">
                     <div style="text-align: center; margin: 0 auto 10px auto;">
@@ -286,21 +287,22 @@
                                 </div>
                                 <div class="col-12 col-md-10">
                                     <ul class="list-chapters at-series">
-                                        {% for chapter in chapters %}
+                                        {% for chapter,mark in chapters_mark %}
                                         <li class="{% if chapter.number > 5 %}none{% endif %}">
                                             <div class="chapter-name">
                                                 {% comment %} <i class="fas fa-image" aria-hidden="true" title="Có chứa ảnh"></i> {% endcomment %}
                                                 <a href="{{ chapter.get_absolute_url }}"
-                                                    title="Chương {{ chapter.number }} : {{ chapter.title|title }}">Chương {{ chapter.number }} : {{ chapter.title|title }}</a>
+                                                    title="Chương {{ chapter.number }} : {{ chapter.title|title }}"
+                                                    {% if mark %} style="color:#c0c0c0" {% endif %} >Chương {{ chapter.number }} : {{ chapter.title|title }}</a>
                                             </div>
                                             <div class="chapter-time">{{ chapter.update_date|date:'d/m/Y' }}</div>
                                         </li>
                                         {% endfor %}
                                         
-                                        {% if chapters|length > 5 %}
+                                        {% if chapters_mark|length > 5 %}
                                         <div class="mobile-more">
                                             <div class="see_more">
-                                                <span>Xem tiếp ({{ chapters|length }} chương)</span>
+                                                <span>Xem tiếp ({{ chapters_mark|length }} chương)</span>
                                             </div>
                                         </div>
                                         {% endif %}
@@ -373,10 +375,18 @@
                                         <div class="ln-comment-page">
                                             <div class="pagination-footer">
                                                 <div class="pagination_wrap">
-                                                    <a href=""
-                                                        class="paging_item paging_prevnext prev  disabled ">Trước</a>
-                                                    <a href="https://ln.hako.re/truyen/5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai?page=2"
-                                                        class="paging_item paging_prevnext next">Sau</a>
+                                                    {% if page_obj.has_previous %}
+                                                    <a href="{% url 'detail' novel.slug %}?page={{page_obj.previous_page_number}}" class="paging_item paging_prevnext prev ">Trước</a>
+                                                    {% else %}
+                                                    <a href="#" class="paging_item paging_prevnext prev  disabled">Trước</a>
+                                                    {% endif %}
+                                                    {% if page_obj.has_next %}
+                                                    <a href="{% url 'detail' novel.slug %}?page={{page_obj.next_page_number}}" class="paging_item paging_prevnext prev ">Sau</a>
+                                                    {% else %}
+                                                    <a href="#" class="paging_item paging_prevnext prev  disabled">Sau</a>
+                                                    {% endif %}
+                                                    {% comment %} <a href="?page=2"
+                                                        class="paging_item paging_prevnext next {% if not page_obj.has_next %} disabled {% endif %}">Sau</a> {% endcomment %}
                                                 </div>
                                             </div>
                                         </div>
@@ -444,7 +454,6 @@
             })
         })
         $("form.comment_form input.button").on("click", function() {
-            alert("comment send");
             var t = tinymce.activeEditor.getContent();
             $.ajax({
                 type: 'POST',
@@ -501,10 +510,6 @@
     <script>
         $(document).ready(function () {
             listab("#series-comments");
-            // Switch to FB tab if request fb_comment_id
-            if (getParameterByName('fb_comment_id') != null) {
-                $('span[data-tab-index="2"]').click();
-            }
 
             $('ol.list-volume li').on('click', function () {
                 var vol = $(this);
@@ -523,12 +528,5 @@
                 $('#list-vol').hide();
             });
         });
-
-        series_id = parseInt('5091');
     </script>
-    
-    <script src="/scripts/app.js?id=abbe46948765a4d10a28"></script>
-    <script type='text/javascript'
-        src='//pl16314303.safestcontentgate.com/d5/6b/4b/d56b4bd6c3d2c1e161c4ab3c78c27670.js'></script>
-</body>
 {% endblock %}

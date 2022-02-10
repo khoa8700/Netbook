@@ -49,7 +49,7 @@
                             <tr id="series_11596">
                                 <td>
                                     <b style="color: orange"></b>
-                                    <a href="https://ln.hako.re/action/series/11596/manage" title="{{ novel.title }}">
+                                    <a href="{% url 'manage' novel.id %}" title="{{ novel.title }}">
                                         <b>{{ novel.title }}</b>
                                     </a>
                                 </td>
@@ -70,7 +70,6 @@
 <script>
     $(".btn-warning").click(function(e){
         var val=$(this).data("href");
-        alert(val);
         $.ajax({
             type: 'POST',
             url:"{% url 'delete_novel' %}",

@@ -1,6 +1,7 @@
 {% extends 'Ebook/base_control.html' %}
 {% block content %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker.css">
 <body>
     {% include 'Ebook/navbar_control.html' %}
     <div class="container">
@@ -11,8 +12,8 @@
                         Hồ sơ
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="POST" action=""> {% csrf_token %}
-                            <!-- {{ form.media }} -->
+                        <form role="form" method="POST" action="{% url 'profile_details' %}"  enctype="multipart/form-data"> {% csrf_token %}
+                            {{ form.media }}
                             <div class="form-group clearfix">
                                 <label class="col-md-2 control-label pt-7 text-right">Tên</label>
                                 <div class="col-md-8">
@@ -26,9 +27,15 @@
                                 </div>
                             </div>
                             <div class="form-group clearfix">
-                                <label class="col-md-2 control-label pt-7 text-right">Số điện thoại</label>
+								<label class="col-md-2 control-label pt-7 text-right">Ảnh đại diện</label>
+								<div class="col-md-8">
+									{{ form.avatar }}
+								</div>
+							</div>
+                            <div class="form-group clearfix">
+                                <label class="col-md-2 control-label pt-7 text-right">Ngày sinh</label>
                                 <div class="col-md-8">
-                                    {{ form.phone }}
+                                    {{ form.birthday }}
                                 </div>
                             </div>
                             <div class="form-group clearfix">
@@ -60,9 +67,9 @@
                                 </div>
                             </div>
                         </form>
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.1/tinymce.min.js"
-                            referrerpolicy="origin"></script>
-                        <script>
+                        {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.1/tinymce.min.js"
+                            referrerpolicy="origin"></script> {% endcomment %}
+                        {% comment %} <script>
                             tinymce.init({
                                 selector: 'textarea',
                                 height: 200,
@@ -87,11 +94,11 @@
                                 plugins: 'wordcount link image code fullscreen paste',
                                 toolbar: 'undo redo | bold italic underline strikethrough forecolor | link image | removeformat | fullscreen'
                             });
-                        </script>
+                        </script> {% endcomment %}
                         <script>
                             $(document).ready(function () {
-                                $('input[name=dateofbirth]').datepicker({
-                                    format: 'dd-mm-yyyy',
+                                $('input[name=birthday]').datepicker({
+                                    format: 'yyyy-mm-dd',
                                     defaultViewDate: {
                                         year: 2000,
                                         month: 0,

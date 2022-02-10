@@ -33,15 +33,15 @@ def unauthenticated_user(view_func):
 	return wrapper_func
 
 def author_check(view_func):
-	def wrapper_function(request, slug, *args, **kwargs): 
+	def wrapper_function(request, id_novel, *args, **kwargs): 
 		user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user # get User from request.user
-		print("type : ",type(user))
-		print("slug in check : ",slug)
+		# print("type : ",type(user))
+		# print("slug in check : ",slug)
         # u=User.objects.get(pk=request.user.pk)
         # print(u.userinfo)
-		novel = Novel.objects.get(slug=slug)
-		if request.user.username == novel.userinfo.user.username:
-			return view_func(request, slug, *args, **kwargs)			
+		novel = Novel.objects.get(id=id_novel)
+		if user == novel.userinfo.user:
+			return view_func(request, id_novel, *args, **kwargs)			
 		else:
 			return redirect('index')
 	return wrapper_function

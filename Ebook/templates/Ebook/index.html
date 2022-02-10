@@ -129,9 +129,8 @@
                                 <div class="comment-top">
                                     <div class="comment-user_ava">
                                         {% comment %} <i href="/user/{{ user.id}}"> {% endcomment %}
-                                        <i href="#">
-                                            <img
-                                                src="{% static 'images/avatar.png' %}">
+                                        <i href="{% url 'profile' comment.user.id %}">
+                                            <img src="{{ MEDIA_URL }}/{{ comment.user.userinfo.avatar }}">
                                         </i>
                                     </div>
                                     <a href="{{comment.novel.get_absolute_url|add:'#ln-comment-'}}{{comment.id }}" rel="nofollow" class="comment-user_name strong">{{ comment.user.userinfo.name }}</i>

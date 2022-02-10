@@ -46,30 +46,30 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">Đăng ký</div>
                     <div class="panel-body">
-                        <form class="form-horizontal" role="form" method="POST" action="https://ln.hako.re/register">
+                        <form class="form-horizontal" role="form" method="POST" action="">
+                            {% csrf_token %}
                             <div class="form-group">
-                                <label for="name" class="col-md-4 control-label">Tên đăng nhập</label>
+                                <label for="id_username" class="col-md-4 control-label">Tên đăng nhập</label>
                                 <div class="col-md-6">
-                                    <input id="name" type="text" class="form-control" name="name" value="">
+                                    {{ formUser.username }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="email" class="col-md-4 control-label">Địa chỉ E-Mail</label>
+                                <label for="id_email" class="col-md-4 control-label">Địa chỉ E-Mail</label>
                                 <div class="col-md-6">
-                                    <input id="email" type="email" class="form-control" name="email" value="">
+                                    {{ formInfo.email }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="password" class="col-md-4 control-label">Mật khẩu</label>
+                                <label for="id_password1" class="col-md-4 control-label">Mật khẩu</label>
                                 <div class="col-md-6">
-                                    <input id="password" type="password" class="form-control" name="password">
+                                    {{ formUser.password1 }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="password-confirm" class="col-md-4 control-label">Xác nhận mật khẩu</label>
+                                <label for="id_password2" class="col-md-4 control-label">Xác nhận mật khẩu</label>
                                 <div class="col-md-6">
-                                    <input id="password-confirm" type="password" class="form-control"
-                                        name="password_confirmation">
+                                    {{ formUser.password2 }}
                                 </div>
                             </div>
                             <div class="form-group">
