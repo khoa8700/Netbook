@@ -43,6 +43,18 @@ LATEST_CHAPTERS_PER_PAGE=CHAPTERS_PER_ROW*NUMBER_ROW_LATEST_CHAPTERS
 LATEST_FINISHED_NOVELS= 10
 LATEST_COMMENTS=6
 
+JSON_OK=JsonResponse({"ok":True})
+JSON_ERROR=JsonResponse({"error":"error"})
+
+ADMIN=1
+AUTHOR=2
+CUSTOMER=3
+
+ROLE_CHOICES=[
+    [AUTHOR,'author'],
+    [CUSTOMER,'customer'],
+]
+
 
 def index(request):
     trending_novels=list(Novel.objects.filter().order_by('-views')[:TRENDING_NOVELS_PER_PAGE])
@@ -646,12 +658,13 @@ def top_rates_novel_list(request):
     context={"novel_list" : novel_list}
     return context
 
+@authenticated_user
 @admin_only
 def manage(request):
     
     name = request.GET.get('name')
     if name is not None:
-        userinfos=list(UserInfo.objects.filter(name=name).exclude(role=UserInfo.ADMIN))
+        userinfos=list(UserInfo.objects.filter(name__icontains=name).exclude(role=UserInfo.ADMIN))
     else:
         userinfos=list(UserInfo.objects.all().exclude(role=UserInfo.ADMIN))
     page_number = request.GET.get('page')
@@ -674,8 +687,10 @@ def manage(request):
     return render(request,"Ebook/user_manage.html",{
         "userinfos" : userinfos,
         "page_obj" : page_obj,
+        "ROLE_CHOICES" : ROLE_CHOICES,
     })
 
+@authenticated_user
 @admin_only
 def ban(request):
     # print("date : ",datetime.now())
@@ -716,6 +731,7 @@ def ban(request):
                             userinfo.save()
     return redirect('user_manage')
 
+@authenticated_user
 @admin_only
 def lock_out(request):
     print("in lock out")
@@ -1055,24 +1071,42 @@ def deleteNovel(request):
 
 @authenticated_user
 @author_or_admin
-def deleteChapter(request):
-    print("in delete novel 1")
-    if request.method=="POST" and request.accepts('ajax'):
-        print("in delete novel 2")
-        slug = request.POST.get("slug")
-        print("# delete novel ",slug)
-        if slug is not None:
-            try:
-                novel = Novel.objects.get(slug=slug)
-            except Novel.DoesNotExist:
-                novel = None
-            if novel is not None:
-                user = User.objects.get(pk=request.user.pk)
-                if user.userinfo==novel.userinfo:
-                    novel.delete()
-                    return JsonResponse({"ok":True})
-    return JsonResponse({"error":"something wrong"})
-        
+def deleteChapter(request, id_novel=None, id_chapter=None):
+    print("in delete chapter")
+    try:
+        print(id_novel,id_chapter)
+        novel = Novel.objects.get(id=id_novel)
+        print(novel)
+        user = User.objects.get(pk=request.user.pk)
+        if user.userinfo==novel.userinfo:
+            chapter = Chapter.objects.get(novel=novel,id=id_chapter)
+            bookmark = Bookmark.objects.filter(novel=novel,number=chapter.number)
+            bookmark.delete()
+            chapter.delete()
+    except:
+        return JsonResponse({"error":"something wrong"})
+    print('delete')
+    redirect('edit_novel', id_novel=id_novel)
+
+# @authenticated_user
+# @author_or_admin
+# def deleteChapter(request,slug=None,chapter_number=None):
+#     if slug is not None and chapter_number is not None:
+#         try:
+#             novel = Novel.objects.get(slug=slug)
+#         except Novel.DoesNotExist:
+#             novel = None
+#         if novel is not None:
+#             try:
+#                 chapter = Chapter.objects.get(novel=novel,number=chapter_number)
+#             except Chapter.DoesNotExist:
+#                 chapter = None
+#             if chapter is not None:
+#                 user = User.objects.get(pk=request.user.pk)
+#                 if user.userinfo==novel.userinfo:
+#                     chapter.delete()
+#     return redirect('edit_novel',slug=slug)
+    
 def manageNovel(request,id_novel):
     # if slug is not None:
     novel=get_object_or_404(Novel,id=id_novel)
@@ -1104,6 +1138,7 @@ def noti(request):
                 n_bookmark = Bookmark.objects.filter(user=user,novel=following.novel).count()
             except Bookmark.DoesNotExist:
                 n_bookmark = 0
+
             noti += following.novel.chapter_set.count() - n_bookmark
         print('noti',noti)
         return { 
@@ -1112,3 +1147,70 @@ def noti(request):
     return { 
         "noti" : noti,
     }
+
+
+@authenticated_user
+@admin_only
+def unBanComment(request):
+    print("welcome unban")
+    if request.method == "POST" and request.is_ajax():
+        username = request.POST.get("username")
+        print("username : ",username)
+        if username is not None:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = None
+            if user is not None:
+                try:
+                    userinfo = UserInfo.objects.get(user=user)
+                except UserInfo.DoesNotExist:
+                    userinfo = None
+                if userinfo is not None:
+                    userinfo.ban_time = None
+                    userinfo.prev_ban_level = 0
+                    userinfo.save()
+                    return JSON_OK
+    return JSON_ERROR
+
+@authenticated_user
+@admin_only
+def unLockout(request):
+    if request.method == "POST" and request.is_ajax():
+        username = request.POST.get("username")
+        print("username : ",username)
+        if username is not None:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = None
+            if user is not None:
+                try:
+                    userinfo = UserInfo.objects.get(user=user)
+                except UserInfo.DoesNotExist:
+                    userinfo = None
+                if userinfo is not None:
+                    userinfo.lock_out_time = None
+                    userinfo.save()
+                    return JSON_OK
+    return JSON_ERROR
+
+@authenticated_user
+@admin_only
+def modifyRole(request):
+    if request.method == "POST" and request.is_ajax():
+        username = request.POST.get("username")
+        role = request.POST.get("role")
+        if username is not None and role is not None:
+            print("username : ",username)
+            print("role : ",role)
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                user = None
+            if user is not None:
+                userinfo = UserInfo.objects.get(user=user)
+                userinfo.role = role
+                userinfo.save()
+                return JSON_OK
+    return JSON_ERROR

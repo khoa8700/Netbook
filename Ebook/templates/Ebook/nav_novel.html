@@ -2,7 +2,7 @@
 {% block content %}
 <body>
     <script>
-        $(document).ready(function () {
+        {% comment %} $(document).ready(function () {
 
 
             var lichap = $('#chapter_' + '92691').closest('ul');
@@ -14,7 +14,7 @@
             $('ul.hide').each(function() {
                 if ($(this).find('li').length == 0) $(this).prev().prev().prev().hide();
             });
-        });
+        }); {% endcomment %}
     </script>
     <style>
         body {
@@ -193,7 +193,7 @@
     <script>
         var smallWidth = $(parent.window).width() < 992;
 
-        function openLink(frameLink, frameName, pushPath) {
+        function openLink(frameLink, frameName, pushPath, reloadRequest) {
             window.open(frameLink, frameName);
             if (frameName != '_parent') {
                 parent.$('#action-tree').addClass('hidden-xs hidden-sm');
@@ -259,9 +259,8 @@
                         break;
                     case 'Xóa chương':
                         child.onclick = () => openLink(
-                            '/action/delete?'+ {{ novel.id }} +'/' + id + ?navbar=0',
+                            '/action/'+ {{ novel.id }} + '/' + id + '/delete',
                             'action',
-                            'chapter_id=' + id + '&action=deletechapter'
                         );
                         break;
                 }
