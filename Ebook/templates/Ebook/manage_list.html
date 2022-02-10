@@ -46,7 +46,7 @@
                                 <th class="col-xs-5 col-sm-3 col-md-3 col-lg-2 text-right">Quản lý</th>
                             </tr>
                             {% for novel in novels %}
-                            <tr id="series_11596">
+                            <tr id="series_{{ novel.id }}">
                                 <td>
                                     <b style="color: orange"></b>
                                     <a href="{% url 'manage' novel.id %}" title="{{ novel.title }}">

@@ -181,8 +181,6 @@
     <ul id="series" class="menu">
         <li>Sửa truyện</li>
         <li class="sep">&nbsp;</li>
-        <li style="color: red">Xóa truyện</li>
-        <li class="sep">&nbsp;</li>
         <li>Thêm chương</li>
     </ul>
     <ul id="chapter" class="menu">
@@ -237,12 +235,7 @@
                             'action=editseries'
                         );
                         break;
-                    case 'Xóa truyện':
-                        child.onclick = () => openLink(
-                            '/action/delete?slug='+ {{ novel.slug }} ,
-                            '_parent'
-                        );
-                        break;
+                    
                     case 'Thêm chương':
                         child.onclick = () => openLink(
                             '/action/'+ {{ novel.id }} +'/create?navbar=0',

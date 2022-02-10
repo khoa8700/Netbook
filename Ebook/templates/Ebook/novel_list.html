@@ -11,9 +11,9 @@
             </div>
             <div class="container">
                 <div class="page-breadcrumb">
-                    <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
+                    <span class="breadcrum-level"><a class="" href="{% url 'index' %}"><i class="fas fa-home"></i></a></span>
                     <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
-                    <span class="breadcrum-level"><a href="{% url 'novel_list'%}">Danh sách</a></span>
+                    <span class="breadcrum-level"><a href="{% url 'novel_list' %}">Danh sách</a></span>
                 </div>
             </div>
             <div class="container">
@@ -132,7 +132,7 @@
                                                 <div>Lượt xem: {{novel.views}}</div>
                                                 <div>Lượt theo dõi: {{novel.follow}}</div>
                                             </p>
-                                            {{ novel.description|truncatechars:100 }}
+                                            {{ novel.description|safe|truncatechars:100 }}
                                         </div>
                                     </div>
                                 </div>

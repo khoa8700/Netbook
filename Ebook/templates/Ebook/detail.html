@@ -12,9 +12,9 @@
             <div class="row">
                 <div class="col-12 col-lg-9">
                     <div class="page-breadcrumb">
-                        <span class="breadcrum-level"><a class="" href=""><i class="fas fa-home"></i></a></span>
+                        <span class="breadcrum-level"><a class="" href="{% url 'index' %}"><i class="fas fa-home"></i></a></span>
                         <span class="next-icon"><i class="fas fa-chevron-right"></i></span>
-                        <span class="breadcrum-level"><a href="{% url 'index' %}">Truyện dịch</a></span>
+                        <span class="breadcrum-level"><a href="{% url 'index' %}">Thông tin truyện</a></span>
                     </div>
                 </div>
                 <div class="col-12 col-lg-3">
@@ -58,28 +58,6 @@
                                                 {% endif %}
                                                     >{{ tag.name }}</a>
                                                 {% endfor %}
-                                                <!-- <a class="series-gerne-item"
-                                                    href="https://ln.hako.re/the-loai/action">Action</a>
-                                                <a class="series-gerne-item"
-                                                    href="https://ln.hako.re/the-loai/adventure">Adventure</a>
-                                                <a class="series-gerne-item"
-                                                    href="https://ln.hako.re/the-loai/drama">Drama</a>
-                                                <a class="series-gerne-item"
-                                                    href="https://ln.hako.re/the-loai/fantasy">Fantasy</a>
-                                                <a class="series-gerne-item"
-                                                    href="https://ln.hako.re/the-loai/horror">Horror</a>
-                                                <a class="series-gerne-item"
-                                                    href="https://ln.hako.re/the-loai/mature">Mature</a>
-                                                <a class="series-gerne-item animation" style="display: none;"
-                                                    href="https://ln.hako.re/the-loai/shoujo-ai" x-show="more"
-                                                    :class="{ 'fade-in': more }">
-                                                    Shoujo ai
-                                                </a>
-                                                <a class="series-gerne-item animation" style="display: none;"
-                                                    href="https://ln.hako.re/the-loai/tragedy" x-show="more"
-                                                    :class="{ 'fade-in': more }">
-                                                    Tragedy
-                                                </a> -->
                                                 {% if tags|length > 5 %}
                                                 <a class="series-gerne-item" x-show="!more" @click="more = true;"><i
                                                     class="fas fa-ellipsis-h"></i></a>
@@ -89,12 +67,6 @@
                                                 <span class="info-name">Tác giả:</span>
                                                 <span class="info-value "><a href="{% url 'advanced_search' %}?author={{ novel.userinfo.name }}">{{ novel.userinfo.name }}</a></span>
                                             </div>
-                                            <!-- <div class="info-item">
-                                                <span class="info-name">Họa sĩ:</span>
-                                                <span class="info-value"><a
-                                                        href="https://ln.hako.re/hoa-si/Kinta%2C%20%E3%82%AD%E3%83%B3%E3%82%BF">Kinta,
-                                                        キンタ</a></span>
-                                            </div> -->
                                             <div class="info-item">
                                                 <span class="info-name">Tình trạng:</span>
                                                 <span class="info-value">
@@ -134,13 +106,6 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="col-4 col-md feature-item width-auto-xl">
-                                                    <div class="catalog-icon side-feature-button">
-                                                        <span class="block feature-value"><i
-                                                                class="fas fa-list"></i></span>
-                                                        <span class="block feature-name">Mục lục</span>
-                                                    </div>
-                                                </div> -->
                                                 <div class="col-4 col-md feature-item width-auto-xl">
                                                     <a href="{% url 'detail' slug %}#series-comments"
                                                         class="side-feature-button">
@@ -149,22 +114,6 @@
                                                         <span class="block feature-name">Bàn luận</span>
                                                     </a>
                                                 </div>
-                                                <!-- <div class="col-4 col-md feature-item width-auto-xl">
-                                                    <label for="open-sharing" class="side-feature-button">
-                                                        <span class="block feature-value"><i
-                                                                class="fas fa-share-alt"></i></span>
-                                                        <span class="block feature-name">Chia sẻ</span>
-                                                    </label>
-                                                    <input type="checkbox" id="open-sharing" />
-                                                    <div class="sharing-box">
-                                                        <a class="sharing-item"
-                                                            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fln.hako.re%2Ftruyen%2F5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai"
-                                                            target="_blank"><i class="fab fa-facebook-f"></i></a>
-                                                        <a class="sharing-item"
-                                                            href="https://twitter.com/intent/tweet?text=&quot;Omae Gotoki ga Maou ni Kateru to Omou na&quot; to Gachizei ni Yuusha Party wo Tsuihou Sareta node, Outo de Kimama ni Kurashitai&url=https%3A%2F%2Fln.hako.re%2Ftruyen%2F5091-omae-gotoki-ga-maou-ni-kateru-to-omou-na-to-gachizei-ni-yuusha-party-wo-tsuihou-sareta-node-outo-de-kimama-ni-kurashitai"
-                                                            target="_blank"><i class="fab fa-twitter"></i></a>
-                                                    </div>
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -205,18 +154,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <div class="other-facts col-12">
-                                        <div class="fact-item">
-                                            <div class="fact-name">Tên khác:</div>
-                                            <div class="fact-value">
-                                                <div class="block pad-bottom-5">
-                                                    「お前ごときが魔王に勝てると思うな」とガチ勢に勇者パーティを追放されたので、王都で気ままに暮らしたい</div>
-                                                <div class="block pad-bottom-5">Do You Think Someone Like You Can Defeat
-                                                    the Demon King?</div>
-                                                <div class="block pad-bottom-5">Apricot</div>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </main>
@@ -240,26 +177,10 @@
                                             <span class="info-value">{{ novel.publication_date|date:'d/m/Y'}}</span>
                                         </div>
                                     </div>
-                                    {% comment %} <div class="series-owner_share">
-                                        <span class="owner_share-title" title="Tham gia">Tham gia</span>
-                                        <a class="ln_info-name" href="https://ln.hako.re/thanh-vien/18762"
-                                            style="padding-left: 5px;">cac</a>
-                                    </div>
-                                    <div class="owner-donate" style="padding: 0">
-
-                                    </div> {% endcomment %}
                                 </main>
                             </section>
                         </div>
                     </div>
-                    {% comment %} <section class="series-note basic-section gradual-mobile">
-                        <header class="sect-header"><span class="sect-title">Chú thích thêm</span><span
-                                class="mobile-icon"><i class="fas fa-chevron-down"></i></span></header>
-                        <main class="d-lg-block">
-                            <div class="long-text" style='word-wrap: break-word;'>
-                            </div>
-                        </main>
-                    </section> {% endcomment %}
                 </div>
                 <div class="col-12 col-lg-9 float-left">
                     <div style="text-align: center; margin: 0 auto 10px auto;">
@@ -290,7 +211,6 @@
                                         {% for chapter,mark in chapters_mark %}
                                         <li class="{% if chapter.number > 5 %}none{% endif %}">
                                             <div class="chapter-name">
-                                                {% comment %} <i class="fas fa-image" aria-hidden="true" title="Có chứa ảnh"></i> {% endcomment %}
                                                 <a href="{{ chapter.get_absolute_url }}"
                                                     title="Chương {{ chapter.number }} : {{ chapter.title|title }}"
                                                     {% if mark %} style="color:#c0c0c0" {% endif %} >Chương {{ chapter.number }} : {{ chapter.title|title }}</a>
@@ -321,20 +241,19 @@
                                 <section class="ln-comment">
                                     <header>
                                         <h3>{{ novel.comment_set.count }} Bình luận </h3>
-
                                     </header>
                                     <main class="ln-comment-body">
                                         {% if request.user.is_authenticated %}
-                                        {% if not userinfo.is_banned %} 
-                                        <div id="ln-comment-submit" class="ln-comment-form clear">
-                                            <form class="comment_form">
-                                                <textarea class="comment_content"></textarea>
-                                                <div class="comment_toolkit clear">
-                                                    <input class="button" type="button" value="Đăng bình luận">
-                                                </div>
-                                            </form>
-                                        </div>
-                                        {% endif %}
+                                            {% if not userinfo.is_banned %} 
+                                            <div id="ln-comment-submit" class="ln-comment-form clear">
+                                                <form class="comment_form">
+                                                    <textarea class="comment_content"></textarea>
+                                                    <div class="comment_toolkit clear">
+                                                        <input class="button" type="button" value="Đăng bình luận">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            {% endif %}
                                         {% endif %}
                                         {% for comment in comments %}
                                         <div class="ln-comment-group">
@@ -365,14 +284,6 @@
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <!-- <div class="ln-comment-menu" x-data="{ show: false }">
-                                                    <div class="ln-comment-toolkit-icon" @click="show = !show">
-                                                        <i class="fas fa-angle-down"></i>
-                                                    </div>
-                                                    <div class="ln-comment-toolkit none" :class="{ 'none': !show }"
-                                                        @click.away="show = false">
-                                                    </div>
-                                                </div> -->
                                             </div>
                                         </div>
                                         {% endfor %}
@@ -389,9 +300,7 @@
                                                     {% else %}
                                                     <a href="#" class="paging_item paging_prevnext prev  disabled">Sau</a>
                                                     {% endif %}
-                                                    {% comment %} <a href="?page=2"
-                                                        class="paging_item paging_prevnext next {% if not page_obj.has_next %} disabled {% endif %}">Sau</a> {% endcomment %}
-                                                </div>
+                                                    </div>
                                             </div>
                                         </div>
                                     </main>
@@ -446,9 +355,6 @@
                     "slug" : "{{ slug }}",
                 },
                 success: function (response) {
-                    // alert(response["number"]);
-                    // var data=JSON.parse(JSON.stringify(response))
-                    // console.log(data)
                     location.reload();  
                     
                 },
@@ -468,9 +374,6 @@
                     "content" : t,
                 },
                 success: function (response) {
-                    // alert(response["number"]);
-                    // var data=JSON.parse(JSON.stringify(response))
-                    // console.log(data)
                     location.reload();  
                     
                 },
@@ -493,9 +396,6 @@
                     "rate" : e,
                 },
                 success: function (response) {
-                    // alert(response["number"]);
-                    // var data=JSON.parse(JSON.stringify(response))
-                    // console.log(data)
                     location.reload();  
                     
                 },

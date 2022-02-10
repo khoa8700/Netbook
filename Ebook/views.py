@@ -29,6 +29,7 @@ from django.http import JsonResponse
 import pytz
 from django.db.models.fields import BooleanField, DateField, FloatField, IntegerField, TextField
 import string
+import re
 # Create your views here.
 TRENDING_NOVELS_PER_PAGE=8
 NOVELS_PER_PAGE=2
@@ -109,7 +110,6 @@ def index(request):
         "latest_chapters":latest_chapters_novels_chapter,
         "latest_finished_novels":latest_finished_novels_chapter,
         "recently_comments":recently_comments,
-        "request":request,
         # "page_obj":page_obj,
     })
 
@@ -151,11 +151,19 @@ def registerPage(request):
     if request.method == 'POST':
         form1 = CreateUserForm(request.POST)
         form2 = CreateUserInfoForm(request.POST)
+
         if form1.is_valid() and form2.is_valid():
-            user = form1.save()
-            info = form2.save()
-            info.user = user # relationship one to one 
-            info.save()
+            user = form1.save(commit=False)
+            info = form2.save(commit=False)
+            regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+            try:
+                userinfo = UserInfo.objects.get(email=info.email)
+            except:
+                userinfo = None
+            if re.fullmatch(regex, info.email) and userinfo:
+                info.user = user # relationship one to one 
+                user.save()
+                info.save()
             username = form1.cleaned_data.get('username')
             messages.success(request, 'Account was created for ' + username)
             return redirect('login')
@@ -1053,7 +1061,7 @@ def manageList(request):
 @author_or_admin
 def deleteNovel(request):
     print("in delete novel 1")
-    if request.method=="POST" :
+    if request.method=="POST" and request.accepts('ajax'):
         print("in delete novel 2")
         slug = request.POST.get("slug")
         print("# delete novel ",slug)
@@ -1086,7 +1094,7 @@ def deleteChapter(request, id_novel=None, id_chapter=None):
     except:
         return JsonResponse({"error":"something wrong"})
     print('delete')
-    redirect('edit_novel', id_novel=id_novel)
+    return redirect('edit_novel', id_novel=id_novel)
 
 # @authenticated_user
 # @author_or_admin
@@ -1153,7 +1161,7 @@ def noti(request):
 @admin_only
 def unBanComment(request):
     print("welcome unban")
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         username = request.POST.get("username")
         print("username : ",username)
         if username is not None:
@@ -1176,7 +1184,7 @@ def unBanComment(request):
 @authenticated_user
 @admin_only
 def unLockout(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         username = request.POST.get("username")
         print("username : ",username)
         if username is not None:
@@ -1198,7 +1206,7 @@ def unLockout(request):
 @authenticated_user
 @admin_only
 def modifyRole(request):
-    if request.method == "POST" and request.is_ajax():
+    if request.method == "POST" and request.accepts('ajax'):
         username = request.POST.get("username")
         role = request.POST.get("role")
         if username is not None and role is not None:
