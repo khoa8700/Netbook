@@ -130,12 +130,14 @@ def loginPage(request):
         password=request.POST.get("password")
         
         user = authenticate(request, username=username, password=password)
+        print(user)
         if not user:
             try:
                 userinfo = UserInfo.objects.get(email=username)
                 user = authenticate(request, username=userinfo.user, password=password)
             except:
                 pass
+        print(user)
         if user is not None:
             if not user.userinfo.is_locked_out():
                 user.is_active = True
@@ -315,7 +317,10 @@ def read(request,slug=None,chapter_number=None):
 @never_cache
 def detail(request,slug=None):
     if slug is not None:
-        userinfo = None
+        try:
+            userinfo = UserInfo.objects.get(user=request.user)
+        except:
+            userinfo = None
         novel = get_object_or_404(Novel,slug=slug)
         novel = Novel.objects.annotate(update_date=Max('chapter__update_date')).get(slug=slug)
         form = CreateRatingForm()
@@ -404,9 +409,10 @@ def detail(request,slug=None):
                     return redirect('detail',slug=slug)
         
         print("tags : ",tags)
+        # print(userinfo.is_banned())
         return render(request,'Ebook/detail.html',{
             "slug" : slug,
-            # "userinfo" : userinfo,
+            "userinfo" : userinfo,
             "novel" : novel,
             "tags" : tags,
             "chapters_mark" : chapters_mark,
@@ -774,7 +780,7 @@ def lock_out(request):
             userinfo.lock_out_time = datetime.now()
             userinfo.lock_out_time += timedelta(days=LOCK_OUT_TIME)
             userinfo.save()
-            user.is_active = False
+            # user.is_active = False
             user.save()
     return redirect('user_manage')
 
