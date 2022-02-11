@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+
+<head id="ctl00_Head1">
+    <title>Thông tin chung - Netbook</title>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/styles.profile_follow.css' %}" />
+    <link rel="icon" type="image/png" href="{% static '/css/favicon-netbook.png' %}" />
+    <style>
+      .follow-link{
+        border: none;
+        outline: none;
+        background: none;
+        cursor: pointer;
+        color: #0000EE;
+        padding: 0;
+        text-decoration: underline;
+        font-family: inherit;
+        font-size: inherit;
+      }
+    </style>
+</head>
+
+<body id="ctl00_Body" class="vi-vn site3">
+    <div>
+        <main class="main">
+            <div class="container">
+                <div class="row">
+                    <div id="ctl00_divCenter" class="full-width col-sm-12">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4">
+                                <nav class="user-sidelink clearfix">
+                                    <ul>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="#"> Thông tin chung</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="#"> Thông tin tài khoản</a>
+                                        </li>
+                                        <li class="hvr-sweep-to-right active">
+                                            <a href="#"> Truyện theo dõi</a>
+                                        </li>
+                                        {% comment %} <li class="hvr-sweep-to-right">
+                                            <a href="http://nhattruyenvip.com/Secure/Notifications.aspx"> Thông báo</a>
+                                        </li> {% endcomment %}
+                                        <li class="hvr-sweep-to-right">
+                                            <a href="#"> Đổi mật khẩu</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                            <div class="col-md-9 col-sm-8">
+                                <div class="user-page clearfix">
+                                  <h1 class="postname">
+                                    Truyện đang theo dõi
+                                  </h1>
+                                  <section class="comics-followed comics-followed-withpaging user-table clearfix">
+                                    <div class="table-responsive">
+                                      <table class="table">
+                                        <thead>
+                                          <tr>
+                                            <th></th>
+                                            <th class="nowrap">Tên truyện</th>
+                                            <th class="nowrap">Xem gần nhất</th>
+                                            <th class="nowrap">Chap mới nhất</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for bookmark,novel in bookmark_novels %}
+                                            <tr>
+                                                <td>
+                                                {% comment %} <a class="image" rel="nofollow noopener noreferrer" target="_blank"
+                                                href="{{ novel.get_absolute_url }}">
+                                                <img src="./Truyện đang theo dõi - NhatTruyen_files/konosuba-tuyen-tap-megumin.jpg"
+                                                  class="lazy"
+                                                  data-original="//st.imageinstant.net/data/comics/64/konosuba-tuyen-tap-megumin.jpg"
+                                                  alt="Konosuba : Tuyển Tập Megumin" style="display: inline;">
+                                                  {{ novel.title }}
+                                                </a> {% endcomment %}
+                                                </td>
+                                            <td>
+                                              <a class="comic-name" rel="nofollow noopener noreferrer" target="_blank"
+                                                href="{{ novel.get_absolute_url }}">{{ novel.title }}</a>
+                                              <div class="follow-action"> 
+                                                <form action="{% url 'follow' %}" method="POST"> {% csrf_token %}
+                                                  <input type="hidden" name="slug" value="{{ novel.slug }}">
+                                                  <input type="hidden" name="next" value="{{ request.path }}">
+                                                  <button name="your_name" type="submit" class="follow-link" data-id="28992">
+                                                    Bỏ theo dõi
+                                                  </button>
+                                                </form>
+                                              </div>
+                                            </td>
+                                            <td class="nowrap chapter">
+                                              {% if bookmark is not None %}
+                                              <a rel="nofollow noopener noreferrer" target="_blank" class="visited"
+                                                href="{% url 'read' novel.slug bookmark.number %}"
+                                                title="Chapter {{ bookmark.number }}">Chapter {{ bookmark.number }}</a>
+                                              {% endif %}
+                                            </td>
+                                            <td class="nowrap chapter">
+                                              {% if novel.chapter_set.count > 0 %}
+                                              <a rel="nofollow noopener noreferrer" target="_blank" class="visited"
+                                                href="{% url 'read' novel.slug novel.chapter_set.count %}"
+                                                title="Chapter {{ novel.chapter_set.count }}">Chapter {{ novel.chapter_set.count }}</a>
+                                              {% else %}
+                                              <p>Chưa có</p>
+                                              {% endif %}
+                                            </td>
+                                          </tr>
+                                          {% endfor %}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </section>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

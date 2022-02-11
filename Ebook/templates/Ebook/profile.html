@@ -1,0 +1,208 @@
+{% extends 'Ebook/base.html' %}
+{% load static %}
+{% block content %}
+{% include 'Ebook/navbar.html' %}
+<main id="mainpart" class="profile-page">
+    <div class="profile-feature-wrapper">
+        <div class="container">
+            <div class="profile-feature">
+                <div class="profile-cover">
+                    <div class="fourone-ratio">
+                        {% comment %} <div class="content img-in-ratio">
+                        </div> {% endcomment %}
+                    </div>
+                    <!-- <div id="profile-changer_cover" class="profile-changer none block-m">
+                        <div class="p-c_wrapper">
+                            <i class="fas fa-camera"></i>
+                            <span class="p-c_text">Yêu cầu 1200 x 300 px</span>
+                        </div>
+                    </div> -->
+                    {% comment %} <input type="file" id="user_cover_file" style="display: none"> {% endcomment %}
+                    {% comment %} <input type="file" id="user_avatar_file" style="display: none"> {% endcomment %}
+                {% comment %} </div> {% endcomment %}
+                <div class="profile-nav">
+                    <div class="profile-ava-wrapper">
+                        <div class="profile-ava">
+                            {% comment %} <div id="profile-changer_ava" class="profile-changer">
+                                <span class="p-c_text"><i class="fas fa-camera"></i></span>
+                            </div> {% endcomment %}
+                            <img src="{{ MEDIA_URL }}/{{ userinfo.avatar }}">
+                        </div>
+                    </div>
+                    <!-- <div class="profile-function at-desktop none block-m">
+                        <a href="https://ln.hako.re/tin-nhan/moi?to=PH4N70M"
+                            class="button to-contact button-green"><i class="fas fa-paper-plane"></i> Liên hệ</a>
+                    </div> -->
+                    <div class="profile-intro">
+                        <h3 class="profile-intro_name">
+                            {{ userinfo.name }}
+                        </h3>
+                        <span class="profile-intro_role 
+                            {% if userinfo.role == 1 %}
+                            role-admin">Administrators
+                            {% elif userinfo.role == 2 %}
+                            role-mod">Authors
+                            {% else %}
+                            role-mem">Members
+                            {% endif %}
+                        </span>
+                    </div>
+                    <!-- <div class="profile-function at-mobile none-m">
+                        <a href="https://ln.hako.re/tin-nhan/moi?to=PH4N70M"
+                            class="button to-contact button-green"><i class="fas fa-paper-plane"></i> Liên hệ</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-3">
+                <section class="basic-section clear">
+                    <ul class="statistic-top row">
+                        <li class="col-6">
+                            <div class="statistic-value">{{nchapter}}</div>
+                            <div class="statistic-name">Chương đã đăng</div>
+                        </li>
+                        <li class="col-6">
+                            <div class="statistic-value">{{nfollow}}</div>
+                            <div class="statistic-name">Đang theo dõi</div>
+                        </li>
+                    </ul>
+                    <main class="sect-body">
+                        <div class="p-s_i-bio">
+                            <p>{{userinfo.self_introduction|safe}}</p>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="info-name"><i class="fas fa-calendar"></i> Ngày sinh: </span><span
+                                class="info-value">{{userinfo.birthday|date:'d/m/Y'}}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="info-name"><i class="fas fa-pencil-alt"></i> Nghề nghiệp: </span><span
+                                class="info-value">{{userinfo.job}}</span>
+                        </div>
+                        <div class="profile-info-item">
+                            <span class="info-name"><i class="fas fa-star"></i> Sở thích: </span><span
+                                class="info-value">{{userinfo.hobby}}</span>
+                        </div>
+                        {% comment %} <div class="profile-info-item">
+                            <span class="info-name"><i class="fas fa-calendar"></i> Tham gia: </span><span
+                                class="info-value">17/01/2022</span>
+                        </div> {% endcomment %}
+                        
+                    </main>
+                </section>
+            </div>
+            <div class="col-12 col-md-12 col-lg-9 col-xl-9">
+                <section class="profile-showcase">
+                    <header><span class="number">{{novels|length}}</span><span class="showcase-title">Truyện đã đăng</span></header>
+                    {% comment %} <div class="row">
+                    </div> {% endcomment %}
+                    <div class="row">
+                        {% for novel in novels %}
+                        <div class="col-12 col-md-6">
+                            <div class="showcase-item">
+                                <div class="row">
+                                    <div class="series-cover col-4">
+                                        <div class="a6-ratio">
+                                            <div class="content img-in-ratio" 
+                                                style="background-image: url('{{ MEDIA_URL }}/{{ novel.thumbnail }}')"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="series-info">
+                                            {% comment %} <div class="series-type-wrapper">
+                                                <small class="series-type type-translation"
+                                                >Truyện dịch</small
+                                                >
+                                            </div> {% endcomment %}
+                                            <h5 class="series-name">
+                                                <a href="{{ novel.get_absolute_url }}">{{ novel.title|title }}</a>
+                                            </h5>
+                                        </div>
+                                        <div class="series-status">
+                                            <div class="status-item">
+                                                <span class="status-name">Tình trạng:</span>
+                                                <span class="status-value">
+                                                    {% if novel.status %}Đã hoàn thành{% else %}Đang tiến hành{% endif %}
+                                                </span>
+                                            </div>
+                                            <div class="status-item">
+                                                <span class="status-name">Lần cuối:</span>
+                                                <span class="status-value">
+                                                    <time class="timeago"
+                                                        title="{{ novel.update_date|date:'d-m-Y H:i:s' }}"
+                                                        datetime="{{ novel.update_date|date:'c' }}">{{ novel.update_date|date:'d-m-Y H:i:s' }}</time>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <span>Không có truyện nào</span>
+                        {% endfor %}
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</main>
+{% comment %} <script>
+    $(document).ready(function () {
+        listab(".profile-tabs");
+        var token = 'vK8B8V43MrwNGMM2WtGrIrBn2D7MvjPqDJK1cZnr';
+        var coverfile = $('#user_cover_file');
+        var avatarfile = $('#user_avatar_file');
+        $('#profile-changer_cover').on('click', function () {
+            coverfile.click();
+        })
+        $('#profile-changer_ava').on('click', function () {
+            avatarfile.click();
+        })
+        coverfile.on('change', function () {
+            var formdata = new FormData();
+            formdata.append('image', this.files[0]);
+            formdata.append('_token', token);
+            $.ajax({
+                url: '/action/upload/usercover',
+                type: 'POST',
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == 'success') {
+                        $('.profile-cover .content').css('background-image', 'url(' + data.url + ')');
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+        avatarfile.on('change', function () {
+            var formdata = new FormData();
+            formdata.append('image', this.files[0]);
+            formdata.append('_token', token);
+            $.ajax({
+                url: '/action/upload/avatar',
+                type: 'POST',
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status == 'success') {
+                        $('.profile-ava').find('img').attr('src', data.url);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                }
+            });
+        });
+    });
+</script> {% endcomment %}
+{% endblock %}

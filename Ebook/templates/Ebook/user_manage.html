@@ -1,0 +1,164 @@
+{% extends 'Ebook/base_control.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<body>
+    {% include 'Ebook/navbar_control.html' %}
+    <style>
+        tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        tr .btn {
+            font-size: 10px;
+        }
+
+        td {
+            vertical-align: middle !important;
+        }
+
+        .btn-danger {
+            width: 35.3px;
+        }
+    </style>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Danh sách người dùng
+                    </div>
+                    <div class="panel-body">
+                        <div style="float: right; margin-bottom: 20px">
+                            <form class="form-inline" method="GET" id="form-delete"> 
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <input style="width: 300px" type="text" class="form-control" name="name"
+                                        placeholder="Tên người dùng" id="keywords_input" value="">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="submit" value="Tìm kiếm">Tìm kiếm</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </div>
+                        <table class="table">
+                            <tr>
+                                <th class="col-xs-7 col-sm-6 col-md-5 col-lg-2">Username </th>
+                                <th class="hidden-xs col-sm-6 col-md-5 col-lg-3">Tên</th>
+                                <th class="hidden-xs col-sm-6 col-md-5 col-lg-3">Email</th>
+                                <th class="hidden-xs col-sm-6 col-md-5 col-lg-2">Phân quyền</th>
+                                <th class="col-xs-7 col-sm-6 col-md-5 col-lg-3 text-right">Quản lý</th>
+                            </tr>
+                            {% for userinfo in userinfos %}
+                            <tr id="user_{{ userinfo.user.id }}">
+                                <td>
+                                    <b style="color: orange"></b>
+                                    <a href="{% url 'profile' userinfo.user.id %}">
+                                        <b>{{ userinfo.user.username }}</b>
+                                    </a>
+                                </td>
+                                <td class="hidden-xs">{{ userinfo.name }}</td>
+                                <td class="hidden-xs">{{ userinfo.email }}</td>
+                                <td>
+                                    <select name="{{userinfo.user.username}}" class="choose_role" >
+                                        {% for role,name in ROLE_CHOICES %}
+                                            <option value="{{ role }}" {% if userinfo.role == role %} selected="selected" {% endif %} >{{ name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td class="text-right">
+                                    {% if userinfo.is_banned %}
+                                    <form action="" style="display: inline;" id="unban" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="username" value="{{userinfo.user.username}}">
+                                        <button type="submit" class="btn delete" name="username" value="{{userinfo.user.username}}" style="background-color: red" title="{{ userinfo.ban_time }}">
+                                            <i class="material-icons"> &#10008; </i>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <form action="{% url 'ban' %}" style="display: inline;" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn" name="username" value="{{userinfo.user.username}}" style="background-color:gray" title="Cấm bình luận">
+                                            <i class="material-icons">&#xE254;</i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                    {% if userinfo.is_locked_out %}
+                                    <form action="" style="display: inline;" id="unlockout" method="POST"> 
+                                        {% csrf_token %}
+                                        <input type="hidden" name="username" value="{{userinfo.user.username}}">
+                                        <button type="submit" class="btn delete" name="username" value="{{userinfo.user.username}}" style="background-color: red" title="{{ userinfo.lock_out_time }}">
+                                            <i class="material-icons"> &#9924; </i>
+                                        </button>
+                                    </form>
+                                    {% else %}
+                                    <form action="{% url 'lock_out' %}" style="display: inline;" method="POST"> {% csrf_token %}
+                                        <button type="submit" class="btn delete" name="username" value="{{userinfo.user.username}}" style="background-color:gray" title="Cấm tài khoản">
+                                            <i class="material-icons">&#xE872;</i>
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            <table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                <li class="page-item disabled"><a href="?page=1"><i class="fa fa-angle-double-left"></i></a></li>
+                <li class="page-item"><a href="?page={{ page_obj.previous_page_number }}" class="page-link">{{ page_obj.number|add:"-1"}}</a></li>
+                {% endif %}
+                <li class="page-item active"><a href="#" class="page-link">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next %}
+                <li class="page-item"><a href="?page={{ page_obj.next_page_number }}" class="page-link">{{ page_obj.number|add:"1"}}</a></li>
+                <li class="page-item"><a href="?page={{ page_obj.paginator.num_pages }}" class="page-link"><i class="fa fa-angle-double-right"></i></a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    $("#unban").submit(function(e){
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: "{% url 'unban' %}",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data){
+                location.reload();
+            }
+        });
+    });
+    $("#unlockout").submit(function(e){
+        var form = $(this);
+        $.ajax({
+            type: "POST",
+            url: "{% url 'unlock_out' %}",
+            data: form.serialize(), // serializes the form's elements.
+            success: function(data){
+                location.reload();
+            }
+        });
+    });
+    $(".choose_role").change(function(e){
+        var name=$(this).attr("name");
+        var data=$(this).val();
+        $.ajax({
+            type: "POST",
+            url: "{% url 'modify_role' %}",
+            data: {
+                "csrfmiddlewaretoken" : "{{  csrf_token  }}",
+                "username" : name,
+                "role" : data,
+            },
+            success: function(data){
+                location.reload(true)
+            }
+        });
+    });
+</script>
+{% endblock %}

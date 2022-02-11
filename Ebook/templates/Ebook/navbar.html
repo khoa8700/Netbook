@@ -1,0 +1,86 @@
+{% load static %}
+<div id="navbar" class="headroom">
+    <div class="container">
+        <div id="sidenav-icon" class="none-xl none-l">
+            <div class="sidenav-icon-content">
+                <span class="sidenav-icon_white"></span>
+                <span class="sidenav-icon_white"></span>
+                <span class="sidenav-icon_white"></span>
+            </div>
+            <ul class="navbar-menu none hidden-block at-mobile unstyle">
+                <div class="navbar-search block none-m in-navbar-menu">
+                    <form class="" action="{% url 'advanced_search' %}" method="get">
+                        <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="title"
+                            value="">
+                        <button class="search-submit" type="submit" value="Tìm kiếm"><i
+                                class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="{% url 'introduce' %}"><span>Giới thiệu</span></a></li>
+            </ul>
+        </div>
+        <div class="navbar-logo-wrapper">
+            <a href="/" class="navbar-logo" style="background-image: url('{% static '/img/logo-92.png' %}')" title="Trang chủ"></a>
+        </div>
+        {% if request.user.is_authenticated %}
+        <div id="navbar-user">
+            <div class="nav-user_icon">
+                <div class="nav-user_avatar">
+                    <img src="{{ MEDIA_URL }}/{{ user.userinfo.avatar }}">
+                </div>
+                <div class="at-user_avatar"></div>
+                
+                <ul class="account-sidebar hidden-block unstyled none">
+                    <li>
+                        <a href="{% url 'profile' user.id %}"><i class="fas fa-user"></i><span>Tài khoản</span></a>
+                    </li>
+                    <li>
+                        <a href="{% url 'profile_follow' %}"><i class="fas fa-heart"></i><span>Kệ sách</span></a>
+                    </li>
+                    <hr class="none block-l">
+                    <li>
+                        <a href="/action"><i class="fas fa-cog"></i><span>Hệ thống</span></a>
+                    </li>
+                    <li>
+                        <a href="/logout"><i class="fas fa-sign-out-alt"></i><span>Thoát</span></a>
+                    </li>
+                </ul>
+            </div>
+            <div id="series-unread-icon" class="user-sublink appearing">
+                <a class="link-item" href="{% url 'profile_follow' %}">
+                    <div class="icon-wrapper">
+                        <i class="fas fa-heart"></i>
+                        {% if noti > 0 %}
+                            <span class="noti-unread">{{ noti }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <div id="navbar-user" class="guest">
+            <a class="login-link" href="/login">Đăng nhập</a>
+        </div>
+        {% endif %}
+        <div class="navbar-mainblock">
+            <div class="navbar-search none block-m">
+                <form class="" action="{% url 'advanced_search' %}" method="get">
+                    <input class="search-input" type="text" placeholder="Tối thiểu 2 kí tự" name="title"
+                        value="">
+                    <button class="search-submit" type="submit" value="Tìm kiếm"><i
+                            class="fas fa-search"></i></button>
+                </form>
+            </div>
+            <ul class="navbar-menu at-navbar none d-lg-block unstyled">
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="{% url 'introduce' %}"><span>Giới thiệu</span></a></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="page-top-group  at-index ">
+    <div class="index-background"></div>
+</div>

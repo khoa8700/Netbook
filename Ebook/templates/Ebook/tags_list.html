@@ -1,0 +1,32 @@
+{% extends 'Ebook/base_control.html' %}
+{% block content %}
+<body>
+    {% include 'Ebook/navbar_control.html' %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Genres
+                    </div>
+                    <div class="panel-body">
+                        <table class="table">
+                            {% for tag in tags %}
+                            <tr>
+                                <td colspan="2" class="info">
+                                    <b>{{ tag.name }}</b>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{ tag.description|safe }}</td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}

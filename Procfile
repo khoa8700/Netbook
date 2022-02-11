@@ -1,0 +1,1 @@
+web: gunicorn netbook.wsgi:application --log-file - --log-level debug

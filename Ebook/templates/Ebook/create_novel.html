@@ -1,0 +1,78 @@
+{% extends 'Ebook/base_control.html' %}
+{% block content %}
+<body>
+  {% include 'Ebook/navbar_control.html' %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <div class="panel panel-default">
+          <div class="panel-heading">Series</div>
+          <div class="panel-body">
+            <form method="POST" action="{% url 'create_novel' %}" enctype="multipart/form-data"> {% csrf_token %}
+              {{ form.media }}
+              <div class="form-group clearfix required">
+                <label class="col-md-2 control-label pt-7 text-right">Tiêu đề</label>
+                <div class="col-md-10">
+                  {{ form.title }}
+                </div>
+              </div>
+              <div class="form-group clearfix required">
+                <label class="col-md-2 control-label pt-7 text-right">Thể loại</label>
+                <div class="col-md-10">
+                  {{ form.tags}}
+                </div>
+              </div>
+              <div class="form-group clearfix required">
+                <label class="col-md-2 control-label text-right">Tóm tắt</label>
+                <div class="col-md-10">
+                  {{ form.description }}
+                </div>
+              </div>
+              <div class="form-group clearfix required">
+                <label class="col-md-2 control-label text-right">Ảnh bìa</label>
+                <div class="col-md-10">
+                  {{ form.thumbnail }}
+                </div>
+              </div>
+              <div class="form-group clearfix required">
+                <label class="col-md-2 control-label pt-5 text-right">Tình trạng dịch</label>
+                <div class="col-md-10">
+                  {{ form.status }}
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+                  <button type="submit" class="btn btn-primary">
+                    Thêm truyện
+                  </button>
+                  <a href="javascript: history.back()" class="btn btn-warning">
+                    Quay lại
+                  </a>
+                </div>
+              </div>
+            </form>
+            <script>
+              $(document).ready(function () {
+                $('#select-type').on('change', function () {
+                  var value = $(this).val();
+                  if (value == '3') {
+                    $('#select-group').parent().parent().hide();
+                  } else {
+                    $('#select-group').parent().parent().show();
+                  }
+                })
+              })
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $("#form_create").submit(function(e){
+        window.parent.location.reload();
+    });
+</script>
+</body>
+{% endblock %}
