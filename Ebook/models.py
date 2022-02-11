@@ -77,7 +77,7 @@ class UserInfo(models.Model):
 class Tag(models.Model):
     name = models.CharField(max_length=200, null=True)
     slug = models.SlugField(null=False)
-    description = models.CharField(max_length=200, null=True)
+    description = RichTextField(null=True)
 
     def __str__(self):
         return self.name
@@ -129,7 +129,7 @@ class Chapter(models.Model):
     novel = ForeignKey(Novel,null=True, blank=True, on_delete=models.CASCADE)
     number = IntegerField()
     content = RichTextField(null=True,blank=True)
-    title = models.CharField(max_length=200, null=True)
+    title = models.CharField(max_length=200, null=True, blank = True)
     views = IntegerField(default=0)
     update_date = models.DateTimeField(null=True,blank=True)
 

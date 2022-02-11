@@ -16,13 +16,13 @@
                                 class="fas fa-search"></i></button>
                     </form>
                 </div>
-                <li><a class="nav-menu_item" href="/list"><span class="">Danh sách</span></a></li>
+                <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><span class="">Danh sách</span></a></li>
                 <li><a class="nav-menu_item" href="{% url 'novel_list' %}"><i class="fas fa-th-list menu-icon"></i><span class="">Danh sách</span></a></li>
                 <li><a class="nav-menu_item" href="{% url 'introduce' %}"><span>Giới thiệu</span></a></li>
             </ul>
         </div>
         <div class="navbar-logo-wrapper">
-            <a href="/" class="navbar-logo" style="background-image: url('{% static '/img/logo-9.png' %}')" title="Trang chủ"></a>
+            <a href="/" class="navbar-logo" style="background-image: url('{% static '/img/logo-92.png' %}')" title="Trang chủ"></a>
         </div>
         {% if request.user.is_authenticated %}
         <div id="navbar-user">

@@ -12445,8 +12445,8 @@ table.broad-table tr th {
 }
 
 .index-background {
-    background: rgba(199, 203, 209, .3) url('/static/images/megumi-bg.jpg') no-repeat 50%;
-    height: 180px;
+    background: rgba(199, 203, 209, .3) url('/static/images/image0.gif') repeat 50%;
+    height: 240px;
     width: 100%
 }
 

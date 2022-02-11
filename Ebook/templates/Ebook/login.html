@@ -30,7 +30,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="/action">Bảng điều khiển</a>
+				<a class="navbar-brand" href="{% url 'index' %} ">Trang chủ</a>
 			</div>
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
@@ -46,6 +46,19 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">Đăng nhập</div>
 					<div class="panel-body">
+						{% if messages %}
+						<div class="alert alert-danger">
+							<strong> Whoops!</strong>
+							Đã xảy ra lỗi với dữ liệu bạn nhập.
+							<br>
+							<br>
+							<ul>
+								{% for message in messages %}
+								<li> {{ message }} </li>
+								{% endfor %}
+							</ul>
+						</div>
+						{% endif %}
 						<form class="form-horizontal" role="form" method="POST" action="">
 							{% csrf_token %}
 							<div class="form-group">

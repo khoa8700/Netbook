@@ -1,3 +1,4 @@
+from traceback import format_exception
 from django.core.checks import messages
 from django.http.response import Http404
 from django.shortcuts import redirect, render, get_object_or_404
@@ -32,10 +33,10 @@ import string
 import re
 # Create your views here.
 TRENDING_NOVELS_PER_PAGE=8
-NOVELS_PER_PAGE=2
+NOVELS_PER_PAGE=12
 COMMENTS_PER_PAGE=5
 NOVELS_IN_TOP_RATES=3
-USERS_PER_PAGE=2
+USERS_PER_PAGE=5
 LOCK_OUT_TIME = 7 # (days)
 TOP_FOLLOWED_NOVELS = 5
 CHAPTERS_PER_ROW=6
@@ -127,18 +128,24 @@ def loginPage(request):
     if request.method=="POST":
         username=request.POST.get("username")
         password=request.POST.get("password")
-        user = User.objects.get(username=username)
-        if not user.userinfo.is_locked_out():
-            user.is_active = True
-            user.save()
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
+        
+        user = authenticate(request, username=username, password=password)
+        if not user:
+            try:
+                userinfo = UserInfo.objects.get(email=username)
+                user = authenticate(request, username=userinfo.user, password=password)
+            except:
+                pass
+        if user is not None:
+            if not user.userinfo.is_locked_out():
+                user.is_active = True
+                user.save()
                 login(request,user)
                 return redirect('index')
             else:
-                messages.info(request, 'Username OR password is incorrect')
+                messages.info(request, 'Tài khoản của bạn đã bị khoá')
         else:
-            messages.info(request, 'Account is locked')
+            messages.info(request, 'Tên đăng nhập hoặc mật khẩu không đúng')
     context = {}
     return render(request, 'Ebook/login.html', context)
 
@@ -160,18 +167,32 @@ def registerPage(request):
                 userinfo = UserInfo.objects.get(email=info.email)
             except:
                 userinfo = None
-            if re.fullmatch(regex, info.email) and userinfo:
+            havemessage = False
+            mess = '<ul class="errorlist"><li>email<ul class="errorlist">'
+            if userinfo:
+                # print('2')
+                havemessage = True
+                mess += '<li>A user with that email already exists.</li>'
+            if not re.fullmatch(regex, info.email):
+                # print('3')
+                havemessage = True
+                mess += '<li>Wrong email format.</li>'
+            mess += '</ul></ul>'
+            if havemessage:
+                messages.info(request, mess)
+            if re.fullmatch(regex, info.email) and not userinfo:
                 info.user = user # relationship one to one 
                 user.save()
                 info.save()
-            username = form1.cleaned_data.get('username')
-            messages.success(request, 'Account was created for ' + username)
-            return redirect('login')
+            # username = form1.cleaned_data.get('username')
+                login(request,user)
+                return redirect('index')
         else:
-            print("form1 valid : ",form1.is_valid())
-            print("form2 valid : ",form2.is_valid())
-            print("form1 error : ",form1.errors) 
-            print("form2 error : ",form2.errors) 
+            # print("form1 valid : ",form1.is_valid())
+            # print("form2 valid : ",form2.is_valid())
+            print("form1 error : ",type(form1.errors)) 
+            # print("form2 error : ",form2.errors) 
+            messages.info(request, form1.errors)
 
     context = {
         'formUser':form1,
@@ -414,21 +435,22 @@ def createNovel(request):
     if request.method == "POST":
         print("inPOST_create_novel")
         form = CreateNovelForm(request.POST, request.FILES)
+        print(form.data)
+        print(form.errors)
         if form.is_valid():
             # user= request.user._wrapped if hasattr(request.user,'_wrapped') else request.user
             u=User.objects.get(pk=request.user.pk)
             userInfo=u.userinfo
-            novel=form.save(commit=False)
+            novel=form.save()
             novel.publication_date=datetime.now()
-            novel.save()
             novel.userinfo=userInfo
             novel.save()
-            print(novel.tags.all())
+            print("after tags : ",novel.tags.all())
         return redirect('manage_list')
     context={
         "form":form,
     }
-    print(form)
+    print(format_exception)
     return render(request, "Ebook/create_novel.html",context)
 
 
@@ -567,7 +589,7 @@ def profile_general(request):
 def profile(request,id):
     user = User.objects.get(id=id)
     userinfo = UserInfo.objects.get(user=user)
-    follow = userinfo.user.following_set.count()
+    follow = Following.objects.filter(user=user,is_followed=True).count()
     novels = userinfo.novel_set.all().annotate(update_date=Max('chapter__update_date'))
     nchapter = 0
     for novel in novels:

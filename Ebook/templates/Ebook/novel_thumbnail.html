@@ -1,6 +1,6 @@
 <div class="thumb-wrapper">
     <a href="{{ chapter.get_absolute_url }}"
-        title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
+        title="Chương {{ chapter.number }}{% if chapter.title %}: {{ chapter.title|title }} {% endif %}">
         <div class="a6-ratio">
             <div class="content img-in-ratio lazyload"
                 data-bg="{{ MEDIA_URL }}/{{ chapter.novel.thumbnail }}">
@@ -8,10 +8,10 @@
         </div>
     </a>
     <div class="thumb-detail">
-        <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">
-            <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}: {{ chapter.title|title }}">Chương {{ chapter.number }}</a>
+        <div class="thumb_attr chapter-title" title="Chương {{ chapter.number }}{% if chapter.title %}: {{ chapter.title|title }} {% endif %}">
+            <a href="{{ chapter.get_absolute_url }}" title="Chương {{ chapter.number }}{% if chapter.title %}: {{ chapter.title|title }} {% endif %}">Chương {{ chapter.number }}</a>
         </div>
-        <div class="thumb_attr volume-title">{{ chapter.title|title }}</div>
+        <div class="thumb_attr volume-title">{% if chapter.title %}{{ chapter.title|title }}{% endif %}</div>
     </div>
 </div>
 <div class="thumb_attr series-title"><a href="{{ chapter.novel.get_absolute_url }}" title="{{ chapter.novel.title|title }}">{{ chapter.novel.title|title }}</a></div>
